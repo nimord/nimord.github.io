@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://qiankun.space/"/>
-  <updated>2016-07-29T14:55:04.454Z</updated>
+  <updated>2016-07-29T15:10:16.688Z</updated>
   <id>http://qiankun.space/</id>
   
   <author>
@@ -16,15 +16,72 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>lfcs-12</title>
+    <title>LFCS 12：如何使用 Linux 的帮助文档和工具</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-12/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-12/</id>
     <published>2016-07-29T14:05:01.000Z</published>
-    <updated>2016-07-29T14:55:04.454Z</updated>
+    <updated>2016-07-29T15:10:16.688Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;h3 id=&quot;Linux-帮助手册man&quot;&gt;&lt;a href=&quot;#Linux-帮助手册man&quot; class=&quot;headerlink&quot; title=&quot;Linux 帮助手册man&quot;&gt;&lt;/a&gt;Linux 帮助手册man&lt;/h3&gt;&lt;p&gt;man 手册是 manual 手册的缩写，就是其名字所揭示的那样：一个给定工具的帮助手册。它包含了命令所支持的选项列表（以及解释），有些工具甚至还提供一些使用范例。&lt;/p&gt;
+&lt;p&gt;我们用 &lt;strong&gt;man 命令&lt;/strong&gt; 跟上你想要了解的工具名称来打开一个帮助手册。例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# man diff&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这将打开&lt;code&gt;diff&lt;/code&gt;的手册页，这个工具将逐行对比文本文件（如你想退出只需要轻轻的点一下 q 键）。&lt;/p&gt;
+&lt;p&gt;下面我来比较两个文本文件 &lt;code&gt;file1&lt;/code&gt; 和 &lt;code&gt;file2&lt;/code&gt;。这两个文本文件包含了使用同一个 Linux 发行版相同版本安装的两台机器上的的安装包列表。&lt;/p&gt;
+&lt;p&gt;输入&lt;code&gt;diff&lt;/code&gt; 命令它将告诉我们 &lt;code&gt;file1&lt;/code&gt; 和&lt;code&gt;file2&lt;/code&gt; 有什么不同:&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# diff file1 file2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095541p277x5ty7ihufb67.png&quot; alt=&quot;在Linux中比较两个文本文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;在Linux中比较两个文本文件&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;&lt;/code&gt; 这个符号是说&lt;code&gt;file2&lt;/code&gt;缺失的行。如果是 &lt;code&gt;file1&lt;/code&gt;缺失，我们将用 &lt;code&gt;&amp;gt;&lt;/code&gt; 符号来替代指示。&lt;/p&gt;
+&lt;p&gt;另外，&lt;strong&gt;7d6&lt;/strong&gt; 意思是说&lt;code&gt;file1&lt;/code&gt;的第&lt;strong&gt;7&lt;/strong&gt;行要删除了才能和&lt;code&gt;file2&lt;/code&gt;一致（&lt;strong&gt;24d22&lt;/strong&gt; 和 &lt;strong&gt;41d38&lt;/strong&gt; 也是同样的意思） &lt;strong&gt;65,67d61&lt;/strong&gt; 告诉需要删除从第 &lt;strong&gt;65&lt;/strong&gt; 行到 &lt;strong&gt;67&lt;/strong&gt; 行。我们完成了以上步骤，那么这两个文件将完全一致。&lt;/p&gt;
+&lt;p&gt;此外，根据 man 手册说明，你还可以通过 &lt;code&gt;-y&lt;/code&gt; 选项来以两路的方式显示文件。你可以发现这对于你找到两个文件间的不同根据方便容易。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# diff -y file1 file2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095542par66q955uu656ui.png&quot; alt=&quot;比较并列出两个文件的不同&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;比较并列出两个文件的不同&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;此外，你也可以用&lt;code&gt;diff&lt;/code&gt;来比较两个二进制文件。如果它们完全一样，&lt;code&gt;diff&lt;/code&gt; 将什么也不会输出。否则，它将会返回如下信息：“&lt;strong&gt;Binary files X and Y differ&lt;/strong&gt;”。&lt;/p&gt;
+&lt;h3 id=&quot;–help-选项&quot;&gt;&lt;a href=&quot;#–help-选项&quot; class=&quot;headerlink&quot; title=&quot;–help 选项&quot;&gt;&lt;/a&gt;–help 选项&lt;/h3&gt;&lt;p&gt;&lt;code&gt;--help&lt;/code&gt;选项，大多数命令都支持它（并不是所有）， 它可以理解为一个命令的简短帮助手册。尽管它没有提供工具的详细介绍，但是确实是一个能够快速列出程序的所支持的选项的不错的方法。&lt;/p&gt;
+&lt;p&gt;例如，&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# sed --help&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;将显示 sed （流编辑器）的每个支持的选项。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sed&lt;/code&gt;命令的一个典型用法是替换文件中的字符。用 &lt;code&gt;-i&lt;/code&gt; 选项（意思是 “&lt;strong&gt;原地编辑编辑文件&lt;/strong&gt;”），你可以编辑一个文件而且并不需要打开它。 如果你想要同时备份一个原始文件，用 &lt;code&gt;-i&lt;/code&gt; 选项加后缀来创建一个原始文件的副本。&lt;/p&gt;
+&lt;p&gt;例如，替换 &lt;code&gt;lorem.txt&lt;/code&gt; 中的&lt;code&gt;Lorem&lt;/code&gt; 为 &lt;code&gt;Tecmint&lt;/code&gt;（忽略大小写），并且创建一个原文件的备份副本，命令如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# less lorem.txt | &lt;span class=&quot;keyword&quot;&gt;grep&lt;/span&gt; -i lorem# sed -i.orig &lt;span class=&quot;string&quot;&gt;&#39;s/Lorem/Tecmint/gI&#39;&lt;/span&gt; lorem.txt# less lorem.txt | &lt;span class=&quot;keyword&quot;&gt;grep&lt;/span&gt; -i lorem# less lorem.txt.orig | &lt;span class=&quot;keyword&quot;&gt;grep&lt;/span&gt; -i lorem&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;请注意&lt;code&gt;lorem.txt&lt;/code&gt;文件中&lt;code&gt;Lorem&lt;/code&gt; 都已经替换为 &lt;code&gt;Tecmint&lt;/code&gt;，并且原文件 &lt;code&gt;lorem.txt&lt;/code&gt; 被保存为&lt;code&gt;lorem.txt.orig&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095542si4s5z2a542g59rr.png&quot; alt=&quot;替换文件中的文本&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;替换文件中的文本&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;usr-share-doc-内的文档&quot;&gt;&lt;a href=&quot;#usr-share-doc-内的文档&quot; class=&quot;headerlink&quot; title=&quot;/usr/share/doc 内的文档&quot;&gt;&lt;/a&gt;/usr/share/doc 内的文档&lt;/h3&gt;&lt;p&gt;这可能是我最喜欢的方法。如果你进入 &lt;code&gt;/usr/share/doc&lt;/code&gt; 目录，并列出该目录，你可以看到许多以安装在你的 Linux 上的工具为名称的文件夹。&lt;/p&gt;
+&lt;p&gt;根据 &lt;a href=&quot;https://linux.cn/article-6132-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;文件系统层级标准&lt;/a&gt;，这些文件夹包含了许多帮助手册没有的信息，还有一些可以使配置更方便的模板和配置文件。&lt;/p&gt;
+&lt;p&gt;例如，让我们来看一下 &lt;code&gt;squid-3.3.8&lt;/code&gt; （不同发行版的版本可能会不同），这还是一个非常受欢迎的 HTTP 代理和 &lt;a href=&quot;http://www.tecmint.com/configure-squid-server-in-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;squid 缓存服务器&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;让我们用&lt;code&gt;cd&lt;/code&gt;命令进入目录：&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# cd &lt;span class=&quot;regexp&quot;&gt;/usr/&lt;/span&gt;share&lt;span class=&quot;regexp&quot;&gt;/doc/&lt;/span&gt;squid-&lt;span class=&quot;number&quot;&gt;3.3&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;列出当前文件夹列表：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# ls&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095543nddiud7rzi2f3ed2.png&quot; alt=&quot;使用 ls 列出目录&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;使用 ls 列出目录&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;你应该特别注意 &lt;code&gt;QUICKSTART&lt;/code&gt; 和 &lt;code&gt;squid.conf.documented&lt;/code&gt;。这些文件分别包含了 Squid 详细文档及其经过详细备注的配置文件。对于别的安装包来说，具体的名字可能不同（有可能是 &lt;strong&gt;QuickRef&lt;/strong&gt; 或者&lt;strong&gt;00QUICKSTART&lt;/strong&gt;），但意思是一样的。&lt;/p&gt;
+&lt;p&gt;对于另外一些安装包，比如 Apache web 服务器，在&lt;code&gt;/usr/share/doc&lt;/code&gt;目录提供了配置模板，当你配置独立服务器或者虚拟主机的时候会非常有用。&lt;/p&gt;
+&lt;h3 id=&quot;GNU-信息文档&quot;&gt;&lt;a href=&quot;#GNU-信息文档&quot; class=&quot;headerlink&quot; title=&quot;GNU 信息文档&quot;&gt;&lt;/a&gt;GNU 信息文档&lt;/h3&gt;&lt;p&gt;你可以把它看做帮助手册的“开挂版”。它不仅仅提供工具的帮助信息，而且还是超级链接的形式（没错，在命令行中的超级链接），你可以通过箭头按钮从一个章节导航到另外章节，并按下回车按钮来确认。&lt;/p&gt;
+&lt;p&gt;一个典型的例子是：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# info coreutils&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;因为 coreutils 包含了每个系统中都有的基本文件、shell 和文本处理工具，你自然可以从 coreutils 的 info 文档中得到它们的详细介绍。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095543xzr5k57jx7fx7ke9.png&quot; alt=&quot;Info Coreutils&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Info Coreutils&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;和帮助手册一样，你可以按 q 键退出。&lt;/p&gt;
+&lt;p&gt;此外，GNU info 还可以显示标准的帮助手册。 例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# info tune2fs&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;它将显示 &lt;strong&gt;tune2fs&lt;/strong&gt;的帮助手册, 这是一个 ext2/3/4 文件系统管理工具。&lt;/p&gt;
+&lt;p&gt;我们现在看到了，让我们来试试怎么用&lt;strong&gt;tune2fs&lt;/strong&gt;：&lt;/p&gt;
+&lt;p&gt;显示 &lt;strong&gt;/dev/mapper/vg00-vol_backups&lt;/strong&gt; 文件系统信息：&lt;/p&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;# tune2&lt;/span&gt;fs -l /dev/mapper/v&lt;span class=&quot;name&quot;&gt;g00&lt;/span&gt;-vol_backups&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;修改文件系统标签（修改为 Backups）：&lt;/p&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;# tune2&lt;/span&gt;fs -L Backups /dev/mapper/v&lt;span class=&quot;name&quot;&gt;g00&lt;/span&gt;-vol_backups&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;设置文件系统的自检间隔及挂载计数（用&lt;code&gt;-c&lt;/code&gt; 选项设置挂载计数间隔， 用 &lt;code&gt;-i&lt;/code&gt; 选项设置自检时间间隔，这里 &lt;strong&gt;d 表示天，w 表示周，m 表示月&lt;/strong&gt;)。&lt;/p&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;# tune2&lt;/span&gt;fs -c &lt;span class=&quot;number&quot;&gt;150&lt;/span&gt; /dev/mapper/v&lt;span class=&quot;name&quot;&gt;g00&lt;/span&gt;-vol_backups &lt;span class=&quot;attr&quot;&gt;# 每 150&lt;/span&gt; 次挂载检查一次&lt;span class=&quot;attr&quot;&gt;# tune2&lt;/span&gt;fs -i &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;w /dev/mapper/v&lt;span class=&quot;name&quot;&gt;g00&lt;/span&gt;-vol_backups &lt;span class=&quot;attr&quot;&gt;# 每 6&lt;/span&gt; 周检查一次&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;以上这些内容也可以通过 &lt;code&gt;--help&lt;/code&gt; 选项找到，或者查看帮助手册。&lt;/p&gt;
+</content>
     
     <summary type="html">
+    
+      &lt;h3 id=&quot;Linux-帮助手册man&quot;&gt;&lt;a href=&quot;#Linux-帮助手册man&quot; class=&quot;headerlink&quot; title=&quot;Linux 帮助手册man&quot;&gt;&lt;/a&gt;Linux 帮助手册man&lt;/h3&gt;&lt;p&gt;man 手册是 manual 手册的缩写，就是其名字
     
     </summary>
     
@@ -36,82 +93,728 @@
   </entry>
   
   <entry>
-    <title>lfcs-11</title>
+    <title>LFCS 11：如何使用命令 vgcreate、lvcreate 和 lvextend 管理和创建 LVM</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-11/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-11/</id>
     <published>2016-07-29T14:04:56.000Z</published>
-    <updated>2016-07-29T14:04:56.550Z</updated>
+    <updated>2016-07-29T15:09:36.443Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;p&gt;在安装 Linux 系统的时候要做的最重要的决定之一便是给系统文件、home 目录等分配空间。在这个地方犯了错，再要扩大空间不足的分区，那样既麻烦又有风险。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;逻辑卷管理&lt;/strong&gt; （&lt;strong&gt;LVM&lt;/strong&gt;）相较于传统的分区管理有许多优点，已经成为大多数（如果不能说全部的话） Linux 发行版安装时的默认选择。LVM 最大的优点应该是能方便的按照你的意愿调整（减小或增大）逻辑分区的大小。&lt;/p&gt;
+&lt;p&gt;LVM 的组成结构：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;把一块或多块硬盘或者一个或多个分区配置成物理卷（PV）。&lt;/li&gt;
+&lt;li&gt;一个用一个或多个物理卷创建出的卷组（&lt;strong&gt;VG&lt;/strong&gt;）。可以把一个卷组想象成一个单独的存储单元。&lt;/li&gt;
+&lt;li&gt;在一个卷组上可以创建多个逻辑卷。每个逻辑卷相当于一个传统意义上的分区 —— 优点是它的大小可以根据需求重新调整大小，正如之前提到的那样。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本文，我们将使用三块 &lt;strong&gt;8 GB&lt;/strong&gt; 的磁盘（&lt;strong&gt;/dev/sdb&lt;/strong&gt;、&lt;strong&gt;/dev/sdc&lt;/strong&gt; 和 &lt;strong&gt;/dev/sdd&lt;/strong&gt;）分别创建三个物理卷。你既可以直接在整个设备上创建 PV，也可以先分区在创建。&lt;/p&gt;
+&lt;p&gt;在这里我们选择第一种方式，如果你决定使用第二种（可以参考本系列&lt;a href=&quot;https://linux.cn/article-7187-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;第四讲：创建分区和文件系统&lt;/a&gt;）确保每个分区的类型都是&lt;code&gt;8e&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;创建物理卷，卷组和逻辑卷&quot;&gt;&lt;a href=&quot;#创建物理卷，卷组和逻辑卷&quot; class=&quot;headerlink&quot; title=&quot;创建物理卷，卷组和逻辑卷&quot;&gt;&lt;/a&gt;创建物理卷，卷组和逻辑卷&lt;/h3&gt;&lt;p&gt;要在 &lt;strong&gt;/dev/sdb&lt;/strong&gt;、&lt;strong&gt;/dev/sdc&lt;/strong&gt; 和 &lt;strong&gt;/dev/sdd&lt;/strong&gt;上创建物理卷，运行：&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# pvcreate &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdb &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdc &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdd&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;你可以列出新创建的 PV ，通过：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# pvs&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;并得到每个 PV 的详细信息，通过：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# pvdisplay /dev/sdX&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;（&lt;strong&gt;X&lt;/strong&gt; 即 b、c 或 d）&lt;/p&gt;
+&lt;p&gt;如果没有输入 &lt;code&gt;/dev/sdX&lt;/code&gt; ，那么你将得到所有 PV 的信息。&lt;/p&gt;
+&lt;p&gt;使用 /dev/sdb&lt;code&gt;和&lt;/code&gt;/dev/sdc&lt;code&gt;创建卷组 ，命名为&lt;/code&gt;vg00&lt;code&gt;(在需要时是可以通过添加其他设备来扩展空间的，我们等到说明这点的时候再用，所以暂时先保留&lt;/code&gt;/dev/sdd`）：&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# vgcreate vg00 &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdb &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdc&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;就像物理卷那样，你也可以查看卷组的信息，通过：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# vgdisplay vg00&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;由于 &lt;code&gt;vg00&lt;/code&gt; 是由两个 &lt;strong&gt;8 GB&lt;/strong&gt; 的磁盘组成的，所以它将会显示成一个 &lt;strong&gt;16 GB&lt;/strong&gt; 的硬盘：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232801kjdhvx1e5vv9jzx7.png&quot; alt=&quot;LVM 卷组列表&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;LVM 卷组列表&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;当谈到创建逻辑卷，空间的分配必须考虑到当下和以后的需求。根据每个逻辑卷的用途来命名是一个好的做法。&lt;/p&gt;
+&lt;p&gt;举个例子，让我们创建两个 LV，命名为 &lt;code&gt;vol_projects&lt;/code&gt; （&lt;strong&gt;10 GB&lt;/strong&gt;） 和 &lt;code&gt;vol_backups&lt;/code&gt; （剩下的空间）， 在日后分别用于部署项目文件和系统备份。&lt;/p&gt;
+&lt;p&gt;参数 &lt;code&gt;-n&lt;/code&gt; 用于为 LV 指定名称，而 &lt;code&gt;-L&lt;/code&gt; 用于设定固定的大小，还有 &lt;code&gt;-l&lt;/code&gt; （小写的 L）在 VG 的预留空间中用于指定百分比大小的空间。&lt;/p&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;# lvcreate -n vol_projects -L 10&lt;/span&gt;G v&lt;span class=&quot;name&quot;&gt;g00&lt;/span&gt;&lt;span class=&quot;attr&quot;&gt;# lvcreate -n vol_backups -l 100&lt;/span&gt;&lt;span class=&quot;meta&quot;&gt;%&lt;/span&gt;FREE v&lt;span class=&quot;name&quot;&gt;g00&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;和之前一样，你可以查看 LV 的列表和基础信息，通过：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# lvs&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;或是查看详细信息，通过：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# lvdisplay&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;若要查看单个 &lt;strong&gt;LV&lt;/strong&gt; 的信息，使用 &lt;strong&gt;lvdisplay&lt;/strong&gt; 加上 &lt;strong&gt;VG&lt;/strong&gt; 和 &lt;strong&gt;LV&lt;/strong&gt; 作为参数，如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# lvdisplay vg00/vol_projects&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232802q49pf2bz9tbg1f24.png&quot; alt=&quot;逻辑卷列表&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;逻辑卷列表&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;如上图，我们看到 LV 已经被创建成存储设备了（参考 LV Path 那一行）。在使用每个逻辑卷之前，需要先在上面创建文件系统。&lt;/p&gt;
+&lt;p&gt;这里我们拿 ext4 来做举例，因为对于每个 LV 的大小， ext4 既可以增大又可以减小（相对的 xfs 就只允许增大）：&lt;/p&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;# mkfs.ext4&lt;/span&gt; /dev/v&lt;span class=&quot;name&quot;&gt;g00&lt;/span&gt;/vol_projects&lt;span class=&quot;attr&quot;&gt;# mkfs.ext4&lt;/span&gt; /dev/v&lt;span class=&quot;name&quot;&gt;g00&lt;/span&gt;/vol_backups&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;我们将在下一节向大家说明，如何调整逻辑卷的大小并在需要的时候添加额外的外部存储空间。&lt;/p&gt;
+&lt;h3 id=&quot;调整逻辑卷大小和扩充卷组&quot;&gt;&lt;a href=&quot;#调整逻辑卷大小和扩充卷组&quot; class=&quot;headerlink&quot; title=&quot;调整逻辑卷大小和扩充卷组&quot;&gt;&lt;/a&gt;调整逻辑卷大小和扩充卷组&lt;/h3&gt;&lt;p&gt;现在设想以下场景。&lt;code&gt;vol_backups&lt;/code&gt; 中的空间即将用完，而 &lt;code&gt;vol_projects&lt;/code&gt; 中还有富余的空间。由于 LVM 的特性，我们可以轻易的减小后者的大小（比方说 &lt;strong&gt;2.5 GB&lt;/strong&gt;），并将其分配给前者，与此同时调整每个文件系统的大小。&lt;/p&gt;
+&lt;p&gt;幸运的是这很简单，只需：&lt;/p&gt;
+&lt;figure class=&quot;highlight cos&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# lvreduce -&lt;span class=&quot;keyword&quot;&gt;L&lt;/span&gt; -&lt;span class=&quot;number&quot;&gt;2.5&lt;/span&gt;G -&lt;span class=&quot;keyword&quot;&gt;r&lt;/span&gt; /dev/vg00/vol_projects# lvextend -&lt;span class=&quot;keyword&quot;&gt;l&lt;/span&gt; +&lt;span class=&quot;number&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;built_in&quot;&gt;%FREE&lt;/span&gt; -&lt;span class=&quot;keyword&quot;&gt;r&lt;/span&gt; /dev/vg00/vol_backups&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232802asehabhyw1wqsbes.png&quot; alt=&quot;减小逻辑卷和卷组&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;减小逻辑卷和卷组&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;在调整逻辑卷的时候，其中包含的减号 &lt;code&gt;(-)&lt;/code&gt; 或加号 &lt;code&gt;(+)&lt;/code&gt; 是十分重要的。否则 LV 将会被设置成指定的大小，而非调整指定大小。&lt;/p&gt;
+&lt;p&gt;有些时候，你可能会遭遇那种无法仅靠调整逻辑卷的大小就可以解决的问题，那时你就需要购置额外的存储设备了，你可能需要再加一块硬盘。这里我们将通过添加之前配置时预留的 PV （&lt;code&gt;/dev/sdd&lt;/code&gt;），用以模拟这种情况。&lt;/p&gt;
+&lt;p&gt;想把 &lt;code&gt;/dev/sdd&lt;/code&gt; 加到 &lt;code&gt;vg00&lt;/code&gt;，执行：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# vgextend vg00 /dev/sdd&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;如果你在运行上条命令的前后执行 vgdisplay &lt;code&gt;vg00&lt;/code&gt; ，你就会看出 VG 的大小增加了。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# vgdisplay vg00&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232803icaaea6dzccpwsbs.png&quot; alt=&quot;查看卷组磁盘大小&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;查看卷组磁盘大小&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;现在，你可以使用新加的空间，按照你的需求调整现有 LV 的大小，或者创建一个新的 LV。&lt;/p&gt;
+&lt;h3 id=&quot;在启动和需求时挂载逻辑卷&quot;&gt;&lt;a href=&quot;#在启动和需求时挂载逻辑卷&quot; class=&quot;headerlink&quot; title=&quot;在启动和需求时挂载逻辑卷&quot;&gt;&lt;/a&gt;在启动和需求时挂载逻辑卷&lt;/h3&gt;&lt;p&gt;当然，如果我们不打算实际的使用逻辑卷，那么创建它们就变得毫无意义了。为了更好的识别逻辑卷，我们需要找出它的 &lt;code&gt;UUID&lt;/code&gt;（用于识别一个格式化存储设备的唯一且不变的属性）。&lt;/p&gt;
+&lt;p&gt;要做到这点，可使用 blkid 加每个设备的路径来实现：&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# blkid &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;vg00&lt;span class=&quot;regexp&quot;&gt;/vol_projects# blkid /&lt;/span&gt;dev&lt;span class=&quot;regexp&quot;&gt;/vg00/&lt;/span&gt;vol_backups&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232803d9fil25unsl5ufzz.png&quot; alt=&quot;寻找逻辑卷的 UUID&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;寻找逻辑卷的 UUID&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;为每个 LV 创建挂载点：&lt;/p&gt;
+&lt;figure class=&quot;highlight dos&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;built_in&quot;&gt;mkdir&lt;/span&gt; /home/projects# &lt;span class=&quot;built_in&quot;&gt;mkdir&lt;/span&gt; /home/backups&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;并在 &lt;code&gt;/etc/fstab&lt;/code&gt; 插入相应的条目（确保使用之前获得的UUID）：&lt;/p&gt;
+&lt;figure class=&quot;highlight maxima&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;UUID=b85df913-580f-461c-844f-546d8cde4646 /home/projects    ext4 defaults &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0UUID&lt;/span&gt;=e1929239-&lt;span class=&quot;number&quot;&gt;5087&lt;/span&gt;-&lt;span class=&quot;number&quot;&gt;44b1&lt;/span&gt;-&lt;span class=&quot;number&quot;&gt;9396&lt;/span&gt;-53e09db6eb9e /home/backups ext4    defaults &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;保存并挂载 LV：&lt;/p&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# mount -a# mount | grep home&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232804te0tozs3t451t0an.png&quot; alt=&quot;挂载逻辑卷&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;挂载逻辑卷&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;在涉及到 LV 的实际使用时，你还需要按照曾在本系列&lt;a href=&quot;https://linux.cn/article-7418-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;第八讲：管理用户和用户组&lt;/a&gt;中讲解的那样，为其设置合适的 &lt;code&gt;ugo+rwx&lt;/code&gt;。&lt;/p&gt;
+</content>
     
     <summary type="html">
     
+      &lt;p&gt;在安装 Linux 系统的时候要做的最重要的决定之一便是给系统文件、home 目录等分配空间。在这个地方犯了错，再要扩大空间不足的分区，那样既麻烦又有风险。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;逻辑卷管理&lt;/strong&gt; （&lt;strong&gt;LVM&lt;/strong&gt;）相较于传统的
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   
   <entry>
-    <title>lfcs-10</title>
+    <title>LFCS 10：学习简单的 Shell 脚本编程和文件系统故障排除</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-10/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-10/</id>
     <published>2016-07-29T14:04:51.000Z</published>
-    <updated>2016-07-29T14:04:51.131Z</updated>
+    <updated>2016-07-29T15:08:41.966Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;h3 id=&quot;理解终端-（Terminals）和-Shell&quot;&gt;&lt;a href=&quot;#理解终端-（Terminals）和-Shell&quot; class=&quot;headerlink&quot; title=&quot;理解终端 （Terminals）和 Shell&quot;&gt;&lt;/a&gt;理解终端 （Terminals）和 Shell&lt;/h3&gt;&lt;p&gt;首先要声明一些概念。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Shell 是一个程序，它将命令传递给操作系统来执行。&lt;/li&gt;
+&lt;li&gt;Terminal 也是一个程序，允许最终用户使用它与 Shell 来交互。比如，下边的图片是 GNOME Terminal。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Gnome Terminal&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;启动 Shell 之后，会呈现一个命令提示符 (也称为命令行) 提示我们 Shell 已经做好了准备，接受标准输入设备输入的命令，这个标准输入设备通常是键盘。&lt;/p&gt;
+&lt;p&gt;你可以参考该系列文章的 &lt;a href=&quot;https://linux.cn/article-7161-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;第一讲 如何在 Linux 上使用 GNU sed 等命令来创建、编辑和操作文件&lt;/a&gt; 来温习一些常用的命令。&lt;/p&gt;
+&lt;p&gt;Linux 为提供了许多可以选用的 Shell，下面列出一些常用的：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;bash Shell&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Bash 代表 Bourne Again Shell，它是 GNU 项目默认的 Shell。它借鉴了 Korn shell (ksh) 和 C shell (csh) 中有用的特性，并同时对性能进行了提升。它同时也是 LFCS 认证中所涵盖的各发行版中默认 Shell，也是本系列教程将使用的 Shell。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;sh Shell&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Bourne SHell 是一个比较古老的 shell，多年来一直都是很多类 Unix 系统的默认 shell。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ksh Shell&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Korn SHell (ksh shell) 也是一个 Unix shell，是贝尔实验室 （Bell Labs）的 David Korn 在 19 世纪 80 年代初的时候开发的。它兼容 Bourne shell ，并同时包含了 C shell 中的多数特性。&lt;/p&gt;
+&lt;p&gt;一个 shell 脚本仅仅只是一个可执行的文本文件，里边包含一条条可执行命令。&lt;/p&gt;
+&lt;h3 id=&quot;简单的-Shell-脚本编程&quot;&gt;&lt;a href=&quot;#简单的-Shell-脚本编程&quot; class=&quot;headerlink&quot; title=&quot;简单的 Shell 脚本编程&quot;&gt;&lt;/a&gt;简单的 Shell 脚本编程&lt;/h3&gt;&lt;p&gt;如前所述，一个 shell 脚本就是一个纯文本文件，因此，可以使用自己喜欢的文本编辑器来创建和编辑。你可以考虑使用 vi/vim (参考本系列 &lt;a href=&quot;https://linux.cn/article-7165-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;第二讲 如何安装和使用纯文本编辑器 vi/vim&lt;/a&gt;)，它的语法高亮让我的编辑工作非常方便。&lt;/p&gt;
+&lt;p&gt;输入如下命令来创建一个名为 myscript.sh 的脚本文件：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# vim myscript.sh&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;shell 脚本的第一行 (著名的&lt;a href=&quot;https://linux.cn/article-3664-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;释伴行&lt;/a&gt;（shebang line）) 必须如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight d&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#!/bin/bash（）&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这条语句“告诉”操作系统需要用哪个解释器来运行这个脚本文件之后命令。&lt;/p&gt;
+&lt;p&gt;现在可以添加需要执行的命令了。通过注释，我们可以声明每一条命令或者整个脚本的具体含义。注意，shell 会忽略掉以井号 (#) 开始的注释语句。&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#!/bin/bash&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; 这是关于 LFCS 认证系列的第十部分&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; 今天是 $(date +%Y-%m-%d)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;编写并保存脚本之后，通过以下命令来使脚本文件成为可执行文件：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod 755 myscript.sh&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;在执行脚本之前，我们需要说一下环境变量 ($PATH)，运行：&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$PATH&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;我们就会看到环境变量 ($PATH) 的具体内容：这是当输入命令时系统所搜索可执行程序的目录，每一项之间使用冒号 (&lt;img src=&quot;https://dn-linuxcn.qbox.me/static/image/smiley/default/smile.gif&quot; alt=&quot;img&quot;&gt; 隔开。称它为环境变量，是因为它本是就是 shell 环境的一部分 —— 这是当 shell 每次启动时 shell 及其子进程可以获取的一系列信息。&lt;/p&gt;
+&lt;p&gt;当我们输入一个命令并按下回车时，shell 会搜索 $PATH 变量中列出的目录并执行第一个知道的实例。请看如下例子：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201607/07/113132kzy876lll96yp4bl.png&quot; alt=&quot;Linux Environment Variables&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;环境变量&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;假如存在两个同名的可执行程序，一个在 /usr/local/bin，另一个在 /usr/bin，则会执行环境变量中最先列出的那个，并忽略另外一个。&lt;/p&gt;
+&lt;p&gt;如果我们自己编写的脚本没有放在 $PATH 变量列出目录中的任何一个，则需要输入 ./filename 来执行它。而如果存储在 $PATH 变量中的任意一个目录，我们就可以像运行其他命令一样来运行之前编写的脚本了。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# pwd&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# ./myscript.sh&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# cp myscript.sh ../bin&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# cd ../bin&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# pwd&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# myscript.sh&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;em&gt;执行脚本&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;if-条件语句&quot;&gt;&lt;a href=&quot;#if-条件语句&quot; class=&quot;headerlink&quot; title=&quot;if 条件语句&quot;&gt;&lt;/a&gt;if 条件语句&lt;/h4&gt;&lt;p&gt;无论何时，当你需要在脚本中根据某个命令的运行结果来采取相应动作时，你应该使用 if 结构来定义条件。基本语法如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; CONDITION; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    COMMANDS;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    OTHER-COMMANDS&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;fi&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中，CONDITION 可以是如下情形的任意一项 (仅列出常用的)，并且达到以下条件时返回 true：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[ -a file ]&lt;/code&gt; → 指定文件存在。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -d file ]&lt;/code&gt; → 指定文件存在，并且是一个目录。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -f file ]&lt;/code&gt; → 指定文件存在，并且是一个普通文件。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -u file ]&lt;/code&gt; → 指定文件存在，并设置了 SUID 权限位。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -g file ]&lt;/code&gt; → 指定文件存在，并设置了 SGID 权限位。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -k file ]&lt;/code&gt; → 指定文件存在，并设置了“黏连 (Sticky)”位。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -r file ]&lt;/code&gt; → 指定文件存在，并且文件可读。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -s file ]&lt;/code&gt; → 指定文件存在，并且文件不为空。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -w file ]&lt;/code&gt; → 指定文件存在，并且文件可写入。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ -x file ]&lt;/code&gt; → 指定文件存在，并且可执行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ string1 = string2 ]&lt;/code&gt; → 字符串相同。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[ string1 != string2 ]&lt;/code&gt; → 字符串不相同。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;[ int1 op int2 ] 为前述列表中的一部分 (例如： -eq –&amp;gt; int1 与 int2 相同时返回 true) ，其中比较项也可以是一个列表子项， 其中 op 为以下比较操作符。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-eq&lt;/code&gt; → int1 等于 int2 时返回 true。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-ne&lt;/code&gt; → int1 不等于 int2 时返回 true。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-lt&lt;/code&gt; → int1 小于 int2 时返回 true。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-le&lt;/code&gt; → int1 小于或等于 int2 时返回 true。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-gt&lt;/code&gt; → int1 大于 int2 时返回 true。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-ge&lt;/code&gt; → int1 大于或等于 int2 时返回 true。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;for-循环语句&quot;&gt;&lt;a href=&quot;#for-循环语句&quot; class=&quot;headerlink&quot; title=&quot;for 循环语句&quot;&gt;&lt;/a&gt;for 循环语句&lt;/h4&gt;&lt;p&gt;循环语句可以在某个条件下重复执行某个命令。基本语法如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; item &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; SEQUENCE; &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        COMMANDS;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;done&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中，item 为每次执行 COMMANDS 时，在 SEQUENCE 中匹配到的值。&lt;/p&gt;
+&lt;h4 id=&quot;While-循环语句&quot;&gt;&lt;a href=&quot;#While-循环语句&quot; class=&quot;headerlink&quot; title=&quot;While 循环语句&quot;&gt;&lt;/a&gt;While 循环语句&lt;/h4&gt;&lt;p&gt;该循环结构会一直执行重复的命令，直到控制命令（EVALUATION_COMMAND）执行的退出状态值等于 0 时 (即执行成功) 停止。基本语法如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; EVALUATION_COMMAND; &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        EXECUTE_COMMANDS;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;done&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中，EVALUATION_COMMAND 可以是任何能够返回成功 (0) 或失败 (0 以外的值) 的退出状态值的命令，EXECUTE_COMMANDS 则可以是任何的程序、脚本或者 shell 结构体，包括其他的嵌套循环。&lt;/p&gt;
+&lt;h4 id=&quot;综合使用&quot;&gt;&lt;a href=&quot;#综合使用&quot; class=&quot;headerlink&quot; title=&quot;综合使用&quot;&gt;&lt;/a&gt;综合使用&lt;/h4&gt;&lt;p&gt;我们会通过以下例子来演示 if 条件语句和 for 循环语句。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;在基于 systemd 的发行版中探测某个服务是否在运行&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;先建立一个文件，列出我们想要想要查看的服务名。&lt;/p&gt;
+&lt;figure class=&quot;highlight nginx&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# cat myservices.txt&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attribute&quot;&gt;sshd&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;mariadb&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;httpd&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;crond&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;firewalld&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;em&gt;使用脚本监控 Linux 服务&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;我们编写的脚本看起来应该是这样的：&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#!/bin/bash&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# This script iterates over a list of services and&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# is used to determine whether they are running or not.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; service &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; $(cat myservices.txt); &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        systemctl status &lt;span class=&quot;variable&quot;&gt;$service&lt;/span&gt; | grep --quiet &lt;span class=&quot;string&quot;&gt;&quot;running&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; [ $? &lt;span class=&quot;_&quot;&gt;-eq&lt;/span&gt; 0 ]; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$service&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;is [ACTIVE]&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$service&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;is [INACTIVE or NOT INSTALLED]&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;fi&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;done&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;em&gt;Linux 服务监控脚本&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;我们来解释一下这个脚本的工作流程&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1). for 循环每次读取 myservices.txt 文件中的一项记录，每一项纪录表示一个服务的通用变量名。各项记录组成如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# cat myservices.txt&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;2). 以上命令由圆括号括着，并在前面添加美元符，表示它需要从 myservices.txt 的记录列表中取值并作为变量传递给 for 循环。&lt;/p&gt;
+&lt;p&gt;3). 对于记录列表中的每一项纪录 (即每一项纪录的服务变量)，都会执行以下动作：&lt;/p&gt;
+&lt;figure class=&quot;highlight arduino&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# systemctl status $service | grep --quiet &lt;span class=&quot;string&quot;&gt;&quot;running&quot;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;此时，需要在每个通用变量名 (即每一项纪录的服务变量) 的前面添加美元符，以表明它是作为变量来传递的。其输出则通过管道符传给 grep。&lt;/p&gt;
+&lt;p&gt;其中，-quiet 选项用于阻止 grep 命令将发现的 “running” 的行回显到屏幕。当 grep 捕获到 “running” 时，则会返回一个退出状态码 “0” (在 if 结构体表示为 $?)，由此确认某个服务正在运行中。&lt;/p&gt;
+&lt;p&gt;如果退出状态码是非零值 (即 systemctl status $service 命令中的回显中没有出现 “running”)，则表明某个服务未运行。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;服务监控脚本&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;我们可以增加一步，在开始循环之前，先确认 myservices.txt 是否存在。&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#!/bin/bash&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# This script iterates over a list of services and&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# is used to determine whether they are running or not.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; [ &lt;span class=&quot;_&quot;&gt;-f&lt;/span&gt; myservices.txt ]; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; service &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; $(cat myservices.txt); &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                systemctl status &lt;span class=&quot;variable&quot;&gt;$service&lt;/span&gt; | grep --quiet &lt;span class=&quot;string&quot;&gt;&quot;running&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; [ $? &lt;span class=&quot;_&quot;&gt;-eq&lt;/span&gt; 0 ]; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        &lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$service&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;is [ACTIVE]&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        &lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$service&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;is [INACTIVE or NOT INSTALLED]&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;keyword&quot;&gt;fi&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;done&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;myservices.txt is missing&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;fi&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;Ping 一系列网络或者 Internet 主机名以获取应答数据&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;你可能想把自己维护的主机写入一个文本文件，并使用脚本探测它们是否能够 ping 得通 (脚本中的 myhosts 可以随意替换为你想要的名称)。&lt;/p&gt;
+&lt;p&gt;shell 的内置 read 命令将告诉 while 循环一行行的读取 myhosts，并将读取的每行内容传给 host 变量，随后 host 变量传递给 ping 命令。&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#!/bin/bash&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# This script is used to demonstrate the use of a while loop&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;read&lt;/span&gt; host; &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        ping -c 2 &lt;span class=&quot;variable&quot;&gt;$host&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;done&lt;/span&gt; &amp;lt; myhosts&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;em&gt;使用脚本 Ping 服务器&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;扩展阅读:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/learning-shell-scripting-language-a-guide-from-newbies-to-system-administrator/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Learn Shell Scripting: A Guide from Newbies to System Administrator&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/basic-shell-programming-part-ii/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;5 Shell Scripts to Learn Shell Programming&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;文件系统排错&quot;&gt;&lt;a href=&quot;#文件系统排错&quot; class=&quot;headerlink&quot; title=&quot;文件系统排错&quot;&gt;&lt;/a&gt;文件系统排错&lt;/h3&gt;&lt;p&gt;尽管 Linux 是一个很稳定的操作系统，但仍然会因为某些原因出现崩溃时 (比如因为断电等)，正好你有一个 (或者更多个) 文件系统未能正确卸载，Linux 重启的时候就会自动检测其中可能发生的错误。&lt;/p&gt;
+&lt;p&gt;此外，每次系统正常启动的时候，都会在文件系统挂载之前校验它们的完整度。而这些全部都依赖于 fsck 工具 (文件系统校验（file system check）)。&lt;/p&gt;
+&lt;p&gt;如果对 fsck 进行设定，它除了校验文件系统的完整性之外，还可以尝试修复错误。fsck 能否成功修复错误，取决于文件系统的损伤程度；如果可以修复，被损坏部分的文件会恢复到位于每个文件系统根目录的 lost+found。&lt;/p&gt;
+&lt;p&gt;最后但同样重要的是，我们必须注意，如果拔掉系统正在写入数据的 USB 设备同样会发生错误，甚至可能发生硬件损坏。&lt;/p&gt;
+&lt;p&gt;fsck 的基本用如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# fsck [options] filesystem&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;检查文件系统错误并尝试自动修复&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;想要使用 fsck 检查文件系统，我们需要首先卸载文件系统。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# mount | grep sdg1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# umount /mnt&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# fsck -y /dev/sdg1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;em&gt;检查文件系统错误&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;除了 -y 选项，我们也可以使用 -a 选项来自动修复文件系统错误，而不必做出交互式应答，并在文件系统看起来 “干净” 卸载的情况下强制校验。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# fsck -af /dev/sdg1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;如果只是要找出什么地方发生了错误 (不用在检测到错误的时候修复)，我们可以使用 -n 选项，这样只会将文件系统错误输出到标准输出设备上。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# fsck -n /dev/sdg1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;根据 fsck 输出的错误信息，我们可以知道是否可以自己修复或者需要将问题提交给工程师团队来做详细的硬件校验。&lt;/p&gt;
+</content>
     
     <summary type="html">
     
+      &lt;h3 id=&quot;理解终端-（Terminals）和-Shell&quot;&gt;&lt;a href=&quot;#理解终端-（Terminals）和-Shell&quot; class=&quot;headerlink&quot; title=&quot;理解终端 （Terminals）和 Shell&quot;&gt;&lt;/a&gt;理解终端 （Terminals）和
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   
   <entry>
-    <title>lfcs-09</title>
+    <title>LFCS 09：使用 Yum/RPM/Apt/Dpkg/Aptitude 进行 Linux 软件包管理</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-09/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-09/</id>
     <published>2016-07-29T14:04:45.000Z</published>
-    <updated>2016-07-29T14:04:45.355Z</updated>
+    <updated>2016-07-29T15:15:22.372Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;h3 id=&quot;软件包管理&quot;&gt;&lt;a href=&quot;#软件包管理&quot; class=&quot;headerlink&quot; title=&quot;软件包管理&quot;&gt;&lt;/a&gt;软件包管理&lt;/h3&gt;&lt;p&gt;简单的说，软件包管理是系统中安装和维护软件的一种方法，这里说的维护包含更新和卸载。&lt;/p&gt;
+&lt;p&gt;在Linux早期，程序只以源代码的方式发行，还带有所需的用户使用手册和必备的配置文件，甚至更多。现如今，大多数发行商一般使用预装程序或者被称为软件包的程序集合。用户可以使用这些预装程序或者软件包安装到该发行版中。然而，Linux最伟大的一点是我们仍然能够获得程序的源代码用来学习、改进和编译。&lt;/p&gt;
+&lt;h4 id=&quot;软件包管理系统是如何工作的&quot;&gt;&lt;a href=&quot;#软件包管理系统是如何工作的&quot; class=&quot;headerlink&quot; title=&quot;软件包管理系统是如何工作的&quot;&gt;&lt;/a&gt;软件包管理系统是如何工作的&lt;/h4&gt;&lt;p&gt;如果某一个软件包需要一定的资源，如共享库，或者需要另一个软件包，这就称之为依赖性。所有现在的包管理系统提供了一些解决依赖性的方法，以确保当安装一个软件包时，相关的依赖包也安装好了。&lt;/p&gt;
+&lt;h4 id=&quot;打包系统&quot;&gt;&lt;a href=&quot;#打包系统&quot; class=&quot;headerlink&quot; title=&quot;打包系统&quot;&gt;&lt;/a&gt;打包系统&lt;/h4&gt;&lt;p&gt;几乎所有安装在现代Linux系统上的软件都会能互联网上找到。它要么由发行商通过中央仓库（中央仓库能包含几千个软件包，每个软件包都已经为发行版构建、测试并且维护好了）提供，要么能够直接得到可以下载和手动安装的源代码。&lt;/p&gt;
+&lt;p&gt;由于不同的发行版使用不同的打包系统（Debian的&lt;em&gt;.deb文件/CentOS的&lt;/em&gt;.rpm文件/openSUSE的专门为openSUSE构建的*.rpm文件），因此为一个发行版开发的软件包会与其他发行版不兼容。然而，大多数发行版都属于LFCS认证所涉及的三个发行版家族之一。&lt;/p&gt;
+&lt;h4 id=&quot;高级和低级打包工具&quot;&gt;&lt;a href=&quot;#高级和低级打包工具&quot; class=&quot;headerlink&quot; title=&quot;高级和低级打包工具&quot;&gt;&lt;/a&gt;高级和低级打包工具&lt;/h4&gt;&lt;p&gt;为了有效地进行软件包管理的任务，你需要知道，有两种类型的实用工具：低级工具（能在后端实际安装、升级、卸载软件包文件），以及高级工具（负责确保能很好的执行依赖性解决和元数据检索的任务——元数据也称为数据的数据）。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;发行版&lt;/th&gt;
+&lt;th&gt;低级工具&lt;/th&gt;
+&lt;th&gt;高级工具&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Debian版及其衍生版&lt;/td&gt;
+&lt;td&gt;dpkg&lt;/td&gt;
+&lt;td&gt;apt-get / aptitude&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CentOS版&lt;/td&gt;
+&lt;td&gt;rpm&lt;/td&gt;
+&lt;td&gt;yum&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openSUSE版&lt;/td&gt;
+&lt;td&gt;rpm&lt;/td&gt;
+&lt;td&gt;zypper&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;让我们来看下低级工具和高级工具的描述。&lt;/p&gt;
+&lt;p&gt;dpkg的是基于Debian的系统的一个低级包管理器。它可以安装，删除，提供有关资料，以及建立*.deb包，但它不能自动下载并安装它们相应的依赖包。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;阅读更多： &lt;a href=&quot;http://www.tecmint.com/dpkg-command-examples/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;15个dpkg命令实例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;apt-get是Debian及其衍生版的高级包管理器，并提供命令行方式来从多个来源检索和安装软件包，其中包括解决依赖性。和dpkg不同的是，apt-get不是直接基于.deb文件工作，而是基于软件包的正确名称。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;阅读更多： &lt;a href=&quot;http://www.tecmint.com/useful-basic-commands-of-apt-get-and-apt-cache-for-package-management/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;25个apt-get命令实例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Aptitude是基于Debian的系统的另一个高级包管理器，它可用于快速简便的执行管理任务（安装，升级和删除软件包，还可以自动处理解决依赖性）。它在atp-get的基础上提供了更多功能，例如提供对软件包的几个版本的访问。&lt;/p&gt;
+&lt;p&gt;rpm是Linux标准基础（LSB）兼容发行版所使用的一种软件包管理器，用来对软件包进行低级处理。就像dpkg一样，rpm可以查询、安装、检验、升级和卸载软件包，它多数用于基于Fedora的系统，比如RHEL和CentOS。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;阅读更多： &lt;a href=&quot;http://www.tecmint.com/20-practical-examples-of-rpm-commands-in-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;20个rpm命令实例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;相对于基于RPM的系统，yum增加了系统自动更新的功能和带依赖性管理的软件包管理功能。作为一个高级工具，和apt-get或者aptitude相似，yum需要配合仓库工作。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;阅读更多： &lt;a href=&quot;http://www.tecmint.com/20-linux-yum-yellowdog-updater-modified-commands-for-package-mangement/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;20个yum命令实例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;低级工具的常见用法&quot;&gt;&lt;a href=&quot;#低级工具的常见用法&quot; class=&quot;headerlink&quot; title=&quot;低级工具的常见用法&quot;&gt;&lt;/a&gt;低级工具的常见用法&lt;/h3&gt;&lt;p&gt;使用低级工具处理最常见的任务如下。&lt;/p&gt;
+&lt;h4 id=&quot;1-从已编译（-deb或-rpm）的文件安装一个软件包&quot;&gt;&lt;a href=&quot;#1-从已编译（-deb或-rpm）的文件安装一个软件包&quot; class=&quot;headerlink&quot; title=&quot;1. 从已编译（.deb或.rpm）的文件安装一个软件包&quot;&gt;&lt;/a&gt;1. 从已编译（&lt;em&gt;.deb或&lt;/em&gt;.rpm）的文件安装一个软件包&lt;/h4&gt;&lt;p&gt;这种安装方法的缺点是没有提供解决依赖性的方案。当你在发行版本库中无法获得某个软件包并且又不能通过高级工具下载安装时，你很可能会从一个已编译文件安装该软件包。因为低级工具不会解决依赖性问题，所以当安装一个没有解决依赖性的软件包时会出现出错并且退出。&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;dpkg&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.deb&lt;/span&gt;      &lt;span class=&quot;selector-attr&quot;&gt;[Debian版和衍生版]&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;rpm&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.rpm&lt;/span&gt;       &lt;span class=&quot;selector-attr&quot;&gt;[CentOS版 / openSUSE版]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;：不要试图在CentOS中安装一个为openSUSE构建的.rpm文件，反之亦然！&lt;/p&gt;
+&lt;h4 id=&quot;2-从已编译文件中更新一个软件包&quot;&gt;&lt;a href=&quot;#2-从已编译文件中更新一个软件包&quot; class=&quot;headerlink&quot; title=&quot;2. 从已编译文件中更新一个软件包&quot;&gt;&lt;/a&gt;2. 从已编译文件中更新一个软件包&lt;/h4&gt;&lt;p&gt;同样，当某个安装的软件包不在中央仓库中时，你只能手动升级该软件包。&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;dpkg&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.deb&lt;/span&gt;      &lt;span class=&quot;selector-attr&quot;&gt;[Debian版和衍生版]&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;rpm&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-U&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.rpm&lt;/span&gt;       &lt;span class=&quot;selector-attr&quot;&gt;[CentOS版 / openSUSE版]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;3-列举安装的软件包&quot;&gt;&lt;a href=&quot;#3-列举安装的软件包&quot; class=&quot;headerlink&quot; title=&quot;3. 列举安装的软件包&quot;&gt;&lt;/a&gt;3. 列举安装的软件包&lt;/h4&gt;&lt;p&gt;当你第一次接触一个已经在工作中的系统时，很可能你会想知道安装了哪些软件包。&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# dpkg -l       &lt;span class=&quot;string&quot;&gt;[Debian版和衍生版]&lt;/span&gt;# rpm -qa       &lt;span class=&quot;string&quot;&gt;[CentOS版 / openSUSE版]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;如果你想知道一个特定的软件包安装在哪儿，你可以使用管道命令从以上命令的输出中去搜索，这在这个系列的&lt;a href=&quot;https://linux.cn/article-7161-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;第一讲 操作Linux文件&lt;/a&gt; 中有介绍。例如我们需要验证mysql-common这个软件包是否安装在Ubuntu系统中：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# dpkg -l | grep mysql-common&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223756gbrc5wckzr9s25q2.png&quot; alt=&quot;检查安装的软件包&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;检查安装的软件包&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;另外一种方式来判断一个软件包是否已安装。&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# dpkg --status package_name        &lt;span class=&quot;string&quot;&gt;[Debian版和衍生版]&lt;/span&gt;# rpm -q package_name           &lt;span class=&quot;string&quot;&gt;[CentOS版 / openSUSE版]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;例如，让我们找出sysdig软件包是否安装在我们的系统。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# rpm -qa | grep sysdig&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223757bpi0oknbiiub0bri.png&quot; alt=&quot;检查sysdig软件包&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;检查sysdig软件包&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;4-查询一个文件是由哪个软件包安装的&quot;&gt;&lt;a href=&quot;#4-查询一个文件是由哪个软件包安装的&quot; class=&quot;headerlink&quot; title=&quot;4. 查询一个文件是由哪个软件包安装的&quot;&gt;&lt;/a&gt;4. 查询一个文件是由哪个软件包安装的&lt;/h4&gt;&lt;figure class=&quot;highlight maxima&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# dpkg --search &lt;span class=&quot;built_in&quot;&gt;file_name&lt;/span&gt;# rpm -qf &lt;span class=&quot;built_in&quot;&gt;file_name&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;例如，pw_dict.hwm文件是由那个软件包安装的？&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# rpm -qf &lt;span class=&quot;regexp&quot;&gt;/usr/&lt;/span&gt;share&lt;span class=&quot;regexp&quot;&gt;/cracklib/&lt;/span&gt;pw_dict.hwm&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223757syilccyc5to25crc.png&quot; alt=&quot;Linux中查询文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Linux中查询文件&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;高级工具的常见用法&quot;&gt;&lt;a href=&quot;#高级工具的常见用法&quot; class=&quot;headerlink&quot; title=&quot;高级工具的常见用法&quot;&gt;&lt;/a&gt;高级工具的常见用法&lt;/h3&gt;&lt;p&gt;使用高级工具处理最常见的任务如下。&lt;/p&gt;
+&lt;h4 id=&quot;1-搜索软件包&quot;&gt;&lt;a href=&quot;#1-搜索软件包&quot; class=&quot;headerlink&quot; title=&quot;1. 搜索软件包&quot;&gt;&lt;/a&gt;1. 搜索软件包&lt;/h4&gt;&lt;p&gt;aptitude的更新操作将会更新可用的软件包列表，而aptitude的搜索操作会根据软件包名进行实际搜索。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# aptitude &lt;span class=&quot;keyword&quot;&gt;update&lt;/span&gt; &amp;amp;&amp;amp; aptitude &lt;span class=&quot;keyword&quot;&gt;search&lt;/span&gt; package_name&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;在search all选项中，yum不仅可以通过软件包名还可以通过软件包的描述搜索。&lt;/p&gt;
+&lt;figure class=&quot;highlight vim&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# yum &lt;span class=&quot;built_in&quot;&gt;search&lt;/span&gt; package_name# yum &lt;span class=&quot;built_in&quot;&gt;search&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;all&lt;/span&gt; package_name# yum whatprovides “*/package_name”&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;假定我们需要一个名为sysdig文件，想知道我们需要安装哪个软件包才行，那么运行。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# yum whatprovides “*/sysdig”&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223800o9soqn1phqsqp1th.png&quot; alt=&quot;检查软件包描述&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;检查软件包描述&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;whatprovides告诉yum搜索一个含有能够匹配上述正则表达式的文件的软件包。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# zypper refresh &amp;amp;&amp;amp; zypper search package_name      [在openSUSE上]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;2-从仓库安装一个软件包&quot;&gt;&lt;a href=&quot;#2-从仓库安装一个软件包&quot; class=&quot;headerlink&quot; title=&quot;2. 从仓库安装一个软件包&quot;&gt;&lt;/a&gt;2. 从仓库安装一个软件包&lt;/h4&gt;&lt;p&gt;当安装一个软件包时，在软件包管理器解决了所有依赖性问题后，可能会提醒你确认安装。需要注意的是运行更新（ update）或刷新（refresh）（根据所使用的软件包管理器）不是绝对必要，但是考虑到安全性和依赖性的原因，保持安装的软件包是最新的是系统管理员的一个好经验。&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# aptitude update &amp;amp;&amp;amp; aptitude install package_name      &lt;span class=&quot;string&quot;&gt;[Debian版和衍生版]&lt;/span&gt;# yum update &amp;amp;&amp;amp; yum install package_name            &lt;span class=&quot;string&quot;&gt;[CentOS版]&lt;/span&gt;# zypper refresh &amp;amp;&amp;amp; zypper install package_name         &lt;span class=&quot;string&quot;&gt;[openSUSE版]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;3-卸载软件包&quot;&gt;&lt;a href=&quot;#3-卸载软件包&quot; class=&quot;headerlink&quot; title=&quot;3. 卸载软件包&quot;&gt;&lt;/a&gt;3. 卸载软件包&lt;/h4&gt;&lt;p&gt;remove选项将会卸载软件包，但把配置文件保留完好，然而purge选项将从系统中完全删去该程序以及相关内容。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;aptitude&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;remove&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;purge&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;package_name#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;yum&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;erase&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;package_name###&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;注意要卸载的openSUSE包前面的减号&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;zypper&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;remove&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;package_name&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;在默认情况下，大部分（如果不是全部的话）的软件包管理器会提示你，在你实际卸载之前你是否确定要继续卸载。所以，请仔细阅读屏幕上的信息，以避免陷入不必要的麻烦！&lt;/p&gt;
+&lt;h4 id=&quot;4-显示软件包的信息&quot;&gt;&lt;a href=&quot;#4-显示软件包的信息&quot; class=&quot;headerlink&quot; title=&quot;4. 显示软件包的信息&quot;&gt;&lt;/a&gt;4. 显示软件包的信息&lt;/h4&gt;&lt;p&gt;下面的命令将会显示birthday这个软件包的信息。&lt;/p&gt;
+&lt;figure class=&quot;highlight armasm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# aptitude show &lt;span class=&quot;keyword&quot;&gt;birthday# &lt;/span&gt;yum &lt;span class=&quot;meta&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;birthday# &lt;/span&gt;zypper &lt;span class=&quot;meta&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;birthday&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223802i8wzqhe4lzwlj1la.png&quot; alt=&quot;检查包信息&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;检查包信息&lt;/em&gt;&lt;/p&gt;
+</content>
     
     <summary type="html">
     
+      &lt;h3 id=&quot;软件包管理&quot;&gt;&lt;a href=&quot;#软件包管理&quot; class=&quot;headerlink&quot; title=&quot;软件包管理&quot;&gt;&lt;/a&gt;软件包管理&lt;/h3&gt;&lt;p&gt;简单的说，软件包管理是系统中安装和维护软件的一种方法，这里说的维护包含更新和卸载。&lt;/p&gt;
+&lt;p&gt;在Linux早期，
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   
   <entry>
-    <title>lfcs-08</title>
+    <title>LFCS 08：管理用户和用户组、文件权限和属性以及启用账户 sudo 访问权限</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-08/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-08/</id>
     <published>2016-07-29T14:04:40.000Z</published>
-    <updated>2016-07-29T14:04:40.998Z</updated>
+    <updated>2016-07-29T15:06:25.812Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;p&gt;由于 Linux 是一个多用户的操作系统（允许多个用户通过不同主机或者终端访问一个独立系统），因此你需要知道如何才能有效地管理用户：如何添加、编辑、禁用和删除用户账户，并赋予他们足以完成自身任务的必要权限。&lt;/p&gt;
+&lt;p&gt;（LCTT 译注：本篇原文章节顺序有误，根据理解做了调整。）&lt;/p&gt;
+&lt;h3 id=&quot;添加用户账户&quot;&gt;&lt;a href=&quot;#添加用户账户&quot; class=&quot;headerlink&quot; title=&quot;添加用户账户&quot;&gt;&lt;/a&gt;添加用户账户&lt;/h3&gt;&lt;p&gt;添加新用户账户，你需要以 root 运行以下两条命令中的任意一条：&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# adduser &lt;span class=&quot;string&quot;&gt;[new_account]&lt;/span&gt;# useradd &lt;span class=&quot;string&quot;&gt;[new_account]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;当新用户账户添加到系统时，会自动执行以下操作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;自动创建用户家目录（默认是 /home/username）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;自动拷贝下列隐藏文件到新建用户的家目录，用来设置新用户会话的环境变量。&lt;/p&gt;
+&lt;figure class=&quot;highlight stylus&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.bash_logout&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.bash_profile&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.bashrc&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;自动创建邮件缓存目录 /var/spool/mail/username。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;自动创建与用户名相同的用户组。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&quot;理解-etc-passwd-中的内容&quot;&gt;&lt;a href=&quot;#理解-etc-passwd-中的内容&quot; class=&quot;headerlink&quot; title=&quot;理解 /etc/passwd 中的内容&quot;&gt;&lt;/a&gt;理解 /etc/passwd 中的内容&lt;/h4&gt;&lt;p&gt;/etc/passwd 文件中存储了所有用户账户的信息，每个用户在里边都有一条对应的记录，其格式（每个字段用冒号隔开）如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;[username]&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;[x]&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;[UID]&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;[GID]&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;[Comment]&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;[Home directory]&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;[Default shell]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;字段 [username] 和 [Comment] 是不言自明的。&lt;/li&gt;
+&lt;li&gt;第二个字段中 x 表明通过用户名 username 登录系统是有密码保护的， 密码保存在 /etc/shadow 文件中。&lt;/li&gt;
+&lt;li&gt;[UID] 和 [GID] 字段用整数表示，代表该用户的用户标识符和对应所在组的组标志符。&lt;/li&gt;
+&lt;li&gt;字段 [Home directory] 为 username 用户家目录的绝对路径。&lt;/li&gt;
+&lt;li&gt;字段 [Default shell] 指定用户登录系统时默认使用的 shell。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;理解-etc-group-中的内容&quot;&gt;&lt;a href=&quot;#理解-etc-group-中的内容&quot; class=&quot;headerlink&quot; title=&quot;理解 /etc/group 中的内容&quot;&gt;&lt;/a&gt;理解 /etc/group 中的内容&lt;/h4&gt;&lt;p&gt;/etc/group 文件存储所有用户组的信息。每行记录的格式如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight crmsh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[&lt;span class=&quot;keyword&quot;&gt;Group&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;name&lt;/span&gt;]:[&lt;span class=&quot;keyword&quot;&gt;Group&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;password&lt;/span&gt;]:[GID]:[&lt;span class=&quot;keyword&quot;&gt;Group&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;members&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;[Group name] 为用户组名称。&lt;/li&gt;
+&lt;li&gt;字段 [Group password] 为 x 的话，则说明不使用用户组密码。&lt;/li&gt;
+&lt;li&gt;[GID] 与 /etc/passwd 中保存的 GID 相同。&lt;/li&gt;
+&lt;li&gt;[Group members] 用户组中的用户使用逗号隔开。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105800t2ooygdsttwnyk4w.png&quot; alt=&quot;添加用户账户&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;添加用户账户&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;修改用户信息&quot;&gt;&lt;a href=&quot;#修改用户信息&quot; class=&quot;headerlink&quot; title=&quot;修改用户信息&quot;&gt;&lt;/a&gt;修改用户信息&lt;/h4&gt;&lt;p&gt;添加用户账户之后，你可以使用 usermod 命令来修改用户信息中的部分字段，该命令基本语法如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# usermod &lt;span class=&quot;string&quot;&gt;[options]&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;[username]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;设置账户的过期时间&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;通过 –expiredate 标记后边接 年-月-日 格式的日期，如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# usermod --expiredate 2014-10-30 tecmint&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;将用户添加到其他组&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;使用 -aG 或者 –append –groups 选项，后边跟着用户组，如果有多个用户组，每个用户组之间使用逗号隔开。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;usermod&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;append&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;groups&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;tecmint&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;改变用户家目录的默认位置&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;使用 -d 或者 –home 选项，后边跟着新的家目录的绝对路径。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# usermod --home /tmp tecmint&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;改变用户的默认 shell&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;使用 –shell 选项，后边跟着新 shell 的路径。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# usermod --&lt;span class=&quot;keyword&quot;&gt;shell&lt;/span&gt; /bin/&lt;span class=&quot;keyword&quot;&gt;sh&lt;/span&gt; tecmint&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;下面，我们一次运行上述命令：&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;usermod&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;expiredate&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;2014&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;30&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;append&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;groups&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;home&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/tmp&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;shell&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/bin/sh&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;tecmint&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105804k9wmu58zpxwbvsvb.png&quot; alt=&quot;usermod 命令例示&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;usermod 命令例示&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;扩展阅读&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/add-users-in-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;15 useradd Command Examples in Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/usermod-command-examples/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;15 usermod Command Examples in Linux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;锁定和解锁账户&quot;&gt;&lt;a href=&quot;#锁定和解锁账户&quot; class=&quot;headerlink&quot; title=&quot;锁定和解锁账户&quot;&gt;&lt;/a&gt;锁定和解锁账户&lt;/h4&gt;&lt;p&gt;对于已有用户账户，我们还可以：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;通过锁定密码来禁用账户&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;使用 -L （大写 l）或者 –lock 选项来锁定用户密码。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# usermod --lock tecmint&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;解锁用户密码&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;使用 –u 或者 –unlock 选项来解锁我们之前锁定的账户。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# usermod --unlock tecmint&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105808v110t32x0pg935xx.png&quot; alt=&quot;锁定用户账户&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;锁定用户账户&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;删除用户账户&quot;&gt;&lt;a href=&quot;#删除用户账户&quot; class=&quot;headerlink&quot; title=&quot;删除用户账户&quot;&gt;&lt;/a&gt;删除用户账户&lt;/h4&gt;&lt;p&gt;你可以通过 userdel –remove 命令来删除用户账户。这样会删除用户拥有的家目录和家目录下的所有文件，以及邮件缓存目录。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# userdel --remove [username]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;用户组管理&quot;&gt;&lt;a href=&quot;#用户组管理&quot; class=&quot;headerlink&quot; title=&quot;用户组管理&quot;&gt;&lt;/a&gt;用户组管理&lt;/h4&gt;&lt;p&gt;每次添加新用户，系统会为该用户创建同名的用户组，此时用户组里边只有新建的用户，其他用户可以随后添加进去。建立用户组的目的之一，就是为了通过对指定资源设置权限来完成对这些资源和文件进行访问控制。&lt;/p&gt;
+&lt;p&gt;比如，你有下列用户：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;user1 (主组 user1)&lt;/li&gt;
+&lt;li&gt;user2 (主组 user2)&lt;/li&gt;
+&lt;li&gt;user3 (主组 user3)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;他们都需要对你系统里边某个位置的 common.txt 文件，或者 user1 用户刚刚创建的共享进行读写。你可能会运行下列命令：&lt;/p&gt;
+&lt;figure class=&quot;highlight armasm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# chmod &lt;span class=&quot;number&quot;&gt;660&lt;/span&gt; &lt;span class=&quot;meta&quot;&gt;common&lt;/span&gt;.txt或# chmod u&lt;span class=&quot;symbol&quot;&gt;=rw&lt;/span&gt;,g&lt;span class=&quot;symbol&quot;&gt;=rw&lt;/span&gt;,o= &lt;span class=&quot;meta&quot;&gt;common&lt;/span&gt;.txt [注意最后那个 = 号和文件名之间的空格]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然而，这样仅仅给文件所属的用户和用户组（本例为 user1）成员的提供了读写权限。你还需要将 user2 和 user3 添加到 user1 组，打这样做也将 user1 用户和用户组的其他文件的权限开放给了 user2 和 user3。&lt;/p&gt;
+&lt;p&gt;这时候，用户组就派上用场了，下面将演示怎么做。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;显示用户所属的用户组&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# groups tecmint# id tecmint&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;为需要对指定文件进行读写的多个用户建立用户组&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;运行下列几条命令来完成：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;groupadd&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;common_group&lt;/span&gt; # 添加新用户组# &lt;span class=&quot;selector-tag&quot;&gt;chown&lt;/span&gt; &lt;span class=&quot;selector-pseudo&quot;&gt;:common_group&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.txt&lt;/span&gt; # 将 &lt;span class=&quot;selector-tag&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.txt&lt;/span&gt; 的用户组修改为 &lt;span class=&quot;selector-tag&quot;&gt;common_group&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;usermod&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-aG&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;common_group&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;user1&lt;/span&gt; # 添加用户 &lt;span class=&quot;selector-tag&quot;&gt;user1&lt;/span&gt; 到 &lt;span class=&quot;selector-tag&quot;&gt;common_group&lt;/span&gt; 用户组# &lt;span class=&quot;selector-tag&quot;&gt;usermod&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-aG&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;common_group&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;user2&lt;/span&gt; # 添加用户 &lt;span class=&quot;selector-tag&quot;&gt;user2&lt;/span&gt; 到 &lt;span class=&quot;selector-tag&quot;&gt;common_group&lt;/span&gt; 用户组# &lt;span class=&quot;selector-tag&quot;&gt;usermod&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-aG&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;common_group&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;user3&lt;/span&gt; # 添加用户 &lt;span class=&quot;selector-tag&quot;&gt;user3&lt;/span&gt; 到 &lt;span class=&quot;selector-tag&quot;&gt;common_group&lt;/span&gt; 用户组&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;删除用户组&quot;&gt;&lt;a href=&quot;#删除用户组&quot; class=&quot;headerlink&quot; title=&quot;删除用户组&quot;&gt;&lt;/a&gt;删除用户组&lt;/h4&gt;&lt;p&gt;通过以下命令删除用户组：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# groupdel [group_name]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;属于这个 group_name 用户组的文件是不会被删除的，而仅仅是删除了用户组。&lt;/p&gt;
+&lt;h3 id=&quot;Linux-文件权限&quot;&gt;&lt;a href=&quot;#Linux-文件权限&quot; class=&quot;headerlink&quot; title=&quot;Linux 文件权限&quot;&gt;&lt;/a&gt;Linux 文件权限&lt;/h3&gt;&lt;p&gt;除了我们在 &lt;a href=&quot;https://linux.cn/article-7171-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;LFCS 系列第三讲：归档/压缩文件及目录、设置文件属性和搜索文件&lt;/a&gt; 中说到的基本的读取、写入和执行权限外，文件还有一些不常用却很重要的的权限设置，有时候把它当做“特殊权限”。&lt;/p&gt;
+&lt;p&gt;就像之前我们讨论的基本权限，这里同样使用八进制数字或者一个字母（象征性符号）表示该权限类型。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理解 Setuid 位&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当为可执行文件设置 setuid 位之后，用户运行程序时会继承该程序属主的有效特权。由于这样做会引起安全风险，因此设置 setuid 权限的文件及程序必须尽量少。你会发现，当系统中有用户需要访问属于 root 用户的文件是所运行的程序就带有了 setuid 权限。&lt;/p&gt;
+&lt;p&gt;也就是说，用户不仅仅可以运行这个可执行文件，而且能以 root 权限来运行。比如，让我们来看看 /bin/passwd 的权限，这个可执行文件用于改变账户的密码，修改 /etc/shadow 文件。超级用户可以改变任意账户的密码，但是其他用户只能改变自己账户的密码。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105809nvorvmbg6moohx9k.png&quot; alt=&quot;passwd 命令例示&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;passwd 命令例示&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;因此，所有用户都有权限运行 /bin/passwd，但只有 root 用户可以指定改变指定用户账户的密码。其他用户只能改变其自身的密码。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105810xz7n0rzjpi0i397e.png&quot; alt=&quot;修改用户密码&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;修改用户密码&lt;/em&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod o+u [filename]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;以八进制形式来设置 setuid 位，在当前基本权限（或者想要设置的权限）前加上数字 4 就行了。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod 4755 [filename]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;理解 Setgid 位&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;设置 setgid 位之后，真实用户的有效 GID 变为属组的 GID。因此，任何用户都能以属组用户的权限来访问文件。另外，当目录置了 setgid 位之后，新建的文件将继承其所属目录的 GID，并且新建的子目录会继承父目录的 setgid 位。通过这个方法，你能够以一个指定的用户组身份来访问该目录里边的文件，而不必管文件属主的主属组。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod g+s [filename]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;以八进制形式来设置 setgid 位，在当前基本权限（或者想要设置的权限）前加上数字 2 就行了。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod 2755 [filename]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;给目录设置 Setgid 位&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105812pcxgamj3xmj9t4mv.png&quot; alt=&quot;给命令设置 setgid 位&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;给命令设置 setgid 位&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理解黏连Sticky位&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;文件设置了黏连位是没有意义，Linux 会忽略该位。如果设置到目录上，会防止其内的文件被删除或改名，除非你是该目录或文件的属主、或者是 root 用户。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod o+t [directory]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;以八进制形式来设置黏连位，在当前基本权限（或者想要设置的权限）前加上数字 1 就行了。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod 1755 [directory]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;若没有黏连位，任何有权限读写目录的用户都可删除和重命名其中的文件。因此，黏连位通常出现在像 /tmp 之类的目录，这些目录是所有人都具有写权限的。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105816z5vxtxdkl5al5iix.png&quot; alt=&quot;给目录设置黏连位&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;给目录设置黏连位&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Linux-特殊文件属性&quot;&gt;&lt;a href=&quot;#Linux-特殊文件属性&quot; class=&quot;headerlink&quot; title=&quot;Linux 特殊文件属性&quot;&gt;&lt;/a&gt;Linux 特殊文件属性&lt;/h3&gt;&lt;p&gt;文件还有其他一些属性，用来做进一步的操作限制。比如，阻止对文件的重命名、移动、删除甚至是修改。可以通过使用 &lt;a href=&quot;http://www.tecmint.com/chattr-command-examples/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;chattr 命令&lt;/a&gt; 来设置，并可以使用 lsattr 工具来查看这些属性。设置如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# chattr +i file1# chattr +a file2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;运行这些命令之后，file1 成为不可变状态（即不可移动、重命名、修改或删除），而 file2 进入“仅追加”模式（仅在追加内容模式中打开）。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105819pgnnciuyn4knu0g4.png&quot; alt=&quot;通过 Chattr 命令来包含文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;通过 Chattr 命令来包含文件&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;访问-root-账户并启用-sudo&quot;&gt;&lt;a href=&quot;#访问-root-账户并启用-sudo&quot; class=&quot;headerlink&quot; title=&quot;访问 root 账户并启用 sudo&quot;&gt;&lt;/a&gt;访问 root 账户并启用 sudo&lt;/h3&gt;&lt;p&gt;访问 root 账户的方法之一，就是通过输入：&lt;/p&gt;
+&lt;figure class=&quot;highlight elixir&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;variable&quot;&gt;$ &lt;/span&gt;su&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然后输入 root 账户密码。&lt;/p&gt;
+&lt;p&gt;倘若授权成功，你将以 root 身份登录，工作目录则是登录前所在的位置。如果是想要一登录就自动进入 root 用户的家目录，请运行：&lt;/p&gt;
+&lt;figure class=&quot;highlight elixir&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;variable&quot;&gt;$ &lt;/span&gt;su -&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然后输入 root 账户密码。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105820xh7rhf72ar3z320e.png&quot; alt=&quot;用户通过 su 切换&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;用户通过 su 切换&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;执行上个步骤需要普通用户知道 root 账户的密码，这样会引起非常严重的安全问题。于是，系统管理员通常会配置 sudo 命令来让普通用户在严格控制的环境中以其他用户身份（通常是 root）来执行命令。所以，可以在严格控制用户的情况下，又允许他运行一条或多条特权命令。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;扩展阅读：&lt;a href=&quot;http://www.tecmint.com/su-vs-sudo-and-how-to-configure-sudo-in-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Difference Between su and sudo User&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;普通用户通过他自己的用户密码来完成 sudo 授权。输入命令之后会出现输入密码（并不是超级用户密码）的提示，授权成功（只要赋予了用户运行该命令的权限）的话，指定的命令就会运行。&lt;/p&gt;
+&lt;p&gt;系统管理员必须编辑 /etc/sudoers 文件，才能为 sudo 赋予相应权限。通常建议使用 visudo 命令来编辑这个文件，而不是使用文本编辑器来打开它。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# visudo&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这样会使用 vim（你可以按照 &lt;a href=&quot;https://linux.cn/article-7165-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;LFCS 系列第二讲：如何安装和使用纯文本编辑器 vi/vim&lt;/a&gt; 里边说的来编辑文件）来打开 /etc/sudoers 文件。&lt;/p&gt;
+&lt;p&gt;以下是需要设置的相关的行：&lt;/p&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attribute&quot;&gt;Defaults&lt;/span&gt;    secure_path=&lt;span class=&quot;string&quot;&gt;&quot;/usr/sbin:/usr/bin:/sbin&quot;&lt;/span&gt;root        &lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;=(&lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;) ALLtecmint     &lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;=/bin/yum updategacanepa    &lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;=NOPASSWD:/bin/updatedb%admin      &lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;=(&lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;) &lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;来更加深入了解这些项：&lt;/p&gt;
+&lt;figure class=&quot;highlight nginx&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attribute&quot;&gt;Defaults&lt;/span&gt;    secure_path=&lt;span class=&quot;string&quot;&gt;&quot;/usr/sbin:/usr/bin:/sbin:/usr/local/bin&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这一行指定 sudo 将要使用的目录，这样可以阻止使用某些用户指定的目录，那样的话可能会危及系统。&lt;/p&gt;
+&lt;p&gt;下一行是用来指定权限的：&lt;/p&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attribute&quot;&gt;root&lt;/span&gt;        &lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;=(&lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;) &lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;第一个 ALL 关键词表明这条规则适用于所有主机。&lt;/li&gt;
+&lt;li&gt;第二个 ALL 关键词表明第一个字段中所指定的用户能以任何用户身份的权限来运行相应命令。&lt;/li&gt;
+&lt;li&gt;第三个 ALL 关键词表明可以运行任何命令。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attribute&quot;&gt;tecmint&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;ALL&lt;/span&gt;=/bin/yum update&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;如果 = 号后边没有指定用户，sudo 则默认为 root 用户。本例中，tecmint 用户能以 root 身份运行 yum update 命令。&lt;/p&gt;
+&lt;figure class=&quot;highlight groovy&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;gacanepa    ALL=&lt;span class=&quot;string&quot;&gt;NOPASSWD:&lt;/span&gt;&lt;span class=&quot;regexp&quot;&gt;/bin/&lt;/span&gt;updatedb&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;NOPASSWD 关键词表明 gacanepa 用户不需要密码，可以直接运行 /bin/updatedb 命令。&lt;/p&gt;
+&lt;figure class=&quot;highlight fortran&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;%admin      &lt;span class=&quot;built_in&quot;&gt;ALL&lt;/span&gt;=(&lt;span class=&quot;built_in&quot;&gt;ALL&lt;/span&gt;) &lt;span class=&quot;built_in&quot;&gt;ALL&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;% 符号表示该行应用于 admin 用户组。其他部分的含义与对于用户的含义是一样的。本例表示 admin 用户组的成员可以通过任何主机连接来运行任何命令。&lt;/p&gt;
+&lt;p&gt;通过 sudo -l 命令可以查看，你的账户拥有什么样的权限。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105825kbmytbiydibd74ze.png&quot; alt=&quot;Sudo 访问规则&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Sudo 访问规则&lt;/em&gt;&lt;/p&gt;
+</content>
     
     <summary type="html">
     
+      &lt;p&gt;由于 Linux 是一个多用户的操作系统（允许多个用户通过不同主机或者终端访问一个独立系统），因此你需要知道如何才能有效地管理用户：如何添加、编辑、禁用和删除用户账户，并赋予他们足以完成自身任务的必要权限。&lt;/p&gt;
+&lt;p&gt;（LCTT 译注：本篇原文章节顺序有误，根据理解做了
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   
   <entry>
-    <title>lfcs-07</title>
+    <title>LFCS 07：通过 SysVinit、Systemd 和 Upstart 管理系统自启动进程和服务</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-07/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-07/</id>
     <published>2016-07-29T14:04:35.000Z</published>
-    <updated>2016-07-29T14:04:35.311Z</updated>
+    <updated>2016-07-29T15:05:44.453Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;h3 id=&quot;管理-Linux-自启动进程&quot;&gt;&lt;a href=&quot;#管理-Linux-自启动进程&quot; class=&quot;headerlink&quot; title=&quot;管理 Linux 自启动进程&quot;&gt;&lt;/a&gt;管理 Linux 自启动进程&lt;/h3&gt;&lt;p&gt;Linux 系统的启动程序包括多个阶段，每个阶段由一个不同的图示块表示。下面的图示简要总结了启动过程以及所有包括的主要组件。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220704vq89jz89hi79mqm1.png&quot; alt=&quot;Linux 启动过程&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Linux 启动过程&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;当你按下你机器上的电源键时，存储在主板 EEPROM 芯片中的固件初始化 POST(通电自检) 检查系统硬件资源的状态。POST 结束后，固件会搜索并加载位于第一块可用磁盘上的 MBR 或 EFI 分区的第一阶段引导程序，并把控制权交给引导程序。&lt;/p&gt;
+&lt;h4 id=&quot;MBR-方式&quot;&gt;&lt;a href=&quot;#MBR-方式&quot; class=&quot;headerlink&quot; title=&quot;MBR 方式&quot;&gt;&lt;/a&gt;MBR 方式&lt;/h4&gt;&lt;p&gt;MBR 是位于 BIOS 设置中标记为可启动磁盘上的第一个扇区，大小是 512 个字节。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;前面 446 个字节：包括可执行代码和错误信息文本的引导程序&lt;/li&gt;
+&lt;li&gt;接下来的 64 个字节：四个分区（主分区或扩展分区）中每个分区一条记录的分区表。其中，每条记录标示了每个一个分区的状态（是否活跃）、大小以及开始和结束扇区。&lt;/li&gt;
+&lt;li&gt;最后 2 个字节： MBR 有效性检查的魔法数。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面的命令对 MBR 进行备份（在本例中，/dev/sda 是第一块硬盘）。结果文件 mbr.bkp 在分区表被破坏、例如系统不可引导时能排上用场。&lt;/p&gt;
+&lt;p&gt;当然，为了后面需要的时候能使用它，我们需要把它保存到别的地方（例如一个 USB 设备）。该文件能帮助我们重新恢复 MBR，这只在我们操作过程中没有改变硬盘驱动布局时才有效。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;备份 MBR&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight armasm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# dd &lt;span class=&quot;meta&quot;&gt;if&lt;/span&gt;=/dev/sda of&lt;span class=&quot;symbol&quot;&gt;=mbr&lt;/span&gt;.&lt;span class=&quot;keyword&quot;&gt;bkp &lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;bs=512 &lt;/span&gt;count&lt;span class=&quot;number&quot;&gt;=1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220706dqzkk0hg99p90zhg.png&quot; alt=&quot;在 Linux 中备份 MBR&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;在 Linux 中备份 MBR&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;恢复 MBR&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight armasm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# dd &lt;span class=&quot;meta&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;symbol&quot;&gt;=mbr&lt;/span&gt;.&lt;span class=&quot;keyword&quot;&gt;bkp &lt;/span&gt;of=/dev/sda &lt;span class=&quot;keyword&quot;&gt;bs=512 &lt;/span&gt;count&lt;span class=&quot;number&quot;&gt;=1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220708qh26the8c820e270.png&quot; alt=&quot;在 Linux 中恢复 MBR&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;在 Linux 中恢复 MBR&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;EFI-UEFI-方式&quot;&gt;&lt;a href=&quot;#EFI-UEFI-方式&quot; class=&quot;headerlink&quot; title=&quot;EFI/UEFI 方式&quot;&gt;&lt;/a&gt;EFI/UEFI 方式&lt;/h4&gt;&lt;p&gt;对于使用 EFI/UEFI 方式的系统， UEFI 固件读取它的设置来决定从哪里启动哪个 UEFI 应用。（例如， EFI 分区位于哪块磁盘或分区。&lt;/p&gt;
+&lt;p&gt;接下来，加载并运行第二阶段引导程序(又名引导管理器)。GRUB[GRand Unified Boot] 是 Linux 中最常使用的引导管理器。今天大部分使用的系统中都能找到它两个中的其中一个版本。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GRUB 有效配置文件： /boot/grub/menu.lst（旧发行版， EFI/UEFI 固件不支持）。&lt;/li&gt;
+&lt;li&gt;GRUB2 配置文件： 通常是 /etc/default/grub。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;尽管 LFCS 考试目标没有明确要求了解 GRUB 内部知识，但如果你足够大胆并且不怕把你的系统搞乱（为了以防万一，你可以先在虚拟机上进行尝试）你可以运行：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# update-grub&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;为了使更改生效，你需要以 root 用户修改 GRUB 的配置。&lt;/p&gt;
+&lt;p&gt;首先， GRUB 加载默认的内核以及 initrd 或 initramfs 镜像。补充一句，initrd 或者 initramfs 帮助完成硬件检测、内核模块加载、以及发现挂载根目录文件系统需要的设备。&lt;/p&gt;
+&lt;p&gt;一旦真正的根目录文件系统启动，为了显示用户界面，内核就会执行系统和服务管理器（init 或 systemd，进程号 PID 一般为 1）开始普通用户态的引导程序。&lt;/p&gt;
+&lt;p&gt;init 和 systemd 都是管理其它守护进程的守护进程（后台进程），它们总是最先启动（系统引导时），最后结束（系统关闭时）。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220710s7dekedg5y5odeys.png&quot; alt=&quot;Systemd 和 Init&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Systemd 和 Init&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;自启动服务-SysVinit&quot;&gt;&lt;a href=&quot;#自启动服务-SysVinit&quot; class=&quot;headerlink&quot; title=&quot;自启动服务(SysVinit)&quot;&gt;&lt;/a&gt;自启动服务(SysVinit)&lt;/h3&gt;&lt;p&gt;Linux 中运行等级通过控制运行哪些服务来以不同方式使用系统。换句话说，运行等级控制着当前执行状态下可以完成什么任务（以及什么不能完成）。&lt;/p&gt;
+&lt;p&gt;传统上，这个启动过程是基于起源于 System V Unix 的形式，通过执行脚本启动或者停止服务从而使机器进入指定的运行等级(换句话说，是一个不同的系统运行模式)。&lt;/p&gt;
+&lt;p&gt;在每个运行等级中，独立服务可以设置为运行、或者在运行时关闭。一些主流发行版的最新版本中，已经移除了标准的 System V，而用一个称为 systemd（表示系统守护进程）的新服务和系统管理器代替，但为了兼容性，通常也支持 sysv 命令。这意味着你可以在基于 systemd 的发行版中运行大部分有名的 sysv 初始化工具。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;推荐阅读： &lt;a href=&quot;http://www.tecmint.com/systemd-replaces-init-in-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Linux 为什么用 ‘systemd’ 代替 ‘init’&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;除了启动系统进程，init 还会查看 /etc/inittab 来决定进入哪个运行等级。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Runlevel&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;停止系统。运行等级 0 是一个用于快速关闭系统的特殊过渡状态。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;别名为 s 或 S，这个运行等级有时候也称为维护模式。在这个运行等级启动的服务由于发行版不同而不同。通常用于正常系统操作损坏时低级别的系统维护。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;多用户。在 Debian 系统及其衍生版中，这是默认的运行等级，还包括了一个图形化登录（如果有的话）。在基于红帽的系统中，这是没有网络的多用户模式。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;在基于红帽的系统中，这是默认的多用户模式，运行除了图形化环境以外的所有东西。基于 Debian 的系统中通常不会使用这个运行等级以及等级 4 和 5。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;通常默认情况下不使用，可用于自定制。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;基于红帽的系统中，支持 GUI 登录的完全多用户模式。这个运行等级和等级 3 类似，但是有可用的 GUI 登录。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;重启系统。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;要在运行等级之间切换，我们只需要使用 init 命令更改运行等级：init N（其中 N 是上面列出的一个运行等级）。 请注意这并不是运行中的系统切换运行等级的推荐方式，因为它不会给已经登录的用户发送警告（因而导致他们丢失工作以及进程异常终结）。&lt;/p&gt;
+&lt;p&gt;相反，应该用 shutdown 命令重启系统（它首先发送警告信息给所有已经登录的用户，并锁住任何新的登录；然后再给 init 发送信号切换运行等级）但是，首先要在 /etc/inittab 文件中设置好默认的运行等级（系统引导到的等级）。&lt;/p&gt;
+&lt;p&gt;因为这个原因，按照下面的步骤切当地切换运行等级。以 root 用户在 /etc/inittab 中查找下面的行。&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-tag&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:2&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:initdefault&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;并用你喜欢的文本编辑器，例如 vim（本系列的 &lt;a href=&quot;https://linux.cn/article-7165-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;LFCS 系列第二讲：如何安装和使用纯文本编辑器 vi/vim&lt;/a&gt;），更改数字 2 为想要的运行等级。&lt;/p&gt;
+&lt;p&gt;然后，以 root 用户执行&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# shutdown -r now&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;最后一个命令会重启系统，并使它在下一次引导时进入指定的运行等级，并会执行保存在 /etc/rc[runlevel].d 目录中的脚本以决定应该启动什么服务、不应该启动什么服务。例如，在下面的系统中运行等级 2。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220717k99keazaefmaa9sr.jpg&quot; alt=&quot;在 Linux 中更改运行等级&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;在 Linux 中更改运行等级&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;使用-chkconfig-管理服务&quot;&gt;&lt;a href=&quot;#使用-chkconfig-管理服务&quot; class=&quot;headerlink&quot; title=&quot;使用 chkconfig 管理服务&quot;&gt;&lt;/a&gt;使用 chkconfig 管理服务&lt;/h4&gt;&lt;p&gt;为了在启动时启动或者停用系统服务，我们可以在 CentOS / openSUSE 中使用 &lt;a href=&quot;http://www.tecmint.com/chkconfig-command-examples/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;chkconfig 命令&lt;/a&gt;，在 Debian 及其衍生版中使用 sysv-rc-conf 命令。这个工具还能告诉我们对于一个指定的运行等级预先配置的状态是什么。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;推荐阅读： &lt;a href=&quot;http://www.tecmint.com/remove-unwanted-services-from-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;如何在 Linux 中停止和停用不想要的服务&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;列出某个服务的运行等级配置。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;chkconfig&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;title&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;chkconfig&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;postfix#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;chkconfig&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mysqld&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220718e0ziipbi0p08vwoi.png&quot; alt=&quot;列出运行等级配置&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;列出运行等级配置&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;从上图中我们可以看出，当系统进入运行等级 2 到 5 的时候就会启动 postfix，而默认情况下运行等级 2 到 4 时会运行 mysqld。现在假设我们并不希望如此。&lt;/p&gt;
+&lt;p&gt;例如，我们希望运行等级为 5 时也启动 mysqld，运行等级为 4 或 5 时关闭 postfix。下面分别针对两种情况进行设置（以 root 用户执行以下命令）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;为特定运行等级启用服务&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;chkconfig&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level(s)&lt;/span&gt;&lt;span class=&quot;title&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;on#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;chkconfig&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mysqld&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;on&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;为特定运行等级停用服务&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;chkconfig&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level(s)&lt;/span&gt;&lt;span class=&quot;title&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;off#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;chkconfig&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;45&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;postfix&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;off&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220720yi9b3yfi8mkq8sy8.png&quot; alt=&quot;启用/停用服务&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;启用/停用服务&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;我们在基于 Debian 的系统中使用 sysv-rc-conf 完成类似任务。&lt;/p&gt;
+&lt;h4 id=&quot;使用-sysv-rc-conf-管理服务&quot;&gt;&lt;a href=&quot;#使用-sysv-rc-conf-管理服务&quot; class=&quot;headerlink&quot; title=&quot;使用 sysv-rc-conf 管理服务&quot;&gt;&lt;/a&gt;使用 sysv-rc-conf 管理服务&lt;/h4&gt;&lt;p&gt;配置服务自动启动时进入指定运行等级，同时禁止启动时进入其它运行等级。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;我们可以用下面的命令查看启动 mdadm 时的运行等级。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;ls&lt;/span&gt; -&lt;span class=&quot;keyword&quot;&gt;l&lt;/span&gt; /etc/rc[0-6].&lt;span class=&quot;keyword&quot;&gt;d&lt;/span&gt; | grep -&lt;span class=&quot;keyword&quot;&gt;E&lt;/span&gt; &#39;rc[0-6]|mdadm&#39;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220723kkwn3antwgwgihph.png&quot; alt=&quot;查看运行中服务的运行等级&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;查看运行中服务的运行等级&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;我们使用 sysv-rc-conf 设置防止 mdadm 在运行等级2 之外的其它等级启动。只需根据需要（你可以使用上下左右按键）选中或取消选中（通过空格键）。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# sysv-rc-conf&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220727xenennd8x0nom838.png&quot; alt=&quot;Sysv 运行等级配置&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Sysv 运行等级配置&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;然后输入 q 退出。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;重启系统并从步骤 1 开始再操作一遍。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;ls&lt;/span&gt; -&lt;span class=&quot;keyword&quot;&gt;l&lt;/span&gt; /etc/rc[0-6].&lt;span class=&quot;keyword&quot;&gt;d&lt;/span&gt; | grep -&lt;span class=&quot;keyword&quot;&gt;E&lt;/span&gt; &#39;rc[0-6]|mdadm&#39;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220731voz9eughblhu3hhz.png&quot; alt=&quot;验证服务运行等级&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;验证服务运行等级&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;从上图中我们可以看出 mdadm 配置为只在运行等级 2 上启动。&lt;/p&gt;
+&lt;h3 id=&quot;那关于-systemd-呢？&quot;&gt;&lt;a href=&quot;#那关于-systemd-呢？&quot; class=&quot;headerlink&quot; title=&quot;那关于 systemd 呢？&quot;&gt;&lt;/a&gt;那关于 systemd 呢？&lt;/h3&gt;&lt;p&gt;systemd 是另外一个被多种主流 Linux 发行版采用的服务和系统管理器。它的目标是允许系统启动时多个任务尽可能并行（而 sysvinit 并非如此，sysvinit 一般比较慢，因为它每次只启动一个进程，而且会检查彼此之间是否有依赖，在启动其它服务之前还要等待守护进程启动），充当运行中系统动态资源管理的角色。&lt;/p&gt;
+&lt;p&gt;因此，服务只在需要的时候启动，而不是系统启动时毫无缘由地启动（为了防止消耗系统资源）。&lt;/p&gt;
+&lt;p&gt;要查看你系统中运行的原生 systemd 服务和 Sysv 服务，可以用以下的命令。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# systemctl&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220738ljodjop7t3d39924.png&quot; alt=&quot;查看运行中的进程&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;查看运行中的进程&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;LOAD 一列显示了单元（UNIT 列，显示服务或者由 systemd 维护的其它进程）是否正确加载，ACTIVE 和 SUB 列则显示了该单元当前的状态。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;显示服务当前状态的信息&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当 ACTIVE 列显示某个单元状态并非活跃时，我们可以使用以下命令查看具体原因。&lt;/p&gt;
+&lt;figure class=&quot;highlight fortran&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# systemctl &lt;span class=&quot;keyword&quot;&gt;status&lt;/span&gt; [&lt;span class=&quot;keyword&quot;&gt;unit&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;例如，上图中 media-samba.mount 处于失败状态。我们可以运行：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# systemctl status media-samba.mount&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220741u2qzr2dgp1y012pp.png&quot; alt=&quot;查看服务状态&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;查看服务状态&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;我们可以看到 media-samba.mount 失败的原因是 host dev1 上的挂载进程无法找到 //192.168.0.10/gacanepa 上的共享网络。&lt;/p&gt;
+&lt;h3 id=&quot;启动或停止服务&quot;&gt;&lt;a href=&quot;#启动或停止服务&quot; class=&quot;headerlink&quot; title=&quot;启动或停止服务&quot;&gt;&lt;/a&gt;启动或停止服务&lt;/h3&gt;&lt;p&gt;一旦 //192.168.0.10/gacanepa 上的共享网络可用，我们可以再来尝试启动、停止以及重启 media-samba.mount 单元。执行每次操作之后，我们都执行 systemctl stats media-samba.mout 来查看它的状态。&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;systemctl&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;media-samba&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.mount&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;systemctl&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;media-samba&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.mount&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;systemctl&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;stop&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;media-samba&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.mount&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;systemctl&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;restart&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;media-samba&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.mount&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;systemctl&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;media-samba&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.mount&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220752nolmn6lblbz2l96o.jpg&quot; alt=&quot;启动停止服务&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;启动停止服务&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;启用或停用某服务随系统启动&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;使用 systemd 你可以在系统启动时启用或停用某服务&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# systemctl enable &lt;span class=&quot;string&quot;&gt;[service]&lt;/span&gt;        # 启用服务# systemctl disable &lt;span class=&quot;string&quot;&gt;[service]&lt;/span&gt;       # 阻止服务随系统启动&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;启用或停用某服务随系统启动包括在 /etc/systemd/system/multi-user.target.wants 目录添加或者删除符号链接。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220803gv0y99jy0w8j05lw.jpg&quot; alt=&quot;启用或停用服务&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;启用或停用服务&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;你也可以用下面的命令查看某个服务的当前状态（启用或者停用）。&lt;/p&gt;
+&lt;figure class=&quot;highlight inform7&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# systemctl &lt;span class=&quot;keyword&quot;&gt;is&lt;/span&gt;-enabled &lt;span class=&quot;comment&quot;&gt;[service]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;例如，&lt;/p&gt;
+&lt;figure class=&quot;highlight maxima&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# systemctl &lt;span class=&quot;built_in&quot;&gt;is&lt;/span&gt;-enabled &lt;span class=&quot;built_in&quot;&gt;postfix&lt;/span&gt;.service&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;另外，你可以用下面的命令重启或者关闭系统。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# systemctl reboot# systemctl shutdown&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;Upstart&quot;&gt;&lt;a href=&quot;#Upstart&quot; class=&quot;headerlink&quot; title=&quot;Upstart&quot;&gt;&lt;/a&gt;Upstart&lt;/h3&gt;&lt;p&gt;基于事件的 Upstart 是 /sbin/init 守护进程的替代品，它仅为在需要那些服务的时候启动服务而生，（或者当它们在运行时管理它们），以及处理发生的实践，因此 Upstart 优于基于依赖的 sysvinit 系统。&lt;/p&gt;
+&lt;p&gt;一开始它是为 Ubuntu 发行版开发的，但在红帽企业版 Linux 6.0 中得到使用。尽管希望它能在所有 Linux 发行版中替代 sysvinit，但它已经被 systemd 超越。2014 年 2 月 14 日，Mark Shuttleworth（Canonical Ltd. 创建者）发布声明之后的 Ubuntu 发行版采用 systemd 作为默认初始化守护进程。&lt;/p&gt;
+&lt;p&gt;由于 Sysv 启动脚本已经流行很长时间了，很多软件包中都包括了 Sysv 启动脚本。为了兼容这些软件， Upstart 提供了兼容模式：它可以运行保存在常用位置（/etc/rc.d/rc?.d, /etc/init.d/rc?.d, /etc/rc?.d或其它类似的位置）的Sysv 启动脚本。因此，如果我们安装了一个还没有 Upstart 配置脚本的软件，仍然可以用原来的方式启动它。&lt;/p&gt;
+&lt;p&gt;另外，如果我们还安装了类似 &lt;a href=&quot;http://www.tecmint.com/chkconfig-command-examples/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;chkconfig&lt;/a&gt; 的工具，你还可以和在基于 sysvinit 的系统中一样用它们管理基于 Sysv 的服务。&lt;/p&gt;
+&lt;p&gt;Upstart 脚本除了支持 Sysv 启动脚本，还支持基于多种方式启动或者停用服务；例如， Upstart 可以在一个特定硬件设备连接上的时候启动一个服务。&lt;/p&gt;
+&lt;p&gt;使用 Upstart以及它原生脚本的系统替换了 /etc/inittab 文件和 /etc/init 目录下和运行等级相关的以 .conf 作为后缀的 Sysv 启动脚本目录。&lt;/p&gt;
+&lt;p&gt;这些 *.conf 脚本（也称为任务定义）通常包括以下几部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;进程描述&lt;/li&gt;
+&lt;li&gt;进程的运行等级或者应该触发它们的事件&lt;/li&gt;
+&lt;li&gt;应该停止进程的运行等级或者触发停止进程的事件&lt;/li&gt;
+&lt;li&gt;选项&lt;/li&gt;
+&lt;li&gt;启动进程的命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例如，&lt;/p&gt;
+&lt;figure class=&quot;highlight vhdl&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# My test service - Upstart script demo description &lt;span class=&quot;string&quot;&gt;&quot;Here goes the description of &#39;My test service&#39;&quot;&lt;/span&gt; author &lt;span class=&quot;string&quot;&gt;&quot;Dave Null &amp;lt;dave.null@example.com&amp;gt;&quot;&lt;/span&gt;# Stanzas## Stanzas define &lt;span class=&quot;keyword&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt; how a &lt;span class=&quot;keyword&quot;&gt;process&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;is&lt;/span&gt; started &lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt; stopped# See a list &lt;span class=&quot;keyword&quot;&gt;of&lt;/span&gt; stanzas here: http://upstart.ubuntu.com/wiki/Stanzas#respawn# &lt;span class=&quot;keyword&quot;&gt;When&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;to&lt;/span&gt; start the servicestart &lt;span class=&quot;keyword&quot;&gt;on&lt;/span&gt; runlevel [&lt;span class=&quot;number&quot;&gt;2345&lt;/span&gt;]# &lt;span class=&quot;keyword&quot;&gt;When&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;to&lt;/span&gt; stop the servicestop &lt;span class=&quot;keyword&quot;&gt;on&lt;/span&gt; runlevel [&lt;span class=&quot;number&quot;&gt;016&lt;/span&gt;]# Automatically restart &lt;span class=&quot;keyword&quot;&gt;process&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;of&lt;/span&gt; crashrespawn# Specify working directorychdir /home/dave/myfiles# Specify the &lt;span class=&quot;keyword&quot;&gt;process&lt;/span&gt;/command (add arguments &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; needed) &lt;span class=&quot;keyword&quot;&gt;to&lt;/span&gt; runexec bash backup.sh arg1 arg2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;要使更改生效，你要让 upstart 重新加载它的配置文件。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# initctl reload-configuration&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然后用下面的命令启动你的任务。&lt;/p&gt;
+&lt;figure class=&quot;highlight crmsh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ sudo &lt;span class=&quot;literal&quot;&gt;start&lt;/span&gt; yourjobname&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中 yourjobname 是之前 yourjobname.conf 脚本中添加的任务名称。&lt;/p&gt;
+&lt;p&gt;关于 Upstart 更完整和详细的介绍可以参考该项目网站的 “&lt;a href=&quot;http://upstart.ubuntu.com/cookbook/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Cookbook&lt;/a&gt;” 栏目。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+</content>
     
     <summary type="html">
     
+      &lt;h3 id=&quot;管理-Linux-自启动进程&quot;&gt;&lt;a href=&quot;#管理-Linux-自启动进程&quot; class=&quot;headerlink&quot; title=&quot;管理 Linux 自启动进程&quot;&gt;&lt;/a&gt;管理 Linux 自启动进程&lt;/h3&gt;&lt;p&gt;Linux 系统的启动程序包括多个阶段，每个
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   

@@ -4,39 +4,707 @@
   
     
     <entry>
-      <title><![CDATA[lfcs-12]]></title>
+      <title><![CDATA[LFCS 12：如何使用 Linux 的帮助文档和工具]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-12/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h3 id="Linux-帮助手册man"><a href="#Linux-帮助手册man" class="headerlink" title="Linux 帮助手册man"></a>Linux 帮助手册man</h3><p>man 手册是 manual 手册的缩写，就是其名字所揭示的那样：一个给定工具的帮助手册。它包含了命令所支持的选项列表（以及解释），有些工具甚至还提供一些使用范例。</p>
+<p>我们用 <strong>man 命令</strong> 跟上你想要了解的工具名称来打开一个帮助手册。例如：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># man diff</span></span><br></pre></td></tr></table></figure>
+<p>这将打开<code>diff</code>的手册页，这个工具将逐行对比文本文件（如你想退出只需要轻轻的点一下 q 键）。</p>
+<p>下面我来比较两个文本文件 <code>file1</code> 和 <code>file2</code>。这两个文本文件包含了使用同一个 Linux 发行版相同版本安装的两台机器上的的安装包列表。</p>
+<p>输入<code>diff</code> 命令它将告诉我们 <code>file1</code> 和<code>file2</code> 有什么不同:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># diff file1 file2</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095541p277x5ty7ihufb67.png" alt="在Linux中比较两个文本文件"></p>
+<p><em>在Linux中比较两个文本文件</em></p>
+<p><code>&lt;</code> 这个符号是说<code>file2</code>缺失的行。如果是 <code>file1</code>缺失，我们将用 <code>&gt;</code> 符号来替代指示。</p>
+<p>另外，<strong>7d6</strong> 意思是说<code>file1</code>的第<strong>7</strong>行要删除了才能和<code>file2</code>一致（<strong>24d22</strong> 和 <strong>41d38</strong> 也是同样的意思） <strong>65,67d61</strong> 告诉需要删除从第 <strong>65</strong> 行到 <strong>67</strong> 行。我们完成了以上步骤，那么这两个文件将完全一致。</p>
+<p>此外，根据 man 手册说明，你还可以通过 <code>-y</code> 选项来以两路的方式显示文件。你可以发现这对于你找到两个文件间的不同根据方便容易。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># diff -y file1 file2</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095542par66q955uu656ui.png" alt="比较并列出两个文件的不同"></p>
+<p><em>比较并列出两个文件的不同</em></p>
+<p>此外，你也可以用<code>diff</code>来比较两个二进制文件。如果它们完全一样，<code>diff</code> 将什么也不会输出。否则，它将会返回如下信息：“<strong>Binary files X and Y differ</strong>”。</p>
+<h3 id="–help-选项"><a href="#–help-选项" class="headerlink" title="–help 选项"></a>–help 选项</h3><p><code>--help</code>选项，大多数命令都支持它（并不是所有）， 它可以理解为一个命令的简短帮助手册。尽管它没有提供工具的详细介绍，但是确实是一个能够快速列出程序的所支持的选项的不错的方法。</p>
+<p>例如，</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># sed --help</span></span><br></pre></td></tr></table></figure>
+<p>将显示 sed （流编辑器）的每个支持的选项。</p>
+<p><code>sed</code>命令的一个典型用法是替换文件中的字符。用 <code>-i</code> 选项（意思是 “<strong>原地编辑编辑文件</strong>”），你可以编辑一个文件而且并不需要打开它。 如果你想要同时备份一个原始文件，用 <code>-i</code> 选项加后缀来创建一个原始文件的副本。</p>
+<p>例如，替换 <code>lorem.txt</code> 中的<code>Lorem</code> 为 <code>Tecmint</code>（忽略大小写），并且创建一个原文件的备份副本，命令如下：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># less lorem.txt | <span class="keyword">grep</span> -i lorem# sed -i.orig <span class="string">'s/Lorem/Tecmint/gI'</span> lorem.txt# less lorem.txt | <span class="keyword">grep</span> -i lorem# less lorem.txt.orig | <span class="keyword">grep</span> -i lorem</span><br></pre></td></tr></table></figure>
+<p>请注意<code>lorem.txt</code>文件中<code>Lorem</code> 都已经替换为 <code>Tecmint</code>，并且原文件 <code>lorem.txt</code> 被保存为<code>lorem.txt.orig</code>。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095542si4s5z2a542g59rr.png" alt="替换文件中的文本"></p>
+<p><em>替换文件中的文本</em></p>
+<h3 id="usr-share-doc-内的文档"><a href="#usr-share-doc-内的文档" class="headerlink" title="/usr/share/doc 内的文档"></a>/usr/share/doc 内的文档</h3><p>这可能是我最喜欢的方法。如果你进入 <code>/usr/share/doc</code> 目录，并列出该目录，你可以看到许多以安装在你的 Linux 上的工具为名称的文件夹。</p>
+<p>根据 <a href="https://linux.cn/article-6132-1.html" target="_blank" rel="external">文件系统层级标准</a>，这些文件夹包含了许多帮助手册没有的信息，还有一些可以使配置更方便的模板和配置文件。</p>
+<p>例如，让我们来看一下 <code>squid-3.3.8</code> （不同发行版的版本可能会不同），这还是一个非常受欢迎的 HTTP 代理和 <a href="http://www.tecmint.com/configure-squid-server-in-linux/" target="_blank" rel="external">squid 缓存服务器</a>。</p>
+<p>让我们用<code>cd</code>命令进入目录：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cd <span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>squid-<span class="number">3.3</span>.<span class="number">8</span></span><br></pre></td></tr></table></figure>
+<p>列出当前文件夹列表：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># ls</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095543nddiud7rzi2f3ed2.png" alt="使用 ls 列出目录"></p>
+<p><em>使用 ls 列出目录</em></p>
+<p>你应该特别注意 <code>QUICKSTART</code> 和 <code>squid.conf.documented</code>。这些文件分别包含了 Squid 详细文档及其经过详细备注的配置文件。对于别的安装包来说，具体的名字可能不同（有可能是 <strong>QuickRef</strong> 或者<strong>00QUICKSTART</strong>），但意思是一样的。</p>
+<p>对于另外一些安装包，比如 Apache web 服务器，在<code>/usr/share/doc</code>目录提供了配置模板，当你配置独立服务器或者虚拟主机的时候会非常有用。</p>
+<h3 id="GNU-信息文档"><a href="#GNU-信息文档" class="headerlink" title="GNU 信息文档"></a>GNU 信息文档</h3><p>你可以把它看做帮助手册的“开挂版”。它不仅仅提供工具的帮助信息，而且还是超级链接的形式（没错，在命令行中的超级链接），你可以通过箭头按钮从一个章节导航到另外章节，并按下回车按钮来确认。</p>
+<p>一个典型的例子是：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># info coreutils</span></span><br></pre></td></tr></table></figure>
+<p>因为 coreutils 包含了每个系统中都有的基本文件、shell 和文本处理工具，你自然可以从 coreutils 的 info 文档中得到它们的详细介绍。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/25/095543xzr5k57jx7fx7ke9.png" alt="Info Coreutils"></p>
+<p><em>Info Coreutils</em></p>
+<p>和帮助手册一样，你可以按 q 键退出。</p>
+<p>此外，GNU info 还可以显示标准的帮助手册。 例如：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># info tune2fs</span></span><br></pre></td></tr></table></figure>
+<p>它将显示 <strong>tune2fs</strong>的帮助手册, 这是一个 ext2/3/4 文件系统管理工具。</p>
+<p>我们现在看到了，让我们来试试怎么用<strong>tune2fs</strong>：</p>
+<p>显示 <strong>/dev/mapper/vg00-vol_backups</strong> 文件系统信息：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"># tune2</span>fs -l /dev/mapper/v<span class="name">g00</span>-vol_backups</span><br></pre></td></tr></table></figure>
+<p>修改文件系统标签（修改为 Backups）：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"># tune2</span>fs -L Backups /dev/mapper/v<span class="name">g00</span>-vol_backups</span><br></pre></td></tr></table></figure>
+<p>设置文件系统的自检间隔及挂载计数（用<code>-c</code> 选项设置挂载计数间隔， 用 <code>-i</code> 选项设置自检时间间隔，这里 <strong>d 表示天，w 表示周，m 表示月</strong>)。</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"># tune2</span>fs -c <span class="number">150</span> /dev/mapper/v<span class="name">g00</span>-vol_backups <span class="attr"># 每 150</span> 次挂载检查一次<span class="attr"># tune2</span>fs -i <span class="number">6</span>w /dev/mapper/v<span class="name">g00</span>-vol_backups <span class="attr"># 每 6</span> 周检查一次</span><br></pre></td></tr></table></figure>
+<p>以上这些内容也可以通过 <code>--help</code> 选项找到，或者查看帮助手册。</p>
+]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-11]]></title>
+      <title><![CDATA[LFCS 11：如何使用命令 vgcreate、lvcreate 和 lvextend 管理和创建 LVM]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-11/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<p>在安装 Linux 系统的时候要做的最重要的决定之一便是给系统文件、home 目录等分配空间。在这个地方犯了错，再要扩大空间不足的分区，那样既麻烦又有风险。</p>
+<p><strong>逻辑卷管理</strong> （<strong>LVM</strong>）相较于传统的分区管理有许多优点，已经成为大多数（如果不能说全部的话） Linux 发行版安装时的默认选择。LVM 最大的优点应该是能方便的按照你的意愿调整（减小或增大）逻辑分区的大小。</p>
+<p>LVM 的组成结构：</p>
+<ul>
+<li>把一块或多块硬盘或者一个或多个分区配置成物理卷（PV）。</li>
+<li>一个用一个或多个物理卷创建出的卷组（<strong>VG</strong>）。可以把一个卷组想象成一个单独的存储单元。</li>
+<li>在一个卷组上可以创建多个逻辑卷。每个逻辑卷相当于一个传统意义上的分区 —— 优点是它的大小可以根据需求重新调整大小，正如之前提到的那样。</li>
+</ul>
+<p>本文，我们将使用三块 <strong>8 GB</strong> 的磁盘（<strong>/dev/sdb</strong>、<strong>/dev/sdc</strong> 和 <strong>/dev/sdd</strong>）分别创建三个物理卷。你既可以直接在整个设备上创建 PV，也可以先分区在创建。</p>
+<p>在这里我们选择第一种方式，如果你决定使用第二种（可以参考本系列<a href="https://linux.cn/article-7187-1.html" target="_blank" rel="external">第四讲：创建分区和文件系统</a>）确保每个分区的类型都是<code>8e</code>。</p>
+<h3 id="创建物理卷，卷组和逻辑卷"><a href="#创建物理卷，卷组和逻辑卷" class="headerlink" title="创建物理卷，卷组和逻辑卷"></a>创建物理卷，卷组和逻辑卷</h3><p>要在 <strong>/dev/sdb</strong>、<strong>/dev/sdc</strong> 和 <strong>/dev/sdd</strong>上创建物理卷，运行：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># pvcreate <span class="regexp">/dev/</span>sdb <span class="regexp">/dev/</span>sdc <span class="regexp">/dev/</span>sdd</span><br></pre></td></tr></table></figure>
+<p>你可以列出新创建的 PV ，通过：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># pvs</span></span><br></pre></td></tr></table></figure>
+<p>并得到每个 PV 的详细信息，通过：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># pvdisplay /dev/sdX</span></span><br></pre></td></tr></table></figure>
+<p>（<strong>X</strong> 即 b、c 或 d）</p>
+<p>如果没有输入 <code>/dev/sdX</code> ，那么你将得到所有 PV 的信息。</p>
+<p>使用 /dev/sdb<code>和</code>/dev/sdc<code>创建卷组 ，命名为</code>vg00<code>(在需要时是可以通过添加其他设备来扩展空间的，我们等到说明这点的时候再用，所以暂时先保留</code>/dev/sdd`）：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vgcreate vg00 <span class="regexp">/dev/</span>sdb <span class="regexp">/dev/</span>sdc</span><br></pre></td></tr></table></figure>
+<p>就像物理卷那样，你也可以查看卷组的信息，通过：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># vgdisplay vg00</span></span><br></pre></td></tr></table></figure>
+<p>由于 <code>vg00</code> 是由两个 <strong>8 GB</strong> 的磁盘组成的，所以它将会显示成一个 <strong>16 GB</strong> 的硬盘：</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232801kjdhvx1e5vv9jzx7.png" alt="LVM 卷组列表"></p>
+<p><em>LVM 卷组列表</em></p>
+<p>当谈到创建逻辑卷，空间的分配必须考虑到当下和以后的需求。根据每个逻辑卷的用途来命名是一个好的做法。</p>
+<p>举个例子，让我们创建两个 LV，命名为 <code>vol_projects</code> （<strong>10 GB</strong>） 和 <code>vol_backups</code> （剩下的空间）， 在日后分别用于部署项目文件和系统备份。</p>
+<p>参数 <code>-n</code> 用于为 LV 指定名称，而 <code>-L</code> 用于设定固定的大小，还有 <code>-l</code> （小写的 L）在 VG 的预留空间中用于指定百分比大小的空间。</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"># lvcreate -n vol_projects -L 10</span>G v<span class="name">g00</span><span class="attr"># lvcreate -n vol_backups -l 100</span><span class="meta">%</span>FREE v<span class="name">g00</span></span><br></pre></td></tr></table></figure>
+<p>和之前一样，你可以查看 LV 的列表和基础信息，通过：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># lvs</span></span><br></pre></td></tr></table></figure>
+<p>或是查看详细信息，通过：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># lvdisplay</span></span><br></pre></td></tr></table></figure>
+<p>若要查看单个 <strong>LV</strong> 的信息，使用 <strong>lvdisplay</strong> 加上 <strong>VG</strong> 和 <strong>LV</strong> 作为参数，如下：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># lvdisplay vg00/vol_projects</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232802q49pf2bz9tbg1f24.png" alt="逻辑卷列表"></p>
+<p><em>逻辑卷列表</em></p>
+<p>如上图，我们看到 LV 已经被创建成存储设备了（参考 LV Path 那一行）。在使用每个逻辑卷之前，需要先在上面创建文件系统。</p>
+<p>这里我们拿 ext4 来做举例，因为对于每个 LV 的大小， ext4 既可以增大又可以减小（相对的 xfs 就只允许增大）：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"># mkfs.ext4</span> /dev/v<span class="name">g00</span>/vol_projects<span class="attr"># mkfs.ext4</span> /dev/v<span class="name">g00</span>/vol_backups</span><br></pre></td></tr></table></figure>
+<p>我们将在下一节向大家说明，如何调整逻辑卷的大小并在需要的时候添加额外的外部存储空间。</p>
+<h3 id="调整逻辑卷大小和扩充卷组"><a href="#调整逻辑卷大小和扩充卷组" class="headerlink" title="调整逻辑卷大小和扩充卷组"></a>调整逻辑卷大小和扩充卷组</h3><p>现在设想以下场景。<code>vol_backups</code> 中的空间即将用完，而 <code>vol_projects</code> 中还有富余的空间。由于 LVM 的特性，我们可以轻易的减小后者的大小（比方说 <strong>2.5 GB</strong>），并将其分配给前者，与此同时调整每个文件系统的大小。</p>
+<p>幸运的是这很简单，只需：</p>
+<figure class="highlight cos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># lvreduce -<span class="keyword">L</span> -<span class="number">2.5</span>G -<span class="keyword">r</span> /dev/vg00/vol_projects# lvextend -<span class="keyword">l</span> +<span class="number">100</span><span class="built_in">%FREE</span> -<span class="keyword">r</span> /dev/vg00/vol_backups</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232802asehabhyw1wqsbes.png" alt="减小逻辑卷和卷组"></p>
+<p><em>减小逻辑卷和卷组</em></p>
+<p>在调整逻辑卷的时候，其中包含的减号 <code>(-)</code> 或加号 <code>(+)</code> 是十分重要的。否则 LV 将会被设置成指定的大小，而非调整指定大小。</p>
+<p>有些时候，你可能会遭遇那种无法仅靠调整逻辑卷的大小就可以解决的问题，那时你就需要购置额外的存储设备了，你可能需要再加一块硬盘。这里我们将通过添加之前配置时预留的 PV （<code>/dev/sdd</code>），用以模拟这种情况。</p>
+<p>想把 <code>/dev/sdd</code> 加到 <code>vg00</code>，执行：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># vgextend vg00 /dev/sdd</span></span><br></pre></td></tr></table></figure>
+<p>如果你在运行上条命令的前后执行 vgdisplay <code>vg00</code> ，你就会看出 VG 的大小增加了。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># vgdisplay vg00</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232803icaaea6dzccpwsbs.png" alt="查看卷组磁盘大小"></p>
+<p><em>查看卷组磁盘大小</em></p>
+<p>现在，你可以使用新加的空间，按照你的需求调整现有 LV 的大小，或者创建一个新的 LV。</p>
+<h3 id="在启动和需求时挂载逻辑卷"><a href="#在启动和需求时挂载逻辑卷" class="headerlink" title="在启动和需求时挂载逻辑卷"></a>在启动和需求时挂载逻辑卷</h3><p>当然，如果我们不打算实际的使用逻辑卷，那么创建它们就变得毫无意义了。为了更好的识别逻辑卷，我们需要找出它的 <code>UUID</code>（用于识别一个格式化存储设备的唯一且不变的属性）。</p>
+<p>要做到这点，可使用 blkid 加每个设备的路径来实现：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># blkid <span class="regexp">/dev/</span>vg00<span class="regexp">/vol_projects# blkid /</span>dev<span class="regexp">/vg00/</span>vol_backups</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232803d9fil25unsl5ufzz.png" alt="寻找逻辑卷的 UUID"></p>
+<p><em>寻找逻辑卷的 UUID</em></p>
+<p>为每个 LV 创建挂载点：</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="built_in">mkdir</span> /home/projects# <span class="built_in">mkdir</span> /home/backups</span><br></pre></td></tr></table></figure>
+<p>并在 <code>/etc/fstab</code> 插入相应的条目（确保使用之前获得的UUID）：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID=b85df913-580f-461c-844f-546d8cde4646 /home/projects    ext4 defaults <span class="number">0</span> <span class="number">0UUID</span>=e1929239-<span class="number">5087</span>-<span class="number">44b1</span>-<span class="number">9396</span>-53e09db6eb9e /home/backups ext4    defaults <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>保存并挂载 LV：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mount -a# mount | grep home</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/20/232804te0tozs3t451t0an.png" alt="挂载逻辑卷"></p>
+<p><em>挂载逻辑卷</em></p>
+<p>在涉及到 LV 的实际使用时，你还需要按照曾在本系列<a href="https://linux.cn/article-7418-1.html" target="_blank" rel="external">第八讲：管理用户和用户组</a>中讲解的那样，为其设置合适的 <code>ugo+rwx</code>。</p>
+]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-10]]></title>
+      <title><![CDATA[LFCS 10：学习简单的 Shell 脚本编程和文件系统故障排除]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-10/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h3 id="理解终端-（Terminals）和-Shell"><a href="#理解终端-（Terminals）和-Shell" class="headerlink" title="理解终端 （Terminals）和 Shell"></a>理解终端 （Terminals）和 Shell</h3><p>首先要声明一些概念。</p>
+<ul>
+<li>Shell 是一个程序，它将命令传递给操作系统来执行。</li>
+<li>Terminal 也是一个程序，允许最终用户使用它与 Shell 来交互。比如，下边的图片是 GNOME Terminal。</li>
+</ul>
+<p><em>Gnome Terminal</em></p>
+<p>启动 Shell 之后，会呈现一个命令提示符 (也称为命令行) 提示我们 Shell 已经做好了准备，接受标准输入设备输入的命令，这个标准输入设备通常是键盘。</p>
+<p>你可以参考该系列文章的 <a href="https://linux.cn/article-7161-1.html" target="_blank" rel="external">第一讲 如何在 Linux 上使用 GNU sed 等命令来创建、编辑和操作文件</a> 来温习一些常用的命令。</p>
+<p>Linux 为提供了许多可以选用的 Shell，下面列出一些常用的：</p>
+<p><strong>bash Shell</strong></p>
+<p>Bash 代表 Bourne Again Shell，它是 GNU 项目默认的 Shell。它借鉴了 Korn shell (ksh) 和 C shell (csh) 中有用的特性，并同时对性能进行了提升。它同时也是 LFCS 认证中所涵盖的各发行版中默认 Shell，也是本系列教程将使用的 Shell。</p>
+<p><strong>sh Shell</strong></p>
+<p>Bourne SHell 是一个比较古老的 shell，多年来一直都是很多类 Unix 系统的默认 shell。</p>
+<p><strong>ksh Shell</strong></p>
+<p>Korn SHell (ksh shell) 也是一个 Unix shell，是贝尔实验室 （Bell Labs）的 David Korn 在 19 世纪 80 年代初的时候开发的。它兼容 Bourne shell ，并同时包含了 C shell 中的多数特性。</p>
+<p>一个 shell 脚本仅仅只是一个可执行的文本文件，里边包含一条条可执行命令。</p>
+<h3 id="简单的-Shell-脚本编程"><a href="#简单的-Shell-脚本编程" class="headerlink" title="简单的 Shell 脚本编程"></a>简单的 Shell 脚本编程</h3><p>如前所述，一个 shell 脚本就是一个纯文本文件，因此，可以使用自己喜欢的文本编辑器来创建和编辑。你可以考虑使用 vi/vim (参考本系列 <a href="https://linux.cn/article-7165-1.html" target="_blank" rel="external">第二讲 如何安装和使用纯文本编辑器 vi/vim</a>)，它的语法高亮让我的编辑工作非常方便。</p>
+<p>输入如下命令来创建一个名为 myscript.sh 的脚本文件：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># vim myscript.sh</span></span><br></pre></td></tr></table></figure>
+<p>shell 脚本的第一行 (著名的<a href="https://linux.cn/article-3664-1.html" target="_blank" rel="external">释伴行</a>（shebang line）) 必须如下：</p>
+<figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash（）</span></span><br></pre></td></tr></table></figure>
+<p>这条语句“告诉”操作系统需要用哪个解释器来运行这个脚本文件之后命令。</p>
+<p>现在可以添加需要执行的命令了。通过注释，我们可以声明每一条命令或者整个脚本的具体含义。注意，shell 会忽略掉以井号 (#) 开始的注释语句。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span><br><span class="line"></span></span><br><span class="line"><span class="built_in">echo</span> 这是关于 LFCS 认证系列的第十部分</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> 今天是 $(date +%Y-%m-%d)</span><br></pre></td></tr></table></figure>
+<p>编写并保存脚本之后，通过以下命令来使脚本文件成为可执行文件：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod 755 myscript.sh</span></span><br></pre></td></tr></table></figure>
+<p>在执行脚本之前，我们需要说一下环境变量 ($PATH)，运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<p>我们就会看到环境变量 ($PATH) 的具体内容：这是当输入命令时系统所搜索可执行程序的目录，每一项之间使用冒号 (<img src="https://dn-linuxcn.qbox.me/static/image/smiley/default/smile.gif" alt="img"> 隔开。称它为环境变量，是因为它本是就是 shell 环境的一部分 —— 这是当 shell 每次启动时 shell 及其子进程可以获取的一系列信息。</p>
+<p>当我们输入一个命令并按下回车时，shell 会搜索 $PATH 变量中列出的目录并执行第一个知道的实例。请看如下例子：</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201607/07/113132kzy876lll96yp4bl.png" alt="Linux Environment Variables"></p>
+<p><em>环境变量</em></p>
+<p>假如存在两个同名的可执行程序，一个在 /usr/local/bin，另一个在 /usr/bin，则会执行环境变量中最先列出的那个，并忽略另外一个。</p>
+<p>如果我们自己编写的脚本没有放在 $PATH 变量列出目录中的任何一个，则需要输入 ./filename 来执行它。而如果存储在 $PATH 变量中的任意一个目录，我们就可以像运行其他命令一样来运行之前编写的脚本了。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># pwd</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># ./myscript.sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># cp myscript.sh ../bin</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># cd ../bin</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># pwd</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># myscript.sh</span></span><br></pre></td></tr></table></figure>
+<p><em>执行脚本</em></p>
+<h4 id="if-条件语句"><a href="#if-条件语句" class="headerlink" title="if 条件语句"></a>if 条件语句</h4><p>无论何时，当你需要在脚本中根据某个命令的运行结果来采取相应动作时，你应该使用 if 结构来定义条件。基本语法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> CONDITION; <span class="keyword">then</span></span><br><span class="line">    COMMANDS;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    OTHER-COMMANDS</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>其中，CONDITION 可以是如下情形的任意一项 (仅列出常用的)，并且达到以下条件时返回 true：</p>
+<ul>
+<li><code>[ -a file ]</code> → 指定文件存在。</li>
+<li><code>[ -d file ]</code> → 指定文件存在，并且是一个目录。</li>
+<li><code>[ -f file ]</code> → 指定文件存在，并且是一个普通文件。</li>
+<li><code>[ -u file ]</code> → 指定文件存在，并设置了 SUID 权限位。</li>
+<li><code>[ -g file ]</code> → 指定文件存在，并设置了 SGID 权限位。</li>
+<li><code>[ -k file ]</code> → 指定文件存在，并设置了“黏连 (Sticky)”位。</li>
+<li><code>[ -r file ]</code> → 指定文件存在，并且文件可读。</li>
+<li><code>[ -s file ]</code> → 指定文件存在，并且文件不为空。</li>
+<li><code>[ -w file ]</code> → 指定文件存在，并且文件可写入。</li>
+<li><code>[ -x file ]</code> → 指定文件存在，并且可执行。</li>
+<li><code>[ string1 = string2 ]</code> → 字符串相同。</li>
+<li><code>[ string1 != string2 ]</code> → 字符串不相同。</li>
+</ul>
+<p>[ int1 op int2 ] 为前述列表中的一部分 (例如： -eq –&gt; int1 与 int2 相同时返回 true) ，其中比较项也可以是一个列表子项， 其中 op 为以下比较操作符。</p>
+<ul>
+<li><code>-eq</code> → int1 等于 int2 时返回 true。</li>
+<li><code>-ne</code> → int1 不等于 int2 时返回 true。</li>
+<li><code>-lt</code> → int1 小于 int2 时返回 true。</li>
+<li><code>-le</code> → int1 小于或等于 int2 时返回 true。</li>
+<li><code>-gt</code> → int1 大于 int2 时返回 true。</li>
+<li><code>-ge</code> → int1 大于或等于 int2 时返回 true。</li>
+</ul>
+<h4 id="for-循环语句"><a href="#for-循环语句" class="headerlink" title="for 循环语句"></a>for 循环语句</h4><p>循环语句可以在某个条件下重复执行某个命令。基本语法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> SEQUENCE; <span class="keyword">do</span></span><br><span class="line">        COMMANDS;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>其中，item 为每次执行 COMMANDS 时，在 SEQUENCE 中匹配到的值。</p>
+<h4 id="While-循环语句"><a href="#While-循环语句" class="headerlink" title="While 循环语句"></a>While 循环语句</h4><p>该循环结构会一直执行重复的命令，直到控制命令（EVALUATION_COMMAND）执行的退出状态值等于 0 时 (即执行成功) 停止。基本语法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> EVALUATION_COMMAND; <span class="keyword">do</span></span><br><span class="line">        EXECUTE_COMMANDS;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>其中，EVALUATION_COMMAND 可以是任何能够返回成功 (0) 或失败 (0 以外的值) 的退出状态值的命令，EXECUTE_COMMANDS 则可以是任何的程序、脚本或者 shell 结构体，包括其他的嵌套循环。</p>
+<h4 id="综合使用"><a href="#综合使用" class="headerlink" title="综合使用"></a>综合使用</h4><p>我们会通过以下例子来演示 if 条件语句和 for 循环语句。</p>
+<p><strong>在基于 systemd 的发行版中探测某个服务是否在运行</strong></p>
+<p>先建立一个文件，列出我们想要想要查看的服务名。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat myservices.txt</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">sshd</span></span><br><span class="line">mariadb</span><br><span class="line">httpd</span><br><span class="line">crond</span><br><span class="line">firewalld</span><br></pre></td></tr></table></figure>
+<p><em>使用脚本监控 Linux 服务</em></p>
+<p>我们编写的脚本看起来应该是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># This script iterates over a list of services and</span></span><br><span class="line"><span class="comment"># is used to determine whether they are running or not.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> service <span class="keyword">in</span> $(cat myservices.txt); <span class="keyword">do</span></span><br><span class="line">        systemctl status <span class="variable">$service</span> | grep --quiet <span class="string">"running"</span></span><br><span class="line">        <span class="keyword">if</span> [ $? <span class="_">-eq</span> 0 ]; <span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> <span class="variable">$service</span> <span class="string">"is [ACTIVE]"</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">echo</span> <span class="variable">$service</span> <span class="string">"is [INACTIVE or NOT INSTALLED]"</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p><em>Linux 服务监控脚本</em></p>
+<p><strong>我们来解释一下这个脚本的工作流程</strong></p>
+<p>1). for 循环每次读取 myservices.txt 文件中的一项记录，每一项纪录表示一个服务的通用变量名。各项记录组成如下：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># cat myservices.txt</span></span><br></pre></td></tr></table></figure>
+<p>2). 以上命令由圆括号括着，并在前面添加美元符，表示它需要从 myservices.txt 的记录列表中取值并作为变量传递给 for 循环。</p>
+<p>3). 对于记录列表中的每一项纪录 (即每一项纪录的服务变量)，都会执行以下动作：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># systemctl status $service | grep --quiet <span class="string">"running"</span></span></span><br></pre></td></tr></table></figure>
+<p>此时，需要在每个通用变量名 (即每一项纪录的服务变量) 的前面添加美元符，以表明它是作为变量来传递的。其输出则通过管道符传给 grep。</p>
+<p>其中，-quiet 选项用于阻止 grep 命令将发现的 “running” 的行回显到屏幕。当 grep 捕获到 “running” 时，则会返回一个退出状态码 “0” (在 if 结构体表示为 $?)，由此确认某个服务正在运行中。</p>
+<p>如果退出状态码是非零值 (即 systemctl status $service 命令中的回显中没有出现 “running”)，则表明某个服务未运行。</p>
+<p><em>服务监控脚本</em></p>
+<p>我们可以增加一步，在开始循环之前，先确认 myservices.txt 是否存在。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># This script iterates over a list of services and</span></span><br><span class="line"><span class="comment"># is used to determine whether they are running or not.</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="_">-f</span> myservices.txt ]; <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">for</span> service <span class="keyword">in</span> $(cat myservices.txt); <span class="keyword">do</span></span><br><span class="line">                systemctl status <span class="variable">$service</span> | grep --quiet <span class="string">"running"</span></span><br><span class="line">                <span class="keyword">if</span> [ $? <span class="_">-eq</span> 0 ]; <span class="keyword">then</span></span><br><span class="line">                        <span class="built_in">echo</span> <span class="variable">$service</span> <span class="string">"is [ACTIVE]"</span></span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                        <span class="built_in">echo</span> <span class="variable">$service</span> <span class="string">"is [INACTIVE or NOT INSTALLED]"</span></span><br><span class="line">                <span class="keyword">fi</span></span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"myservices.txt is missing"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p><strong>Ping 一系列网络或者 Internet 主机名以获取应答数据</strong></p>
+<p>你可能想把自己维护的主机写入一个文本文件，并使用脚本探测它们是否能够 ping 得通 (脚本中的 myhosts 可以随意替换为你想要的名称)。</p>
+<p>shell 的内置 read 命令将告诉 while 循环一行行的读取 myhosts，并将读取的每行内容传给 host 变量，随后 host 变量传递给 ping 命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># This script is used to demonstrate the use of a while loop</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> host; <span class="keyword">do</span></span><br><span class="line">        ping -c 2 <span class="variable">$host</span></span><br><span class="line"><span class="keyword">done</span> &lt; myhosts</span><br></pre></td></tr></table></figure>
+<p><em>使用脚本 Ping 服务器</em></p>
+<p>扩展阅读:</p>
+<ul>
+<li><a href="http://www.tecmint.com/learning-shell-scripting-language-a-guide-from-newbies-to-system-administrator/" target="_blank" rel="external">Learn Shell Scripting: A Guide from Newbies to System Administrator</a></li>
+<li><a href="http://www.tecmint.com/basic-shell-programming-part-ii/" target="_blank" rel="external">5 Shell Scripts to Learn Shell Programming</a></li>
+</ul>
+<h3 id="文件系统排错"><a href="#文件系统排错" class="headerlink" title="文件系统排错"></a>文件系统排错</h3><p>尽管 Linux 是一个很稳定的操作系统，但仍然会因为某些原因出现崩溃时 (比如因为断电等)，正好你有一个 (或者更多个) 文件系统未能正确卸载，Linux 重启的时候就会自动检测其中可能发生的错误。</p>
+<p>此外，每次系统正常启动的时候，都会在文件系统挂载之前校验它们的完整度。而这些全部都依赖于 fsck 工具 (文件系统校验（file system check）)。</p>
+<p>如果对 fsck 进行设定，它除了校验文件系统的完整性之外，还可以尝试修复错误。fsck 能否成功修复错误，取决于文件系统的损伤程度；如果可以修复，被损坏部分的文件会恢复到位于每个文件系统根目录的 lost+found。</p>
+<p>最后但同样重要的是，我们必须注意，如果拔掉系统正在写入数据的 USB 设备同样会发生错误，甚至可能发生硬件损坏。</p>
+<p>fsck 的基本用如下：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># fsck [options] filesystem</span></span><br></pre></td></tr></table></figure>
+<p><strong>检查文件系统错误并尝试自动修复</strong></p>
+<p>想要使用 fsck 检查文件系统，我们需要首先卸载文件系统。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># mount | grep sdg1</span></span><br><span class="line"><span class="meta"># umount /mnt</span></span><br><span class="line"><span class="meta"># fsck -y /dev/sdg1</span></span><br></pre></td></tr></table></figure>
+<p><em>检查文件系统错误</em></p>
+<p>除了 -y 选项，我们也可以使用 -a 选项来自动修复文件系统错误，而不必做出交互式应答，并在文件系统看起来 “干净” 卸载的情况下强制校验。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># fsck -af /dev/sdg1</span></span><br></pre></td></tr></table></figure>
+<p>如果只是要找出什么地方发生了错误 (不用在检测到错误的时候修复)，我们可以使用 -n 选项，这样只会将文件系统错误输出到标准输出设备上。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># fsck -n /dev/sdg1</span></span><br></pre></td></tr></table></figure>
+<p>根据 fsck 输出的错误信息，我们可以知道是否可以自己修复或者需要将问题提交给工程师团队来做详细的硬件校验。</p>
+]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-09]]></title>
+      <title><![CDATA[LFCS 09：使用 Yum/RPM/Apt/Dpkg/Aptitude 进行 Linux 软件包管理]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-09/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h3 id="软件包管理"><a href="#软件包管理" class="headerlink" title="软件包管理"></a>软件包管理</h3><p>简单的说，软件包管理是系统中安装和维护软件的一种方法，这里说的维护包含更新和卸载。</p>
+<p>在Linux早期，程序只以源代码的方式发行，还带有所需的用户使用手册和必备的配置文件，甚至更多。现如今，大多数发行商一般使用预装程序或者被称为软件包的程序集合。用户可以使用这些预装程序或者软件包安装到该发行版中。然而，Linux最伟大的一点是我们仍然能够获得程序的源代码用来学习、改进和编译。</p>
+<h4 id="软件包管理系统是如何工作的"><a href="#软件包管理系统是如何工作的" class="headerlink" title="软件包管理系统是如何工作的"></a>软件包管理系统是如何工作的</h4><p>如果某一个软件包需要一定的资源，如共享库，或者需要另一个软件包，这就称之为依赖性。所有现在的包管理系统提供了一些解决依赖性的方法，以确保当安装一个软件包时，相关的依赖包也安装好了。</p>
+<h4 id="打包系统"><a href="#打包系统" class="headerlink" title="打包系统"></a>打包系统</h4><p>几乎所有安装在现代Linux系统上的软件都会能互联网上找到。它要么由发行商通过中央仓库（中央仓库能包含几千个软件包，每个软件包都已经为发行版构建、测试并且维护好了）提供，要么能够直接得到可以下载和手动安装的源代码。</p>
+<p>由于不同的发行版使用不同的打包系统（Debian的<em>.deb文件/CentOS的</em>.rpm文件/openSUSE的专门为openSUSE构建的*.rpm文件），因此为一个发行版开发的软件包会与其他发行版不兼容。然而，大多数发行版都属于LFCS认证所涉及的三个发行版家族之一。</p>
+<h4 id="高级和低级打包工具"><a href="#高级和低级打包工具" class="headerlink" title="高级和低级打包工具"></a>高级和低级打包工具</h4><p>为了有效地进行软件包管理的任务，你需要知道，有两种类型的实用工具：低级工具（能在后端实际安装、升级、卸载软件包文件），以及高级工具（负责确保能很好的执行依赖性解决和元数据检索的任务——元数据也称为数据的数据）。</p>
+<table>
+<thead>
+<tr>
+<th>发行版</th>
+<th>低级工具</th>
+<th>高级工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Debian版及其衍生版</td>
+<td>dpkg</td>
+<td>apt-get / aptitude</td>
+</tr>
+<tr>
+<td>CentOS版</td>
+<td>rpm</td>
+<td>yum</td>
+</tr>
+<tr>
+<td>openSUSE版</td>
+<td>rpm</td>
+<td>zypper</td>
+</tr>
+</tbody>
+</table>
+<p>让我们来看下低级工具和高级工具的描述。</p>
+<p>dpkg的是基于Debian的系统的一个低级包管理器。它可以安装，删除，提供有关资料，以及建立*.deb包，但它不能自动下载并安装它们相应的依赖包。</p>
+<ul>
+<li>阅读更多： <a href="http://www.tecmint.com/dpkg-command-examples/" target="_blank" rel="external">15个dpkg命令实例</a></li>
+</ul>
+<p>apt-get是Debian及其衍生版的高级包管理器，并提供命令行方式来从多个来源检索和安装软件包，其中包括解决依赖性。和dpkg不同的是，apt-get不是直接基于.deb文件工作，而是基于软件包的正确名称。</p>
+<ul>
+<li>阅读更多： <a href="http://www.tecmint.com/useful-basic-commands-of-apt-get-and-apt-cache-for-package-management/" target="_blank" rel="external">25个apt-get命令实例</a></li>
+</ul>
+<p>Aptitude是基于Debian的系统的另一个高级包管理器，它可用于快速简便的执行管理任务（安装，升级和删除软件包，还可以自动处理解决依赖性）。它在atp-get的基础上提供了更多功能，例如提供对软件包的几个版本的访问。</p>
+<p>rpm是Linux标准基础（LSB）兼容发行版所使用的一种软件包管理器，用来对软件包进行低级处理。就像dpkg一样，rpm可以查询、安装、检验、升级和卸载软件包，它多数用于基于Fedora的系统，比如RHEL和CentOS。</p>
+<ul>
+<li>阅读更多： <a href="http://www.tecmint.com/20-practical-examples-of-rpm-commands-in-linux/" target="_blank" rel="external">20个rpm命令实例</a></li>
+</ul>
+<p>相对于基于RPM的系统，yum增加了系统自动更新的功能和带依赖性管理的软件包管理功能。作为一个高级工具，和apt-get或者aptitude相似，yum需要配合仓库工作。</p>
+<ul>
+<li>阅读更多： <a href="http://www.tecmint.com/20-linux-yum-yellowdog-updater-modified-commands-for-package-mangement/" target="_blank" rel="external">20个yum命令实例</a></li>
+</ul>
+<h3 id="低级工具的常见用法"><a href="#低级工具的常见用法" class="headerlink" title="低级工具的常见用法"></a>低级工具的常见用法</h3><p>使用低级工具处理最常见的任务如下。</p>
+<h4 id="1-从已编译（-deb或-rpm）的文件安装一个软件包"><a href="#1-从已编译（-deb或-rpm）的文件安装一个软件包" class="headerlink" title="1. 从已编译（.deb或.rpm）的文件安装一个软件包"></a>1. 从已编译（<em>.deb或</em>.rpm）的文件安装一个软件包</h4><p>这种安装方法的缺点是没有提供解决依赖性的方案。当你在发行版本库中无法获得某个软件包并且又不能通过高级工具下载安装时，你很可能会从一个已编译文件安装该软件包。因为低级工具不会解决依赖性问题，所以当安装一个没有解决依赖性的软件包时会出现出错并且退出。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">dpkg</span> <span class="selector-tag">-i</span> <span class="selector-tag">file</span><span class="selector-class">.deb</span>      <span class="selector-attr">[Debian版和衍生版]</span># <span class="selector-tag">rpm</span> <span class="selector-tag">-i</span> <span class="selector-tag">file</span><span class="selector-class">.rpm</span>       <span class="selector-attr">[CentOS版 / openSUSE版]</span></span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：不要试图在CentOS中安装一个为openSUSE构建的.rpm文件，反之亦然！</p>
+<h4 id="2-从已编译文件中更新一个软件包"><a href="#2-从已编译文件中更新一个软件包" class="headerlink" title="2. 从已编译文件中更新一个软件包"></a>2. 从已编译文件中更新一个软件包</h4><p>同样，当某个安装的软件包不在中央仓库中时，你只能手动升级该软件包。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">dpkg</span> <span class="selector-tag">-i</span> <span class="selector-tag">file</span><span class="selector-class">.deb</span>      <span class="selector-attr">[Debian版和衍生版]</span># <span class="selector-tag">rpm</span> <span class="selector-tag">-U</span> <span class="selector-tag">file</span><span class="selector-class">.rpm</span>       <span class="selector-attr">[CentOS版 / openSUSE版]</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-列举安装的软件包"><a href="#3-列举安装的软件包" class="headerlink" title="3. 列举安装的软件包"></a>3. 列举安装的软件包</h4><p>当你第一次接触一个已经在工作中的系统时，很可能你会想知道安装了哪些软件包。</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># dpkg -l       <span class="string">[Debian版和衍生版]</span># rpm -qa       <span class="string">[CentOS版 / openSUSE版]</span></span><br></pre></td></tr></table></figure>
+<p>如果你想知道一个特定的软件包安装在哪儿，你可以使用管道命令从以上命令的输出中去搜索，这在这个系列的<a href="https://linux.cn/article-7161-1.html" target="_blank" rel="external">第一讲 操作Linux文件</a> 中有介绍。例如我们需要验证mysql-common这个软件包是否安装在Ubuntu系统中：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># dpkg -l | grep mysql-common</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223756gbrc5wckzr9s25q2.png" alt="检查安装的软件包"></p>
+<p><em>检查安装的软件包</em></p>
+<p>另外一种方式来判断一个软件包是否已安装。</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># dpkg --status package_name        <span class="string">[Debian版和衍生版]</span># rpm -q package_name           <span class="string">[CentOS版 / openSUSE版]</span></span><br></pre></td></tr></table></figure>
+<p>例如，让我们找出sysdig软件包是否安装在我们的系统。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># rpm -qa | grep sysdig</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223757bpi0oknbiiub0bri.png" alt="检查sysdig软件包"></p>
+<p><em>检查sysdig软件包</em></p>
+<h4 id="4-查询一个文件是由哪个软件包安装的"><a href="#4-查询一个文件是由哪个软件包安装的" class="headerlink" title="4. 查询一个文件是由哪个软件包安装的"></a>4. 查询一个文件是由哪个软件包安装的</h4><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># dpkg --search <span class="built_in">file_name</span># rpm -qf <span class="built_in">file_name</span></span><br></pre></td></tr></table></figure>
+<p>例如，pw_dict.hwm文件是由那个软件包安装的？</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># rpm -qf <span class="regexp">/usr/</span>share<span class="regexp">/cracklib/</span>pw_dict.hwm</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223757syilccyc5to25crc.png" alt="Linux中查询文件"></p>
+<p><em>Linux中查询文件</em></p>
+<h3 id="高级工具的常见用法"><a href="#高级工具的常见用法" class="headerlink" title="高级工具的常见用法"></a>高级工具的常见用法</h3><p>使用高级工具处理最常见的任务如下。</p>
+<h4 id="1-搜索软件包"><a href="#1-搜索软件包" class="headerlink" title="1. 搜索软件包"></a>1. 搜索软件包</h4><p>aptitude的更新操作将会更新可用的软件包列表，而aptitude的搜索操作会根据软件包名进行实际搜索。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># aptitude <span class="keyword">update</span> &amp;&amp; aptitude <span class="keyword">search</span> package_name</span><br></pre></td></tr></table></figure>
+<p>在search all选项中，yum不仅可以通过软件包名还可以通过软件包的描述搜索。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum <span class="built_in">search</span> package_name# yum <span class="built_in">search</span> <span class="keyword">all</span> package_name# yum whatprovides “*/package_name”</span><br></pre></td></tr></table></figure>
+<p>假定我们需要一个名为sysdig文件，想知道我们需要安装哪个软件包才行，那么运行。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># yum whatprovides “*/sysdig”</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223800o9soqn1phqsqp1th.png" alt="检查软件包描述"></p>
+<p><em>检查软件包描述</em></p>
+<p>whatprovides告诉yum搜索一个含有能够匹配上述正则表达式的文件的软件包。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># zypper refresh &amp;&amp; zypper search package_name      [在openSUSE上]</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-从仓库安装一个软件包"><a href="#2-从仓库安装一个软件包" class="headerlink" title="2. 从仓库安装一个软件包"></a>2. 从仓库安装一个软件包</h4><p>当安装一个软件包时，在软件包管理器解决了所有依赖性问题后，可能会提醒你确认安装。需要注意的是运行更新（ update）或刷新（refresh）（根据所使用的软件包管理器）不是绝对必要，但是考虑到安全性和依赖性的原因，保持安装的软件包是最新的是系统管理员的一个好经验。</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># aptitude update &amp;&amp; aptitude install package_name      <span class="string">[Debian版和衍生版]</span># yum update &amp;&amp; yum install package_name            <span class="string">[CentOS版]</span># zypper refresh &amp;&amp; zypper install package_name         <span class="string">[openSUSE版]</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-卸载软件包"><a href="#3-卸载软件包" class="headerlink" title="3. 卸载软件包"></a>3. 卸载软件包</h4><p>remove选项将会卸载软件包，但把配置文件保留完好，然而purge选项将从系统中完全删去该程序以及相关内容。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">aptitude</span> <span class="comment">remove</span> <span class="comment">/</span> <span class="comment">purge</span> <span class="comment">package_name#</span> <span class="comment">yum</span> <span class="comment">erase</span> <span class="comment">package_name###</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">注意要卸载的openSUSE包前面的减号</span> <span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">#</span> <span class="comment">zypper</span> <span class="comment">remove</span> <span class="literal">-</span><span class="comment">package_name</span></span><br></pre></td></tr></table></figure>
+<p>在默认情况下，大部分（如果不是全部的话）的软件包管理器会提示你，在你实际卸载之前你是否确定要继续卸载。所以，请仔细阅读屏幕上的信息，以避免陷入不必要的麻烦！</p>
+<h4 id="4-显示软件包的信息"><a href="#4-显示软件包的信息" class="headerlink" title="4. 显示软件包的信息"></a>4. 显示软件包的信息</h4><p>下面的命令将会显示birthday这个软件包的信息。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># aptitude show <span class="keyword">birthday# </span>yum <span class="meta">info</span> <span class="keyword">birthday# </span>zypper <span class="meta">info</span> <span class="keyword">birthday</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/12/223802i8wzqhe4lzwlj1la.png" alt="检查包信息"></p>
+<p><em>检查包信息</em></p>
+]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-08]]></title>
+      <title><![CDATA[LFCS 08：管理用户和用户组、文件权限和属性以及启用账户 sudo 访问权限]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-08/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<p>由于 Linux 是一个多用户的操作系统（允许多个用户通过不同主机或者终端访问一个独立系统），因此你需要知道如何才能有效地管理用户：如何添加、编辑、禁用和删除用户账户，并赋予他们足以完成自身任务的必要权限。</p>
+<p>（LCTT 译注：本篇原文章节顺序有误，根据理解做了调整。）</p>
+<h3 id="添加用户账户"><a href="#添加用户账户" class="headerlink" title="添加用户账户"></a>添加用户账户</h3><p>添加新用户账户，你需要以 root 运行以下两条命令中的任意一条：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># adduser <span class="string">[new_account]</span># useradd <span class="string">[new_account]</span></span><br></pre></td></tr></table></figure>
+<p>当新用户账户添加到系统时，会自动执行以下操作：</p>
+<ol>
+<li><p>自动创建用户家目录（默认是 /home/username）。</p>
+</li>
+<li><p>自动拷贝下列隐藏文件到新建用户的家目录，用来设置新用户会话的环境变量。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.bash_logout</span><span class="selector-class">.bash_profile</span><span class="selector-class">.bashrc</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自动创建邮件缓存目录 /var/spool/mail/username。</p>
+</li>
+<li><p>自动创建与用户名相同的用户组。</p>
+</li>
+</ol>
+<h4 id="理解-etc-passwd-中的内容"><a href="#理解-etc-passwd-中的内容" class="headerlink" title="理解 /etc/passwd 中的内容"></a>理解 /etc/passwd 中的内容</h4><p>/etc/passwd 文件中存储了所有用户账户的信息，每个用户在里边都有一条对应的记录，其格式（每个字段用冒号隔开）如下：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[username]</span>:<span class="string">[x]</span>:<span class="string">[UID]</span>:<span class="string">[GID]</span>:<span class="string">[Comment]</span>:<span class="string">[Home directory]</span>:<span class="string">[Default shell]</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>字段 [username] 和 [Comment] 是不言自明的。</li>
+<li>第二个字段中 x 表明通过用户名 username 登录系统是有密码保护的， 密码保存在 /etc/shadow 文件中。</li>
+<li>[UID] 和 [GID] 字段用整数表示，代表该用户的用户标识符和对应所在组的组标志符。</li>
+<li>字段 [Home directory] 为 username 用户家目录的绝对路径。</li>
+<li>字段 [Default shell] 指定用户登录系统时默认使用的 shell。</li>
+</ul>
+<h4 id="理解-etc-group-中的内容"><a href="#理解-etc-group-中的内容" class="headerlink" title="理解 /etc/group 中的内容"></a>理解 /etc/group 中的内容</h4><p>/etc/group 文件存储所有用户组的信息。每行记录的格式如下：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">Group</span> <span class="title">name</span>]:[<span class="keyword">Group</span> <span class="title">password</span>]:[GID]:[<span class="keyword">Group</span> <span class="title">members</span>]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>[Group name] 为用户组名称。</li>
+<li>字段 [Group password] 为 x 的话，则说明不使用用户组密码。</li>
+<li>[GID] 与 /etc/passwd 中保存的 GID 相同。</li>
+<li>[Group members] 用户组中的用户使用逗号隔开。</li>
+</ul>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105800t2ooygdsttwnyk4w.png" alt="添加用户账户"></p>
+<p><em>添加用户账户</em></p>
+<h4 id="修改用户信息"><a href="#修改用户信息" class="headerlink" title="修改用户信息"></a>修改用户信息</h4><p>添加用户账户之后，你可以使用 usermod 命令来修改用户信息中的部分字段，该命令基本语法如下：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># usermod <span class="string">[options]</span> <span class="string">[username]</span></span><br></pre></td></tr></table></figure>
+<p><strong>设置账户的过期时间</strong></p>
+<p>通过 –expiredate 标记后边接 年-月-日 格式的日期，如下：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># usermod --expiredate 2014-10-30 tecmint</span></span><br></pre></td></tr></table></figure>
+<p><strong>将用户添加到其他组</strong></p>
+<p>使用 -aG 或者 –append –groups 选项，后边跟着用户组，如果有多个用户组，每个用户组之间使用逗号隔开。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">usermod</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">append</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">groups</span> <span class="comment">root</span><span class="string">,</span><span class="comment">users</span> <span class="comment">tecmint</span></span><br></pre></td></tr></table></figure>
+<p><strong>改变用户家目录的默认位置</strong></p>
+<p>使用 -d 或者 –home 选项，后边跟着新的家目录的绝对路径。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># usermod --home /tmp tecmint</span></span><br></pre></td></tr></table></figure>
+<p><strong>改变用户的默认 shell</strong></p>
+<p>使用 –shell 选项，后边跟着新 shell 的路径。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># usermod --<span class="keyword">shell</span> /bin/<span class="keyword">sh</span> tecmint</span><br></pre></td></tr></table></figure>
+<p>下面，我们一次运行上述命令：</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">usermod</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">expiredate</span> <span class="comment">2014</span><span class="literal">-</span><span class="comment">10</span><span class="literal">-</span><span class="comment">30</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">append</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">groups</span> <span class="comment">root</span><span class="string">,</span><span class="comment">users</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">home</span> <span class="comment">/tmp</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">shell</span> <span class="comment">/bin/sh</span> <span class="comment">tecmint</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105804k9wmu58zpxwbvsvb.png" alt="usermod 命令例示"></p>
+<p><em>usermod 命令例示</em></p>
+<p>扩展阅读</p>
+<ul>
+<li><a href="http://www.tecmint.com/add-users-in-linux/" target="_blank" rel="external">15 useradd Command Examples in Linux</a></li>
+<li><a href="http://www.tecmint.com/usermod-command-examples/" target="_blank" rel="external">15 usermod Command Examples in Linux</a></li>
+</ul>
+<h4 id="锁定和解锁账户"><a href="#锁定和解锁账户" class="headerlink" title="锁定和解锁账户"></a>锁定和解锁账户</h4><p>对于已有用户账户，我们还可以：</p>
+<p><strong>通过锁定密码来禁用账户</strong></p>
+<p>使用 -L （大写 l）或者 –lock 选项来锁定用户密码。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># usermod --lock tecmint</span></span><br></pre></td></tr></table></figure>
+<p><strong>解锁用户密码</strong></p>
+<p>使用 –u 或者 –unlock 选项来解锁我们之前锁定的账户。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># usermod --unlock tecmint</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105808v110t32x0pg935xx.png" alt="锁定用户账户"></p>
+<p><em>锁定用户账户</em></p>
+<h4 id="删除用户账户"><a href="#删除用户账户" class="headerlink" title="删除用户账户"></a>删除用户账户</h4><p>你可以通过 userdel –remove 命令来删除用户账户。这样会删除用户拥有的家目录和家目录下的所有文件，以及邮件缓存目录。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># userdel --remove [username]</span></span><br></pre></td></tr></table></figure>
+<h4 id="用户组管理"><a href="#用户组管理" class="headerlink" title="用户组管理"></a>用户组管理</h4><p>每次添加新用户，系统会为该用户创建同名的用户组，此时用户组里边只有新建的用户，其他用户可以随后添加进去。建立用户组的目的之一，就是为了通过对指定资源设置权限来完成对这些资源和文件进行访问控制。</p>
+<p>比如，你有下列用户：</p>
+<ul>
+<li>user1 (主组 user1)</li>
+<li>user2 (主组 user2)</li>
+<li>user3 (主组 user3)</li>
+</ul>
+<p>他们都需要对你系统里边某个位置的 common.txt 文件，或者 user1 用户刚刚创建的共享进行读写。你可能会运行下列命令：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># chmod <span class="number">660</span> <span class="meta">common</span>.txt或# chmod u<span class="symbol">=rw</span>,g<span class="symbol">=rw</span>,o= <span class="meta">common</span>.txt [注意最后那个 = 号和文件名之间的空格]</span><br></pre></td></tr></table></figure>
+<p>然而，这样仅仅给文件所属的用户和用户组（本例为 user1）成员的提供了读写权限。你还需要将 user2 和 user3 添加到 user1 组，打这样做也将 user1 用户和用户组的其他文件的权限开放给了 user2 和 user3。</p>
+<p>这时候，用户组就派上用场了，下面将演示怎么做。</p>
+<p><strong>显示用户所属的用户组</strong></p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># groups tecmint# id tecmint</span></span><br></pre></td></tr></table></figure>
+<p><strong>为需要对指定文件进行读写的多个用户建立用户组</strong></p>
+<p>运行下列几条命令来完成：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">groupadd</span> <span class="selector-tag">common_group</span> # 添加新用户组# <span class="selector-tag">chown</span> <span class="selector-pseudo">:common_group</span> <span class="selector-tag">common</span><span class="selector-class">.txt</span> # 将 <span class="selector-tag">common</span><span class="selector-class">.txt</span> 的用户组修改为 <span class="selector-tag">common_group</span># <span class="selector-tag">usermod</span> <span class="selector-tag">-aG</span> <span class="selector-tag">common_group</span> <span class="selector-tag">user1</span> # 添加用户 <span class="selector-tag">user1</span> 到 <span class="selector-tag">common_group</span> 用户组# <span class="selector-tag">usermod</span> <span class="selector-tag">-aG</span> <span class="selector-tag">common_group</span> <span class="selector-tag">user2</span> # 添加用户 <span class="selector-tag">user2</span> 到 <span class="selector-tag">common_group</span> 用户组# <span class="selector-tag">usermod</span> <span class="selector-tag">-aG</span> <span class="selector-tag">common_group</span> <span class="selector-tag">user3</span> # 添加用户 <span class="selector-tag">user3</span> 到 <span class="selector-tag">common_group</span> 用户组</span><br></pre></td></tr></table></figure>
+<h4 id="删除用户组"><a href="#删除用户组" class="headerlink" title="删除用户组"></a>删除用户组</h4><p>通过以下命令删除用户组：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># groupdel [group_name]</span></span><br></pre></td></tr></table></figure>
+<p>属于这个 group_name 用户组的文件是不会被删除的，而仅仅是删除了用户组。</p>
+<h3 id="Linux-文件权限"><a href="#Linux-文件权限" class="headerlink" title="Linux 文件权限"></a>Linux 文件权限</h3><p>除了我们在 <a href="https://linux.cn/article-7171-1.html" target="_blank" rel="external">LFCS 系列第三讲：归档/压缩文件及目录、设置文件属性和搜索文件</a> 中说到的基本的读取、写入和执行权限外，文件还有一些不常用却很重要的的权限设置，有时候把它当做“特殊权限”。</p>
+<p>就像之前我们讨论的基本权限，这里同样使用八进制数字或者一个字母（象征性符号）表示该权限类型。</p>
+<p><strong>理解 Setuid 位</strong></p>
+<p>当为可执行文件设置 setuid 位之后，用户运行程序时会继承该程序属主的有效特权。由于这样做会引起安全风险，因此设置 setuid 权限的文件及程序必须尽量少。你会发现，当系统中有用户需要访问属于 root 用户的文件是所运行的程序就带有了 setuid 权限。</p>
+<p>也就是说，用户不仅仅可以运行这个可执行文件，而且能以 root 权限来运行。比如，让我们来看看 /bin/passwd 的权限，这个可执行文件用于改变账户的密码，修改 /etc/shadow 文件。超级用户可以改变任意账户的密码，但是其他用户只能改变自己账户的密码。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105809nvorvmbg6moohx9k.png" alt="passwd 命令例示"></p>
+<p><em>passwd 命令例示</em></p>
+<p>因此，所有用户都有权限运行 /bin/passwd，但只有 root 用户可以指定改变指定用户账户的密码。其他用户只能改变其自身的密码。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105810xz7n0rzjpi0i397e.png" alt="修改用户密码"></p>
+<p><em>修改用户密码</em></p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod o+u [filename]</span></span><br></pre></td></tr></table></figure>
+<p>以八进制形式来设置 setuid 位，在当前基本权限（或者想要设置的权限）前加上数字 4 就行了。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod 4755 [filename]</span></span><br></pre></td></tr></table></figure>
+<p><strong>理解 Setgid 位</strong></p>
+<p>设置 setgid 位之后，真实用户的有效 GID 变为属组的 GID。因此，任何用户都能以属组用户的权限来访问文件。另外，当目录置了 setgid 位之后，新建的文件将继承其所属目录的 GID，并且新建的子目录会继承父目录的 setgid 位。通过这个方法，你能够以一个指定的用户组身份来访问该目录里边的文件，而不必管文件属主的主属组。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod g+s [filename]</span></span><br></pre></td></tr></table></figure>
+<p>以八进制形式来设置 setgid 位，在当前基本权限（或者想要设置的权限）前加上数字 2 就行了。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod 2755 [filename]</span></span><br></pre></td></tr></table></figure>
+<p><strong>给目录设置 Setgid 位</strong></p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105812pcxgamj3xmj9t4mv.png" alt="给命令设置 setgid 位"></p>
+<p><em>给命令设置 setgid 位</em></p>
+<p><strong>理解黏连Sticky位</strong></p>
+<p>文件设置了黏连位是没有意义，Linux 会忽略该位。如果设置到目录上，会防止其内的文件被删除或改名，除非你是该目录或文件的属主、或者是 root 用户。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod o+t [directory]</span></span><br></pre></td></tr></table></figure>
+<p>以八进制形式来设置黏连位，在当前基本权限（或者想要设置的权限）前加上数字 1 就行了。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod 1755 [directory]</span></span><br></pre></td></tr></table></figure>
+<p>若没有黏连位，任何有权限读写目录的用户都可删除和重命名其中的文件。因此，黏连位通常出现在像 /tmp 之类的目录，这些目录是所有人都具有写权限的。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105816z5vxtxdkl5al5iix.png" alt="给目录设置黏连位"></p>
+<p><em>给目录设置黏连位</em></p>
+<h3 id="Linux-特殊文件属性"><a href="#Linux-特殊文件属性" class="headerlink" title="Linux 特殊文件属性"></a>Linux 特殊文件属性</h3><p>文件还有其他一些属性，用来做进一步的操作限制。比如，阻止对文件的重命名、移动、删除甚至是修改。可以通过使用 <a href="http://www.tecmint.com/chattr-command-examples/" target="_blank" rel="external">chattr 命令</a> 来设置，并可以使用 lsattr 工具来查看这些属性。设置如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chattr +i file1# chattr +a file2</span></span><br></pre></td></tr></table></figure>
+<p>运行这些命令之后，file1 成为不可变状态（即不可移动、重命名、修改或删除），而 file2 进入“仅追加”模式（仅在追加内容模式中打开）。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105819pgnnciuyn4knu0g4.png" alt="通过 Chattr 命令来包含文件"></p>
+<p><em>通过 Chattr 命令来包含文件</em></p>
+<h3 id="访问-root-账户并启用-sudo"><a href="#访问-root-账户并启用-sudo" class="headerlink" title="访问 root 账户并启用 sudo"></a>访问 root 账户并启用 sudo</h3><p>访问 root 账户的方法之一，就是通过输入：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>su</span><br></pre></td></tr></table></figure>
+<p>然后输入 root 账户密码。</p>
+<p>倘若授权成功，你将以 root 身份登录，工作目录则是登录前所在的位置。如果是想要一登录就自动进入 root 用户的家目录，请运行：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>su -</span><br></pre></td></tr></table></figure>
+<p>然后输入 root 账户密码。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105820xh7rhf72ar3z320e.png" alt="用户通过 su 切换"></p>
+<p><em>用户通过 su 切换</em></p>
+<p>执行上个步骤需要普通用户知道 root 账户的密码，这样会引起非常严重的安全问题。于是，系统管理员通常会配置 sudo 命令来让普通用户在严格控制的环境中以其他用户身份（通常是 root）来执行命令。所以，可以在严格控制用户的情况下，又允许他运行一条或多条特权命令。</p>
+<ul>
+<li>扩展阅读：<a href="http://www.tecmint.com/su-vs-sudo-and-how-to-configure-sudo-in-linux/" target="_blank" rel="external">Difference Between su and sudo User</a></li>
+</ul>
+<p>普通用户通过他自己的用户密码来完成 sudo 授权。输入命令之后会出现输入密码（并不是超级用户密码）的提示，授权成功（只要赋予了用户运行该命令的权限）的话，指定的命令就会运行。</p>
+<p>系统管理员必须编辑 /etc/sudoers 文件，才能为 sudo 赋予相应权限。通常建议使用 visudo 命令来编辑这个文件，而不是使用文本编辑器来打开它。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># visudo</span></span><br></pre></td></tr></table></figure>
+<p>这样会使用 vim（你可以按照 <a href="https://linux.cn/article-7165-1.html" target="_blank" rel="external">LFCS 系列第二讲：如何安装和使用纯文本编辑器 vi/vim</a> 里边说的来编辑文件）来打开 /etc/sudoers 文件。</p>
+<p>以下是需要设置的相关的行：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Defaults</span>    secure_path=<span class="string">"/usr/sbin:/usr/bin:/sbin"</span>root        <span class="literal">ALL</span>=(<span class="literal">ALL</span>) ALLtecmint     <span class="literal">ALL</span>=/bin/yum updategacanepa    <span class="literal">ALL</span>=NOPASSWD:/bin/updatedb%admin      <span class="literal">ALL</span>=(<span class="literal">ALL</span>) <span class="literal">ALL</span></span><br></pre></td></tr></table></figure>
+<p>来更加深入了解这些项：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Defaults</span>    secure_path=<span class="string">"/usr/sbin:/usr/bin:/sbin:/usr/local/bin"</span></span><br></pre></td></tr></table></figure>
+<p>这一行指定 sudo 将要使用的目录，这样可以阻止使用某些用户指定的目录，那样的话可能会危及系统。</p>
+<p>下一行是用来指定权限的：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">root</span>        <span class="literal">ALL</span>=(<span class="literal">ALL</span>) <span class="literal">ALL</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一个 ALL 关键词表明这条规则适用于所有主机。</li>
+<li>第二个 ALL 关键词表明第一个字段中所指定的用户能以任何用户身份的权限来运行相应命令。</li>
+<li>第三个 ALL 关键词表明可以运行任何命令。</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">tecmint</span> <span class="literal">ALL</span>=/bin/yum update</span><br></pre></td></tr></table></figure>
+<p>如果 = 号后边没有指定用户，sudo 则默认为 root 用户。本例中，tecmint 用户能以 root 身份运行 yum update 命令。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gacanepa    ALL=<span class="string">NOPASSWD:</span><span class="regexp">/bin/</span>updatedb</span><br></pre></td></tr></table></figure>
+<p>NOPASSWD 关键词表明 gacanepa 用户不需要密码，可以直接运行 /bin/updatedb 命令。</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%admin      <span class="built_in">ALL</span>=(<span class="built_in">ALL</span>) <span class="built_in">ALL</span></span><br></pre></td></tr></table></figure>
+<p>% 符号表示该行应用于 admin 用户组。其他部分的含义与对于用户的含义是一样的。本例表示 admin 用户组的成员可以通过任何主机连接来运行任何命令。</p>
+<p>通过 sudo -l 命令可以查看，你的账户拥有什么样的权限。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201606/02/105825kbmytbiydibd74ze.png" alt="Sudo 访问规则"></p>
+<p><em>Sudo 访问规则</em></p>
+]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-07]]></title>
+      <title><![CDATA[LFCS 07：通过 SysVinit、Systemd 和 Upstart 管理系统自启动进程和服务]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-07/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h3 id="管理-Linux-自启动进程"><a href="#管理-Linux-自启动进程" class="headerlink" title="管理 Linux 自启动进程"></a>管理 Linux 自启动进程</h3><p>Linux 系统的启动程序包括多个阶段，每个阶段由一个不同的图示块表示。下面的图示简要总结了启动过程以及所有包括的主要组件。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220704vq89jz89hi79mqm1.png" alt="Linux 启动过程"></p>
+<p><em>Linux 启动过程</em></p>
+<p>当你按下你机器上的电源键时，存储在主板 EEPROM 芯片中的固件初始化 POST(通电自检) 检查系统硬件资源的状态。POST 结束后，固件会搜索并加载位于第一块可用磁盘上的 MBR 或 EFI 分区的第一阶段引导程序，并把控制权交给引导程序。</p>
+<h4 id="MBR-方式"><a href="#MBR-方式" class="headerlink" title="MBR 方式"></a>MBR 方式</h4><p>MBR 是位于 BIOS 设置中标记为可启动磁盘上的第一个扇区，大小是 512 个字节。</p>
+<ul>
+<li>前面 446 个字节：包括可执行代码和错误信息文本的引导程序</li>
+<li>接下来的 64 个字节：四个分区（主分区或扩展分区）中每个分区一条记录的分区表。其中，每条记录标示了每个一个分区的状态（是否活跃）、大小以及开始和结束扇区。</li>
+<li>最后 2 个字节： MBR 有效性检查的魔法数。</li>
+</ul>
+<p>下面的命令对 MBR 进行备份（在本例中，/dev/sda 是第一块硬盘）。结果文件 mbr.bkp 在分区表被破坏、例如系统不可引导时能排上用场。</p>
+<p>当然，为了后面需要的时候能使用它，我们需要把它保存到别的地方（例如一个 USB 设备）。该文件能帮助我们重新恢复 MBR，这只在我们操作过程中没有改变硬盘驱动布局时才有效。</p>
+<p><strong>备份 MBR</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># dd <span class="meta">if</span>=/dev/sda of<span class="symbol">=mbr</span>.<span class="keyword">bkp </span><span class="keyword">bs=512 </span>count<span class="number">=1</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220706dqzkk0hg99p90zhg.png" alt="在 Linux 中备份 MBR"></p>
+<p><em>在 Linux 中备份 MBR</em></p>
+<p><strong>恢复 MBR</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># dd <span class="meta">if</span><span class="symbol">=mbr</span>.<span class="keyword">bkp </span>of=/dev/sda <span class="keyword">bs=512 </span>count<span class="number">=1</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220708qh26the8c820e270.png" alt="在 Linux 中恢复 MBR"></p>
+<p><em>在 Linux 中恢复 MBR</em></p>
+<h4 id="EFI-UEFI-方式"><a href="#EFI-UEFI-方式" class="headerlink" title="EFI/UEFI 方式"></a>EFI/UEFI 方式</h4><p>对于使用 EFI/UEFI 方式的系统， UEFI 固件读取它的设置来决定从哪里启动哪个 UEFI 应用。（例如， EFI 分区位于哪块磁盘或分区。</p>
+<p>接下来，加载并运行第二阶段引导程序(又名引导管理器)。GRUB[GRand Unified Boot] 是 Linux 中最常使用的引导管理器。今天大部分使用的系统中都能找到它两个中的其中一个版本。</p>
+<ul>
+<li>GRUB 有效配置文件： /boot/grub/menu.lst（旧发行版， EFI/UEFI 固件不支持）。</li>
+<li>GRUB2 配置文件： 通常是 /etc/default/grub。</li>
+</ul>
+<p>尽管 LFCS 考试目标没有明确要求了解 GRUB 内部知识，但如果你足够大胆并且不怕把你的系统搞乱（为了以防万一，你可以先在虚拟机上进行尝试）你可以运行：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># update-grub</span></span><br></pre></td></tr></table></figure>
+<p>为了使更改生效，你需要以 root 用户修改 GRUB 的配置。</p>
+<p>首先， GRUB 加载默认的内核以及 initrd 或 initramfs 镜像。补充一句，initrd 或者 initramfs 帮助完成硬件检测、内核模块加载、以及发现挂载根目录文件系统需要的设备。</p>
+<p>一旦真正的根目录文件系统启动，为了显示用户界面，内核就会执行系统和服务管理器（init 或 systemd，进程号 PID 一般为 1）开始普通用户态的引导程序。</p>
+<p>init 和 systemd 都是管理其它守护进程的守护进程（后台进程），它们总是最先启动（系统引导时），最后结束（系统关闭时）。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220710s7dekedg5y5odeys.png" alt="Systemd 和 Init"></p>
+<p><em>Systemd 和 Init</em></p>
+<h3 id="自启动服务-SysVinit"><a href="#自启动服务-SysVinit" class="headerlink" title="自启动服务(SysVinit)"></a>自启动服务(SysVinit)</h3><p>Linux 中运行等级通过控制运行哪些服务来以不同方式使用系统。换句话说，运行等级控制着当前执行状态下可以完成什么任务（以及什么不能完成）。</p>
+<p>传统上，这个启动过程是基于起源于 System V Unix 的形式，通过执行脚本启动或者停止服务从而使机器进入指定的运行等级(换句话说，是一个不同的系统运行模式)。</p>
+<p>在每个运行等级中，独立服务可以设置为运行、或者在运行时关闭。一些主流发行版的最新版本中，已经移除了标准的 System V，而用一个称为 systemd（表示系统守护进程）的新服务和系统管理器代替，但为了兼容性，通常也支持 sysv 命令。这意味着你可以在基于 systemd 的发行版中运行大部分有名的 sysv 初始化工具。</p>
+<ul>
+<li>推荐阅读： <a href="http://www.tecmint.com/systemd-replaces-init-in-linux/" target="_blank" rel="external">Linux 为什么用 ‘systemd’ 代替 ‘init’</a></li>
+</ul>
+<p>除了启动系统进程，init 还会查看 /etc/inittab 来决定进入哪个运行等级。</p>
+<table>
+<thead>
+<tr>
+<th>Runlevel</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>停止系统。运行等级 0 是一个用于快速关闭系统的特殊过渡状态。</td>
+</tr>
+<tr>
+<td>1</td>
+<td>别名为 s 或 S，这个运行等级有时候也称为维护模式。在这个运行等级启动的服务由于发行版不同而不同。通常用于正常系统操作损坏时低级别的系统维护。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>多用户。在 Debian 系统及其衍生版中，这是默认的运行等级，还包括了一个图形化登录（如果有的话）。在基于红帽的系统中，这是没有网络的多用户模式。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>在基于红帽的系统中，这是默认的多用户模式，运行除了图形化环境以外的所有东西。基于 Debian 的系统中通常不会使用这个运行等级以及等级 4 和 5。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>通常默认情况下不使用，可用于自定制。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>基于红帽的系统中，支持 GUI 登录的完全多用户模式。这个运行等级和等级 3 类似，但是有可用的 GUI 登录。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>重启系统。</td>
+</tr>
+</tbody>
+</table>
+<p>要在运行等级之间切换，我们只需要使用 init 命令更改运行等级：init N（其中 N 是上面列出的一个运行等级）。 请注意这并不是运行中的系统切换运行等级的推荐方式，因为它不会给已经登录的用户发送警告（因而导致他们丢失工作以及进程异常终结）。</p>
+<p>相反，应该用 shutdown 命令重启系统（它首先发送警告信息给所有已经登录的用户，并锁住任何新的登录；然后再给 init 发送信号切换运行等级）但是，首先要在 /etc/inittab 文件中设置好默认的运行等级（系统引导到的等级）。</p>
+<p>因为这个原因，按照下面的步骤切当地切换运行等级。以 root 用户在 /etc/inittab 中查找下面的行。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">id</span><span class="selector-pseudo">:2</span><span class="selector-pseudo">:initdefault</span>:</span><br></pre></td></tr></table></figure>
+<p>并用你喜欢的文本编辑器，例如 vim（本系列的 <a href="https://linux.cn/article-7165-1.html" target="_blank" rel="external">LFCS 系列第二讲：如何安装和使用纯文本编辑器 vi/vim</a>），更改数字 2 为想要的运行等级。</p>
+<p>然后，以 root 用户执行</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># shutdown -r now</span></span><br></pre></td></tr></table></figure>
+<p>最后一个命令会重启系统，并使它在下一次引导时进入指定的运行等级，并会执行保存在 /etc/rc[runlevel].d 目录中的脚本以决定应该启动什么服务、不应该启动什么服务。例如，在下面的系统中运行等级 2。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220717k99keazaefmaa9sr.jpg" alt="在 Linux 中更改运行等级"></p>
+<p><em>在 Linux 中更改运行等级</em></p>
+<h4 id="使用-chkconfig-管理服务"><a href="#使用-chkconfig-管理服务" class="headerlink" title="使用 chkconfig 管理服务"></a>使用 chkconfig 管理服务</h4><p>为了在启动时启动或者停用系统服务，我们可以在 CentOS / openSUSE 中使用 <a href="http://www.tecmint.com/chkconfig-command-examples/" target="_blank" rel="external">chkconfig 命令</a>，在 Debian 及其衍生版中使用 sysv-rc-conf 命令。这个工具还能告诉我们对于一个指定的运行等级预先配置的状态是什么。</p>
+<ul>
+<li>推荐阅读： <a href="http://www.tecmint.com/remove-unwanted-services-from-linux/" target="_blank" rel="external">如何在 Linux 中停止和停用不想要的服务</a></li>
+</ul>
+<p>列出某个服务的运行等级配置。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">chkconfig</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">list</span> <span class="title">[</span><span class="comment">service</span> <span class="comment">name</span><span class="title">]</span><span class="comment">#</span> <span class="comment">chkconfig</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">list</span> <span class="comment">postfix#</span> <span class="comment">chkconfig</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">list</span> <span class="comment">mysqld</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220718e0ziipbi0p08vwoi.png" alt="列出运行等级配置"></p>
+<p><em>列出运行等级配置</em></p>
+<p>从上图中我们可以看出，当系统进入运行等级 2 到 5 的时候就会启动 postfix，而默认情况下运行等级 2 到 4 时会运行 mysqld。现在假设我们并不希望如此。</p>
+<p>例如，我们希望运行等级为 5 时也启动 mysqld，运行等级为 4 或 5 时关闭 postfix。下面分别针对两种情况进行设置（以 root 用户执行以下命令）。</p>
+<p><strong>为特定运行等级启用服务</strong></p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">chkconfig</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level</span> <span class="title">[</span><span class="comment">level(s)</span><span class="title">]</span> <span class="comment">service</span> <span class="comment">on#</span> <span class="comment">chkconfig</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level</span> <span class="comment">5</span> <span class="comment">mysqld</span> <span class="comment">on</span></span><br></pre></td></tr></table></figure>
+<p><strong>为特定运行等级停用服务</strong></p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">chkconfig</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level</span> <span class="title">[</span><span class="comment">level(s)</span><span class="title">]</span> <span class="comment">service</span> <span class="comment">off#</span> <span class="comment">chkconfig</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level</span> <span class="comment">45</span> <span class="comment">postfix</span> <span class="comment">off</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220720yi9b3yfi8mkq8sy8.png" alt="启用/停用服务"></p>
+<p><em>启用/停用服务</em></p>
+<p>我们在基于 Debian 的系统中使用 sysv-rc-conf 完成类似任务。</p>
+<h4 id="使用-sysv-rc-conf-管理服务"><a href="#使用-sysv-rc-conf-管理服务" class="headerlink" title="使用 sysv-rc-conf 管理服务"></a>使用 sysv-rc-conf 管理服务</h4><p>配置服务自动启动时进入指定运行等级，同时禁止启动时进入其它运行等级。</p>
+<ol>
+<li><p>我们可以用下面的命令查看启动 mdadm 时的运行等级。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">ls</span> -<span class="keyword">l</span> /etc/rc[0-6].<span class="keyword">d</span> | grep -<span class="keyword">E</span> 'rc[0-6]|mdadm'</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220723kkwn3antwgwgihph.png" alt="查看运行中服务的运行等级"></p>
+<p><em>查看运行中服务的运行等级</em></p>
+</li>
+<li><p>我们使用 sysv-rc-conf 设置防止 mdadm 在运行等级2 之外的其它等级启动。只需根据需要（你可以使用上下左右按键）选中或取消选中（通过空格键）。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># sysv-rc-conf</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220727xenennd8x0nom838.png" alt="Sysv 运行等级配置"></p>
+<p><em>Sysv 运行等级配置</em></p>
+<p>然后输入 q 退出。</p>
+</li>
+<li><p>重启系统并从步骤 1 开始再操作一遍。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">ls</span> -<span class="keyword">l</span> /etc/rc[0-6].<span class="keyword">d</span> | grep -<span class="keyword">E</span> 'rc[0-6]|mdadm'</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220731voz9eughblhu3hhz.png" alt="验证服务运行等级"></p>
+<p><em>验证服务运行等级</em></p>
+<p>从上图中我们可以看出 mdadm 配置为只在运行等级 2 上启动。</p>
+<h3 id="那关于-systemd-呢？"><a href="#那关于-systemd-呢？" class="headerlink" title="那关于 systemd 呢？"></a>那关于 systemd 呢？</h3><p>systemd 是另外一个被多种主流 Linux 发行版采用的服务和系统管理器。它的目标是允许系统启动时多个任务尽可能并行（而 sysvinit 并非如此，sysvinit 一般比较慢，因为它每次只启动一个进程，而且会检查彼此之间是否有依赖，在启动其它服务之前还要等待守护进程启动），充当运行中系统动态资源管理的角色。</p>
+<p>因此，服务只在需要的时候启动，而不是系统启动时毫无缘由地启动（为了防止消耗系统资源）。</p>
+<p>要查看你系统中运行的原生 systemd 服务和 Sysv 服务，可以用以下的命令。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># systemctl</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220738ljodjop7t3d39924.png" alt="查看运行中的进程"></p>
+<p><em>查看运行中的进程</em></p>
+<p>LOAD 一列显示了单元（UNIT 列，显示服务或者由 systemd 维护的其它进程）是否正确加载，ACTIVE 和 SUB 列则显示了该单元当前的状态。</p>
+<p><strong>显示服务当前状态的信息</strong></p>
+<p>当 ACTIVE 列显示某个单元状态并非活跃时，我们可以使用以下命令查看具体原因。</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl <span class="keyword">status</span> [<span class="keyword">unit</span>]</span><br></pre></td></tr></table></figure>
+<p>例如，上图中 media-samba.mount 处于失败状态。我们可以运行：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># systemctl status media-samba.mount</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220741u2qzr2dgp1y012pp.png" alt="查看服务状态"></p>
+<p><em>查看服务状态</em></p>
+<p>我们可以看到 media-samba.mount 失败的原因是 host dev1 上的挂载进程无法找到 //192.168.0.10/gacanepa 上的共享网络。</p>
+<h3 id="启动或停止服务"><a href="#启动或停止服务" class="headerlink" title="启动或停止服务"></a>启动或停止服务</h3><p>一旦 //192.168.0.10/gacanepa 上的共享网络可用，我们可以再来尝试启动、停止以及重启 media-samba.mount 单元。执行每次操作之后，我们都执行 systemctl stats media-samba.mout 来查看它的状态。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">systemctl</span> <span class="selector-tag">start</span> <span class="selector-tag">media-samba</span><span class="selector-class">.mount</span># <span class="selector-tag">systemctl</span> <span class="selector-tag">status</span> <span class="selector-tag">media-samba</span><span class="selector-class">.mount</span># <span class="selector-tag">systemctl</span> <span class="selector-tag">stop</span> <span class="selector-tag">media-samba</span><span class="selector-class">.mount</span># <span class="selector-tag">systemctl</span> <span class="selector-tag">restart</span> <span class="selector-tag">media-samba</span><span class="selector-class">.mount</span># <span class="selector-tag">systemctl</span> <span class="selector-tag">status</span> <span class="selector-tag">media-samba</span><span class="selector-class">.mount</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220752nolmn6lblbz2l96o.jpg" alt="启动停止服务"></p>
+<p><em>启动停止服务</em></p>
+<p><strong>启用或停用某服务随系统启动</strong></p>
+<p>使用 systemd 你可以在系统启动时启用或停用某服务</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl enable <span class="string">[service]</span>        # 启用服务# systemctl disable <span class="string">[service]</span>       # 阻止服务随系统启动</span><br></pre></td></tr></table></figure>
+<p>启用或停用某服务随系统启动包括在 /etc/systemd/system/multi-user.target.wants 目录添加或者删除符号链接。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201605/19/220803gv0y99jy0w8j05lw.jpg" alt="启用或停用服务"></p>
+<p><em>启用或停用服务</em></p>
+<p>你也可以用下面的命令查看某个服务的当前状态（启用或者停用）。</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl <span class="keyword">is</span>-enabled <span class="comment">[service]</span></span><br></pre></td></tr></table></figure>
+<p>例如，</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl <span class="built_in">is</span>-enabled <span class="built_in">postfix</span>.service</span><br></pre></td></tr></table></figure>
+<p>另外，你可以用下面的命令重启或者关闭系统。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># systemctl reboot# systemctl shutdown</span></span><br></pre></td></tr></table></figure>
+<h3 id="Upstart"><a href="#Upstart" class="headerlink" title="Upstart"></a>Upstart</h3><p>基于事件的 Upstart 是 /sbin/init 守护进程的替代品，它仅为在需要那些服务的时候启动服务而生，（或者当它们在运行时管理它们），以及处理发生的实践，因此 Upstart 优于基于依赖的 sysvinit 系统。</p>
+<p>一开始它是为 Ubuntu 发行版开发的，但在红帽企业版 Linux 6.0 中得到使用。尽管希望它能在所有 Linux 发行版中替代 sysvinit，但它已经被 systemd 超越。2014 年 2 月 14 日，Mark Shuttleworth（Canonical Ltd. 创建者）发布声明之后的 Ubuntu 发行版采用 systemd 作为默认初始化守护进程。</p>
+<p>由于 Sysv 启动脚本已经流行很长时间了，很多软件包中都包括了 Sysv 启动脚本。为了兼容这些软件， Upstart 提供了兼容模式：它可以运行保存在常用位置（/etc/rc.d/rc?.d, /etc/init.d/rc?.d, /etc/rc?.d或其它类似的位置）的Sysv 启动脚本。因此，如果我们安装了一个还没有 Upstart 配置脚本的软件，仍然可以用原来的方式启动它。</p>
+<p>另外，如果我们还安装了类似 <a href="http://www.tecmint.com/chkconfig-command-examples/" target="_blank" rel="external">chkconfig</a> 的工具，你还可以和在基于 sysvinit 的系统中一样用它们管理基于 Sysv 的服务。</p>
+<p>Upstart 脚本除了支持 Sysv 启动脚本，还支持基于多种方式启动或者停用服务；例如， Upstart 可以在一个特定硬件设备连接上的时候启动一个服务。</p>
+<p>使用 Upstart以及它原生脚本的系统替换了 /etc/inittab 文件和 /etc/init 目录下和运行等级相关的以 .conf 作为后缀的 Sysv 启动脚本目录。</p>
+<p>这些 *.conf 脚本（也称为任务定义）通常包括以下几部分：</p>
+<ul>
+<li>进程描述</li>
+<li>进程的运行等级或者应该触发它们的事件</li>
+<li>应该停止进程的运行等级或者触发停止进程的事件</li>
+<li>选项</li>
+<li>启动进程的命令</li>
+</ul>
+<p>例如，</p>
+<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># My test service - Upstart script demo description <span class="string">"Here goes the description of 'My test service'"</span> author <span class="string">"Dave Null &lt;dave.null@example.com&gt;"</span># Stanzas## Stanzas define <span class="keyword">when</span> <span class="keyword">and</span> how a <span class="keyword">process</span> <span class="keyword">is</span> started <span class="keyword">and</span> stopped# See a list <span class="keyword">of</span> stanzas here: http://upstart.ubuntu.com/wiki/Stanzas#respawn# <span class="keyword">When</span> <span class="keyword">to</span> start the servicestart <span class="keyword">on</span> runlevel [<span class="number">2345</span>]# <span class="keyword">When</span> <span class="keyword">to</span> stop the servicestop <span class="keyword">on</span> runlevel [<span class="number">016</span>]# Automatically restart <span class="keyword">process</span> <span class="keyword">in</span> <span class="keyword">case</span> <span class="keyword">of</span> crashrespawn# Specify working directorychdir /home/dave/myfiles# Specify the <span class="keyword">process</span>/command (add arguments <span class="keyword">if</span> needed) <span class="keyword">to</span> runexec bash backup.sh arg1 arg2</span><br></pre></td></tr></table></figure>
+<p>要使更改生效，你要让 upstart 重新加载它的配置文件。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># initctl reload-configuration</span></span><br></pre></td></tr></table></figure>
+<p>然后用下面的命令启动你的任务。</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo <span class="literal">start</span> yourjobname</span><br></pre></td></tr></table></figure>
+<p>其中 yourjobname 是之前 yourjobname.conf 脚本中添加的任务名称。</p>
+<p>关于 Upstart 更完整和详细的介绍可以参考该项目网站的 “<a href="http://upstart.ubuntu.com/cookbook/" target="_blank" rel="external">Cookbook</a>” 栏目。</p>
+</li>
+</ol>
+]]></content>
     </entry>
     
     <entry>

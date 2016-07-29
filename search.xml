@@ -4,6 +4,92 @@
   
     
     <entry>
+      <title><![CDATA[LFCS 01：如何在 Linux 上使用 GNU sed 等命令来创建、编辑和操作文件]]></title>
+      <url>http://qiankun.space/2016/07/29/lfcs-01/</url>
+      <content type="html"><![CDATA[<h3 id="处理-Linux-中的文本流"><a href="#处理-Linux-中的文本流" class="headerlink" title="处理 Linux 中的文本流"></a>处理 Linux 中的文本流</h3><p>Linux 将程序中的输入和输出当成字符流或者字符序列。在开始理解重定向和管道之前，我们必须先了解三种最重要的I/O（输入和输出Input and Output）流，事实上，它们都是特殊的文件（根据 UNIX 和 Linux 中的约定，数据流和外围设备（设备文件）也被视为普通文件）。</p>
+<p>在 &gt; (重定向操作符) 和 | (管道操作符)之间的区别是：前者将命令与文件相连接，而后者将命令的输出和另一个命令相连接。</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"># command &gt; file# command1</span> | comma<span class="symbol">nd2</span></span><br></pre></td></tr></table></figure>
+<p>由于重定向操作符会静默地创建或覆盖文件，我们必须特别小心谨慎地使用它，并且永远不要把它和管道混淆起来。在 Linux 和 UNIX 系统上管道的优势是：第一个命令的输出不会写入一个文件而是直接被第二个命令读取。</p>
+<p>在下面的操作练习中，我们将会使用这首诗——《A happy child》（作者未知)</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055317sx248jjs2c4c7uu7.png" alt="cat 命令样例"></p>
+<p><em>cat 命令样例</em></p>
+<h4 id="使用-sed"><a href="#使用-sed" class="headerlink" title="使用 sed"></a>使用 sed</h4><p>sed 是流编辑器stream editor的缩写。为那些不懂术语的人额外解释一下，流编辑器是用来在一个输入流（文件或者管道中的输入）执行基本的文本转换的工具。</p>
+<p>sed 最基本的用法是字符替换。我们将通过把每个出现的小写 y 改写为大写 Y 并且将输出重定向到 ahappychild2.txt 开始。g 标志表示 sed 应该替换文件每一行中所有应当替换的实例。如果这个标志省略了，sed 将会只替换每一行中第一次出现的实例。</p>
+<p><strong>基本语法：</strong></p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># sed <span class="string">'s/term/replacement/flag'</span> file</span></span><br></pre></td></tr></table></figure>
+<p><strong>我们的样例：</strong></p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># sed <span class="string">'s/y/Y/g'</span> ahappychild.txt &gt; ahappychild2.txt</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055318u6w915x3w6gg64l5.png" alt="sed 命令样例"></p>
+<p><em>sed 命令样例</em></p>
+<p>如果你要在替换文本中搜索或者替换特殊字符（如 /，\，＆），你需要使用反斜杠对它进行转义。</p>
+<p>例如，我们要用一个符号来替换一个文字，与此同时我们将把一行最开始出现的第一个 I 替换为 You。</p>
+<figure class="highlight sml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># sed <span class="symbol">'s</span>/<span class="keyword">and</span>/\&amp;/g;s/^<span class="type">I</span>/<span class="type">You</span>/g' ahappychild.txt</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055318ustph1gt8asgs2t8.png" alt="sed 替换字符串"></p>
+<p><em>sed 替换字符串</em></p>
+<p>在上面的命令中，众所周知 ^（插入符号）是正则表达式中用来表示一行开头的符号。</p>
+<p>正如你所看到的，我们可以通过使用分号分隔以及用括号包裹来把两个或者更多的替换命令（并在它们中使用正则表达式）连接起来。</p>
+<p>另一种 sed 的用法是显示或者删除文件中选中的一部分。在下面的样例中，将会显示 /var/log/messages 中从6月8日开始的头五行。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># sed -<span class="keyword">n</span> '/^Jun  8/ p' /<span class="keyword">var</span>/<span class="keyword">log</span>/messages | sed -<span class="keyword">n</span> 1,5p</span><br></pre></td></tr></table></figure>
+<p>请注意，在默认的情况下，sed 会打印每一行。我们可以使用 -n 选项来覆盖这一行为并且告诉 sed 只需要打印（用 p来表示）文件（或管道）中匹配的部分（第一个命令中指定以“Jun 8” 开头的行，第二个命令中指定一到五行）。</p>
+<p>最后，可能有用的技巧是当检查脚本或者配置文件的时候可以保留文件本身并且删除注释。下面的单行 sed 命令删除（d）空行或者是开头为<code>#</code>的行（| 字符对两个正则表达式进行布尔 OR 操作）。</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># sed <span class="string">'/^#\|^$/d'</span> apache2.conf</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055318sz9c1jpnjqnacl1p.png" alt="sed 匹配字符串"></p>
+<p><em>sed 匹配字符串</em></p>
+<h4 id="uniq-命令"><a href="#uniq-命令" class="headerlink" title="uniq 命令"></a>uniq 命令</h4><p>uniq 命令允许我们返回或者删除文件中重复的行，默认写到标准输出。我们必须注意到，除非两个重复的行相邻，否则uniq 命令不会删除他们。因此，uniq 经常和一个前置的 sort 命令（一种用来对文本行进行排序的算法）搭配使用。默认情况下，sort 使用第一个字段（用空格分隔）作为关键字段。要指定一个不同的关键字段，我们需要使用 -k 选项。</p>
+<p><strong>样例</strong></p>
+<p>du –sch /path/to/directory/* 命令将会以人类可读的格式返回在指定目录下每一个子文件夹和文件的磁盘空间使用情况（也会显示每个目录总体的情况），而且不是按照大小输出，而是按照子文件夹和文件的名称。我们可以使用下面的命令来让它通过大小排序。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># du -sch <span class="regexp">/var/</span>* | <span class="keyword">sort</span> -h</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055319qckggebd272dhhe2.jpg" alt="sort 命令样例"></p>
+<p><em>sort 命令样例</em></p>
+<p>你可以通过使用下面的命令告诉 uniq 比较每一行的前6个字符（-w 6）（这里是指定的日期）来统计日志事件的个数，而且在每一行的开头输出出现的次数（-c）。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">cat</span> /<span class="keyword">var</span>/<span class="keyword">log</span>/mail.<span class="keyword">log</span> | uniq -c -w 6</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055319ex1ex1hxjmnywnbm.jpg" alt="文件中的统计数字"></p>
+<p><em>文件中的统计数字</em></p>
+<p>最后，你可以组合使用 sort 和 uniq 命令（通常如此）。看看下面文件中捐助者、捐助日期和金额的列表。假设我们想知道有多少个捐助者。我们可以使用下面的命令来分隔第一字段（字段由冒号分隔），按名称排序并且删除重复的行。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">cat</span> sortuniq.txt | cut -<span class="keyword">d</span>: -f1 | <span class="keyword">sort</span> | uniq</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055320quba70a7m8vbe4ym.jpg" alt="寻找文件中不重复的记录"></p>
+<p><em>寻找文件中不重复的记录</em></p>
+<ul>
+<li>也可阅读: <a href="https://linux.cn/article-2336-1.html" target="_blank" rel="external">13个“cat”命令样例</a></li>
+</ul>
+<h4 id="grep-命令"><a href="#grep-命令" class="headerlink" title="grep 命令"></a>grep 命令</h4><p>grep 在文件（或命令输出）中搜索指定正则表达式，并且在标准输出中输出匹配的行。</p>
+<p><strong>样例</strong></p>
+<p>显示文件 /etc/passwd 中用户 gacanepa 的信息，忽略大小写。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">grep</span> -i gacanepa <span class="regexp">/etc/</span>passwd</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055320eepm9mp9mm4qwe9e.jpg" alt="grep 命令样例"></p>
+<p><em>grep 命令样例</em></p>
+<p>显示 /etc 文件夹下所有 rc 开头并跟随任意数字的内容。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">ls</span> -<span class="keyword">l</span> /etc | grep rc[0-9]</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055321o4y33j3zzk3k4jpk.jpg" alt="使用 grep 列出内容"></p>
+<p><em>使用 grep 列出内容</em></p>
+<ul>
+<li>也可阅读: <a href="https://linux.cn/article-2250-1.html" target="_blank" rel="external">12个“grep”命令样例</a></li>
+</ul>
+<h4 id="tr-命令使用技巧"><a href="#tr-命令使用技巧" class="headerlink" title="tr 命令使用技巧"></a>tr 命令使用技巧</h4><p>tr 命令可以用来从标准输入中转换（改变）或者删除字符，并将结果写入到标准输出中。</p>
+<p><strong>样例</strong></p>
+<p>把 sortuniq.txt 文件中所有的小写改为大写。</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cat sortuniq.txt | tr <span class="string">[:lower:]</span> <span class="string">[:upper:]</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055321tjh2huac2yxxhx29.jpg" alt="排序文件中的字符串"></p>
+<p><em>排序文件中的字符串</em></p>
+<p>压缩<code>ls –l</code>输出中的分隔符为一个空格。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">ls</span> -<span class="keyword">l</span> | <span class="keyword">tr</span> -s <span class="string">' '</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055321hz2w9e42egucz2iu.jpg" alt="压缩分隔符"></p>
+<p><em>压缩分隔符</em></p>
+<h4 id="cut-命令使用方法"><a href="#cut-命令使用方法" class="headerlink" title="cut 命令使用方法"></a>cut 命令使用方法</h4><p>cut 命令可以基于字节（-b选项）、字符（-c）或者字段（-f）提取部分输入（从标准输入或者文件中）并且将结果输出到标准输出。在最后一种情况下（基于字段），默认的字段分隔符是一个制表符，但可以由 -d 选项来指定不同的分隔符。</p>
+<p><strong>样例</strong></p>
+<p>从 /etc/passwd 中提取用户账户和他们被分配的默认 shell（-d 选项允许我们指定分界符，-f 选项指定那些字段将被提取）。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">cat</span> /etc/passwd | cut -<span class="keyword">d</span>: -f1,7</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055322pgyrzp6irfm299fj.jpg" alt="提取用户账户"></p>
+<p><em>提取用户账户</em></p>
+<p>将以上命令结合起来，我们将使用 last 命令的输出中第一和第三个非空文件创建一个文本流。我们将使用 grep 作为第一过滤器来检查用户 gacanepa 的会话，然后将分隔符压缩至一个空格（tr -s ‘ ‘)。下一步，我们将使用 cut 来提取第一和第三个字段，最后使用第二个字段（本样例中，指的是IP地址）来排序之后，再用 uniq 去重。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">last</span> | <span class="keyword">grep</span> gacanepa | <span class="keyword">tr</span> -s ‘ ‘ | cut -d’ ‘ -f1,<span class="number">3</span> | <span class="keyword">sort</span> -k2 | uniq</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055322bio7q6dxhoioeo6q.png" alt="last 命令样例"></p>
+<p><em>last 命令样例</em></p>
+<p>上面的命令显示了如何将多个命令和管道结合起来，以便根据我们的要求得到过滤后的数据。你也可以逐步地使用它以帮助你理解输出是如何从一个命令传输到下一个命令的（顺便说一句，这是一个非常好的学习经验！）</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[方向选择和埋头苦干]]></title>
       <url>http://qiankun.space/2016/05/20/orientation-is-more-important-than-hardwork/</url>
       <content type="html"><![CDATA[<p>勤奋努力是一个人的优良品质，对于这一点我深信不疑。可是如果就一件事、一个结果而言，选择“方向”的重要性就显得格外突出。</p>
@@ -214,7 +300,7 @@
 <p>系统初始化的过程是在工作和事件的相互协作下完成的，可以大致描述如下：系统初始化时，init 进程开始运行，init 进程自身会发出不同的事件，这些最初的事件会触发一些工作运行。每个工作运行过程中会释放不同的事件，这些事件又将触发新的工作运行。如此反复，直到整个 系统正常运行起来。</p>
 <p>究竟哪些事件会触发某个工作的运行？这是由工作配置文件定义的。</p>
 <h4 id="工作配置文件"><a href="#工作配置文件" class="headerlink" title="工作配置文件"></a>工作配置文件</h4><p>任何一个工作都是由一个工作配置文件（Job Configuration File）定义的。这个文件是一个文本文件，包含一个或者多个小节（stanza）。每个小节是一个完整的定义模块，定义了工作的一个方面，比如 author 小节定义了工作的作者。工作配置文件存放在/etc/init 下面，是以.conf 作为文件后缀的文件。</p>
-<h5 id="一个最简单的工作配置文件"><a href="#一个最简单的工作配置文件" class="headerlink" title="一个最简单的工作配置文件"></a>一个最简单的工作配置文件</h5><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#This <span class="keyword">is</span> <span class="keyword">a</span> simple demo of Job Configure <span class="keyword">file</span></span><br><span class="line">#This <span class="built_in">line</span> <span class="keyword">is</span> comment, start with #</span><br><span class="line"></span><br><span class="line">#Stanza <span class="number">1</span>, The author</span><br><span class="line">author “Liu Ming”</span><br><span class="line"></span><br><span class="line">#Stanza <span class="number">2</span>, Description</span><br><span class="line">description “This job <span class="keyword">only</span> <span class="built_in">has</span> author <span class="built_in">and</span> description, <span class="keyword">so</span> <span class="keyword">no</span> use, just <span class="keyword">a</span> demo”</span><br></pre></td></tr></table></figure>
+<h5 id="一个最简单的工作配置文件"><a href="#一个最简单的工作配置文件" class="headerlink" title="一个最简单的工作配置文件"></a>一个最简单的工作配置文件</h5><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#This is a simple demo of Job Configure file</span></span><br><span class="line"><span class="comment">#This line is comment, start with #</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Stanza 1, The author</span></span><br><span class="line">author “Liu Ming”</span><br><span class="line"></span><br><span class="line"><span class="comment">#Stanza 2, Description</span></span><br><span class="line">description “This <span class="keyword">job </span>only has author <span class="keyword">and </span>description, so no use, <span class="keyword">just </span>a demo”</span><br></pre></td></tr></table></figure>
 <p>上面的例子不会产生任何作用，一个真正的工作配置文件会包含很多小节，其中比较重要的小节有以下几个：</p>
 <p><strong> “expect” Stanza </strong></p>
 <p>Upstart 除了负责系统的启动过程之外，和 SysVinit 一样，Upstart 还提供一系列的管理工具。当系统启动之后，管理员可能还需要进行维护和调整，比如启动或者停止某项系统服务。或者将系统切换到其它的工作状态，比如改变运 行级别。本文后续将详细介绍 Upstart 的管理工具的使用。</p>

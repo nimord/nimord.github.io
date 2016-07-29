@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://qiankun.space/"/>
-  <updated>2016-05-20T09:22:42.297Z</updated>
+  <updated>2016-07-29T14:01:13.500Z</updated>
   <id>http://qiankun.space/</id>
   
   <author>
@@ -14,6 +14,108 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LFCS 01：如何在 Linux 上使用 GNU sed 等命令来创建、编辑和操作文件</title>
+    <link href="http://qiankun.space/2016/07/29/lfcs-01/"/>
+    <id>http://qiankun.space/2016/07/29/lfcs-01/</id>
+    <published>2016-07-29T13:57:17.000Z</published>
+    <updated>2016-07-29T14:01:13.500Z</updated>
+    
+    <content type="html">&lt;h3 id=&quot;处理-Linux-中的文本流&quot;&gt;&lt;a href=&quot;#处理-Linux-中的文本流&quot; class=&quot;headerlink&quot; title=&quot;处理 Linux 中的文本流&quot;&gt;&lt;/a&gt;处理 Linux 中的文本流&lt;/h3&gt;&lt;p&gt;Linux 将程序中的输入和输出当成字符流或者字符序列。在开始理解重定向和管道之前，我们必须先了解三种最重要的I/O（输入和输出Input and Output）流，事实上，它们都是特殊的文件（根据 UNIX 和 Linux 中的约定，数据流和外围设备（设备文件）也被视为普通文件）。&lt;/p&gt;
+&lt;p&gt;在 &amp;gt; (重定向操作符) 和 | (管道操作符)之间的区别是：前者将命令与文件相连接，而后者将命令的输出和另一个命令相连接。&lt;/p&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;# command &amp;gt; file# command1&lt;/span&gt; | comma&lt;span class=&quot;symbol&quot;&gt;nd2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;由于重定向操作符会静默地创建或覆盖文件，我们必须特别小心谨慎地使用它，并且永远不要把它和管道混淆起来。在 Linux 和 UNIX 系统上管道的优势是：第一个命令的输出不会写入一个文件而是直接被第二个命令读取。&lt;/p&gt;
+&lt;p&gt;在下面的操作练习中，我们将会使用这首诗——《A happy child》（作者未知)&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055317sx248jjs2c4c7uu7.png&quot; alt=&quot;cat 命令样例&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;cat 命令样例&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;使用-sed&quot;&gt;&lt;a href=&quot;#使用-sed&quot; class=&quot;headerlink&quot; title=&quot;使用 sed&quot;&gt;&lt;/a&gt;使用 sed&lt;/h4&gt;&lt;p&gt;sed 是流编辑器stream editor的缩写。为那些不懂术语的人额外解释一下，流编辑器是用来在一个输入流（文件或者管道中的输入）执行基本的文本转换的工具。&lt;/p&gt;
+&lt;p&gt;sed 最基本的用法是字符替换。我们将通过把每个出现的小写 y 改写为大写 Y 并且将输出重定向到 ahappychild2.txt 开始。g 标志表示 sed 应该替换文件每一行中所有应当替换的实例。如果这个标志省略了，sed 将会只替换每一行中第一次出现的实例。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;基本语法：&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight autoit&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# sed &lt;span class=&quot;string&quot;&gt;&#39;s/term/replacement/flag&#39;&lt;/span&gt; file&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;我们的样例：&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight autoit&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# sed &lt;span class=&quot;string&quot;&gt;&#39;s/y/Y/g&#39;&lt;/span&gt; ahappychild.txt &amp;gt; ahappychild2.txt&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055318u6w915x3w6gg64l5.png&quot; alt=&quot;sed 命令样例&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;sed 命令样例&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;如果你要在替换文本中搜索或者替换特殊字符（如 /，\，＆），你需要使用反斜杠对它进行转义。&lt;/p&gt;
+&lt;p&gt;例如，我们要用一个符号来替换一个文字，与此同时我们将把一行最开始出现的第一个 I 替换为 You。&lt;/p&gt;
+&lt;figure class=&quot;highlight sml&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# sed &lt;span class=&quot;symbol&quot;&gt;&#39;s&lt;/span&gt;/&lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt;/\&amp;amp;/g;s/^&lt;span class=&quot;type&quot;&gt;I&lt;/span&gt;/&lt;span class=&quot;type&quot;&gt;You&lt;/span&gt;/g&#39; ahappychild.txt&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055318ustph1gt8asgs2t8.png&quot; alt=&quot;sed 替换字符串&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;sed 替换字符串&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;在上面的命令中，众所周知 ^（插入符号）是正则表达式中用来表示一行开头的符号。&lt;/p&gt;
+&lt;p&gt;正如你所看到的，我们可以通过使用分号分隔以及用括号包裹来把两个或者更多的替换命令（并在它们中使用正则表达式）连接起来。&lt;/p&gt;
+&lt;p&gt;另一种 sed 的用法是显示或者删除文件中选中的一部分。在下面的样例中，将会显示 /var/log/messages 中从6月8日开始的头五行。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# sed -&lt;span class=&quot;keyword&quot;&gt;n&lt;/span&gt; &#39;/^Jun  8/ p&#39; /&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;keyword&quot;&gt;log&lt;/span&gt;/messages | sed -&lt;span class=&quot;keyword&quot;&gt;n&lt;/span&gt; 1,5p&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;请注意，在默认的情况下，sed 会打印每一行。我们可以使用 -n 选项来覆盖这一行为并且告诉 sed 只需要打印（用 p来表示）文件（或管道）中匹配的部分（第一个命令中指定以“Jun 8” 开头的行，第二个命令中指定一到五行）。&lt;/p&gt;
+&lt;p&gt;最后，可能有用的技巧是当检查脚本或者配置文件的时候可以保留文件本身并且删除注释。下面的单行 sed 命令删除（d）空行或者是开头为&lt;code&gt;#&lt;/code&gt;的行（| 字符对两个正则表达式进行布尔 OR 操作）。&lt;/p&gt;
+&lt;figure class=&quot;highlight autoit&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# sed &lt;span class=&quot;string&quot;&gt;&#39;/^#\|^$/d&#39;&lt;/span&gt; apache2.conf&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055318sz9c1jpnjqnacl1p.png&quot; alt=&quot;sed 匹配字符串&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;sed 匹配字符串&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;uniq-命令&quot;&gt;&lt;a href=&quot;#uniq-命令&quot; class=&quot;headerlink&quot; title=&quot;uniq 命令&quot;&gt;&lt;/a&gt;uniq 命令&lt;/h4&gt;&lt;p&gt;uniq 命令允许我们返回或者删除文件中重复的行，默认写到标准输出。我们必须注意到，除非两个重复的行相邻，否则uniq 命令不会删除他们。因此，uniq 经常和一个前置的 sort 命令（一种用来对文本行进行排序的算法）搭配使用。默认情况下，sort 使用第一个字段（用空格分隔）作为关键字段。要指定一个不同的关键字段，我们需要使用 -k 选项。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;样例&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;du –sch /path/to/directory/* 命令将会以人类可读的格式返回在指定目录下每一个子文件夹和文件的磁盘空间使用情况（也会显示每个目录总体的情况），而且不是按照大小输出，而是按照子文件夹和文件的名称。我们可以使用下面的命令来让它通过大小排序。&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# du -sch &lt;span class=&quot;regexp&quot;&gt;/var/&lt;/span&gt;* | &lt;span class=&quot;keyword&quot;&gt;sort&lt;/span&gt; -h&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055319qckggebd272dhhe2.jpg&quot; alt=&quot;sort 命令样例&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;sort 命令样例&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;你可以通过使用下面的命令告诉 uniq 比较每一行的前6个字符（-w 6）（这里是指定的日期）来统计日志事件的个数，而且在每一行的开头输出出现的次数（-c）。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;cat&lt;/span&gt; /&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;keyword&quot;&gt;log&lt;/span&gt;/mail.&lt;span class=&quot;keyword&quot;&gt;log&lt;/span&gt; | uniq -c -w 6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055319ex1ex1hxjmnywnbm.jpg&quot; alt=&quot;文件中的统计数字&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;文件中的统计数字&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;最后，你可以组合使用 sort 和 uniq 命令（通常如此）。看看下面文件中捐助者、捐助日期和金额的列表。假设我们想知道有多少个捐助者。我们可以使用下面的命令来分隔第一字段（字段由冒号分隔），按名称排序并且删除重复的行。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;cat&lt;/span&gt; sortuniq.txt | cut -&lt;span class=&quot;keyword&quot;&gt;d&lt;/span&gt;: -f1 | &lt;span class=&quot;keyword&quot;&gt;sort&lt;/span&gt; | uniq&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055320quba70a7m8vbe4ym.jpg&quot; alt=&quot;寻找文件中不重复的记录&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;寻找文件中不重复的记录&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;也可阅读: &lt;a href=&quot;https://linux.cn/article-2336-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;13个“cat”命令样例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;grep-命令&quot;&gt;&lt;a href=&quot;#grep-命令&quot; class=&quot;headerlink&quot; title=&quot;grep 命令&quot;&gt;&lt;/a&gt;grep 命令&lt;/h4&gt;&lt;p&gt;grep 在文件（或命令输出）中搜索指定正则表达式，并且在标准输出中输出匹配的行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;样例&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;显示文件 /etc/passwd 中用户 gacanepa 的信息，忽略大小写。&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;grep&lt;/span&gt; -i gacanepa &lt;span class=&quot;regexp&quot;&gt;/etc/&lt;/span&gt;passwd&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055320eepm9mp9mm4qwe9e.jpg&quot; alt=&quot;grep 命令样例&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;grep 命令样例&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;显示 /etc 文件夹下所有 rc 开头并跟随任意数字的内容。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;ls&lt;/span&gt; -&lt;span class=&quot;keyword&quot;&gt;l&lt;/span&gt; /etc | grep rc[0-9]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055321o4y33j3zzk3k4jpk.jpg&quot; alt=&quot;使用 grep 列出内容&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;使用 grep 列出内容&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;也可阅读: &lt;a href=&quot;https://linux.cn/article-2250-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;12个“grep”命令样例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;tr-命令使用技巧&quot;&gt;&lt;a href=&quot;#tr-命令使用技巧&quot; class=&quot;headerlink&quot; title=&quot;tr 命令使用技巧&quot;&gt;&lt;/a&gt;tr 命令使用技巧&lt;/h4&gt;&lt;p&gt;tr 命令可以用来从标准输入中转换（改变）或者删除字符，并将结果写入到标准输出中。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;样例&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;把 sortuniq.txt 文件中所有的小写改为大写。&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# cat sortuniq.txt | tr &lt;span class=&quot;string&quot;&gt;[:lower:]&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;[:upper:]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055321tjh2huac2yxxhx29.jpg&quot; alt=&quot;排序文件中的字符串&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;排序文件中的字符串&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;压缩&lt;code&gt;ls –l&lt;/code&gt;输出中的分隔符为一个空格。&lt;/p&gt;
+&lt;figure class=&quot;highlight vim&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;ls&lt;/span&gt; -&lt;span class=&quot;keyword&quot;&gt;l&lt;/span&gt; | &lt;span class=&quot;keyword&quot;&gt;tr&lt;/span&gt; -s &lt;span class=&quot;string&quot;&gt;&#39; &#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055321hz2w9e42egucz2iu.jpg&quot; alt=&quot;压缩分隔符&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;压缩分隔符&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;cut-命令使用方法&quot;&gt;&lt;a href=&quot;#cut-命令使用方法&quot; class=&quot;headerlink&quot; title=&quot;cut 命令使用方法&quot;&gt;&lt;/a&gt;cut 命令使用方法&lt;/h4&gt;&lt;p&gt;cut 命令可以基于字节（-b选项）、字符（-c）或者字段（-f）提取部分输入（从标准输入或者文件中）并且将结果输出到标准输出。在最后一种情况下（基于字段），默认的字段分隔符是一个制表符，但可以由 -d 选项来指定不同的分隔符。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;样例&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;从 /etc/passwd 中提取用户账户和他们被分配的默认 shell（-d 选项允许我们指定分界符，-f 选项指定那些字段将被提取）。&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;cat&lt;/span&gt; /etc/passwd | cut -&lt;span class=&quot;keyword&quot;&gt;d&lt;/span&gt;: -f1,7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055322pgyrzp6irfm299fj.jpg&quot; alt=&quot;提取用户账户&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;提取用户账户&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;将以上命令结合起来，我们将使用 last 命令的输出中第一和第三个非空文件创建一个文本流。我们将使用 grep 作为第一过滤器来检查用户 gacanepa 的会话，然后将分隔符压缩至一个空格（tr -s ‘ ‘)。下一步，我们将使用 cut 来提取第一和第三个字段，最后使用第二个字段（本样例中，指的是IP地址）来排序之后，再用 uniq 去重。&lt;/p&gt;
+&lt;figure class=&quot;highlight vim&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;last&lt;/span&gt; | &lt;span class=&quot;keyword&quot;&gt;grep&lt;/span&gt; gacanepa | &lt;span class=&quot;keyword&quot;&gt;tr&lt;/span&gt; -s ‘ ‘ | cut -d’ ‘ -f1,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt; | &lt;span class=&quot;keyword&quot;&gt;sort&lt;/span&gt; -k2 | uniq&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/28/055322bio7q6dxhoioeo6q.png&quot; alt=&quot;last 命令样例&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;last 命令样例&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;上面的命令显示了如何将多个命令和管道结合起来，以便根据我们的要求得到过滤后的数据。你也可以逐步地使用它以帮助你理解输出是如何从一个命令传输到下一个命令的（顺便说一句，这是一个非常好的学习经验！）&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;处理-Linux-中的文本流&quot;&gt;&lt;a href=&quot;#处理-Linux-中的文本流&quot; class=&quot;headerlink&quot; title=&quot;处理 Linux 中的文本流&quot;&gt;&lt;/a&gt;处理 Linux 中的文本流&lt;/h3&gt;&lt;p&gt;Linux 将程序中的输入和输出当成字符流或
+    
+    </summary>
+    
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
+    
+  </entry>
   
   <entry>
     <title>方向选择和埋头苦干</title>
@@ -260,7 +362,7 @@
 &lt;p&gt;系统初始化的过程是在工作和事件的相互协作下完成的，可以大致描述如下：系统初始化时，init 进程开始运行，init 进程自身会发出不同的事件，这些最初的事件会触发一些工作运行。每个工作运行过程中会释放不同的事件，这些事件又将触发新的工作运行。如此反复，直到整个 系统正常运行起来。&lt;/p&gt;
 &lt;p&gt;究竟哪些事件会触发某个工作的运行？这是由工作配置文件定义的。&lt;/p&gt;
 &lt;h4 id=&quot;工作配置文件&quot;&gt;&lt;a href=&quot;#工作配置文件&quot; class=&quot;headerlink&quot; title=&quot;工作配置文件&quot;&gt;&lt;/a&gt;工作配置文件&lt;/h4&gt;&lt;p&gt;任何一个工作都是由一个工作配置文件（Job Configuration File）定义的。这个文件是一个文本文件，包含一个或者多个小节（stanza）。每个小节是一个完整的定义模块，定义了工作的一个方面，比如 author 小节定义了工作的作者。工作配置文件存放在/etc/init 下面，是以.conf 作为文件后缀的文件。&lt;/p&gt;
-&lt;h5 id=&quot;一个最简单的工作配置文件&quot;&gt;&lt;a href=&quot;#一个最简单的工作配置文件&quot; class=&quot;headerlink&quot; title=&quot;一个最简单的工作配置文件&quot;&gt;&lt;/a&gt;一个最简单的工作配置文件&lt;/h5&gt;&lt;figure class=&quot;highlight vim&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;#This &lt;span class=&quot;keyword&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;a&lt;/span&gt; simple demo of Job Configure &lt;span class=&quot;keyword&quot;&gt;file&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#This &lt;span class=&quot;built_in&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;is&lt;/span&gt; comment, start with #&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#Stanza &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, The author&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;author “Liu Ming”&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#Stanza &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, Description&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;description “This job &lt;span class=&quot;keyword&quot;&gt;only&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;has&lt;/span&gt; author &lt;span class=&quot;built_in&quot;&gt;and&lt;/span&gt; description, &lt;span class=&quot;keyword&quot;&gt;so&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;no&lt;/span&gt; use, just &lt;span class=&quot;keyword&quot;&gt;a&lt;/span&gt; demo”&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h5 id=&quot;一个最简单的工作配置文件&quot;&gt;&lt;a href=&quot;#一个最简单的工作配置文件&quot; class=&quot;headerlink&quot; title=&quot;一个最简单的工作配置文件&quot;&gt;&lt;/a&gt;一个最简单的工作配置文件&lt;/h5&gt;&lt;figure class=&quot;highlight mipsasm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#This is a simple demo of Job Configure file&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#This line is comment, start with #&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#Stanza 1, The author&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;author “Liu Ming”&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#Stanza 2, Description&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;description “This &lt;span class=&quot;keyword&quot;&gt;job &lt;/span&gt;only has author &lt;span class=&quot;keyword&quot;&gt;and &lt;/span&gt;description, so no use, &lt;span class=&quot;keyword&quot;&gt;just &lt;/span&gt;a demo”&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;上面的例子不会产生任何作用，一个真正的工作配置文件会包含很多小节，其中比较重要的小节有以下几个：&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt; “expect” Stanza &lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Upstart 除了负责系统的启动过程之外，和 SysVinit 一样，Upstart 还提供一系列的管理工具。当系统启动之后，管理员可能还需要进行维护和调整，比如启动或者停止某项系统服务。或者将系统切换到其它的工作状态，比如改变运 行级别。本文后续将详细介绍 Upstart 的管理工具的使用。&lt;/p&gt;

@@ -40,27 +40,529 @@
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-06]]></title>
+      <title><![CDATA[LFCS 06：组装分区为RAID设备——创建和管理系统备份]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-06/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h3 id="了解RAID"><a href="#了解RAID" class="headerlink" title="了解RAID"></a>了解RAID</h3><p>这种被称为独立磁盘冗余阵列（Redundant Array of Independent Disks）(RAID)的技术是将多个硬盘组合成一个单独逻辑单元的存储解决方案，它提供了数据冗余功能并且改善硬盘的读写操作性能。</p>
+<p>然而，实际的容错和磁盘 I/O 性能硬盘取决于如何将多个硬盘组装成磁盘阵列。根据可用的设备和容错/性能的需求，RAID 被分为不同的级别，你可以参考 RAID 系列文章以获得每个 RAID 级别更详细的解释。</p>
+<ul>
+<li><a href="https://linux.cn/article-6085-1.html" target="_blank" rel="external">在 Linux 下使用 RAID（一）：介绍 RAID 的级别和概念</a></li>
+</ul>
+<p>我们选择用于创建、组装、管理、监视软件 RAID 的工具，叫做 mdadm (multiple disk admin 的简写）。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span> <span class="comment">Debian</span> <span class="comment">及衍生版</span> <span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">#</span> <span class="comment">aptitude</span> <span class="comment">update</span> <span class="comment">&amp;&amp;</span> <span class="comment">aptitude</span> <span class="comment">install</span> <span class="comment">mdadm</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span> <span class="comment">Red</span> <span class="comment">Hat</span> <span class="comment">和基于</span> <span class="comment">CentOS</span> <span class="comment">的系统</span> <span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">#</span> <span class="comment">yum</span> <span class="comment">update</span> <span class="comment">&amp;&amp;</span> <span class="comment">yum</span> <span class="comment">install</span> <span class="comment">mdadm</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span> <span class="comment">openSUSE</span> <span class="comment">上</span> <span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">#</span> <span class="comment">zypper</span> <span class="comment">refresh</span> <span class="comment">&amp;&amp;</span> <span class="comment">zypper</span> <span class="comment">install</span> <span class="comment">mdadm</span> <span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<h4 id="将分区组装成-RAID-设备"><a href="#将分区组装成-RAID-设备" class="headerlink" title="将分区组装成 RAID 设备"></a>将分区组装成 RAID 设备</h4><p>组装已有分区作为 RAID 设备的过程由以下步骤组成。</p>
+<p><strong>1. 使用 mdadm 创建阵列</strong></p>
+<p>如果先前其中一个分区已经格式化，或者作为了另一个 RAID 阵列的一部分，你会被提示以确认创建一个新的阵列。假设你已经采取了必要的预防措施以避免丢失重要数据，那么可以安全地输入 Y 并且按下回车。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">mdadm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">verbose</span> <span class="comment">/dev/md0</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level=stripe</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">raid</span><span class="literal">-</span><span class="comment">devices=2</span> <span class="comment">/dev/sdb1</span> <span class="comment">/dev/sdc1</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222344q1889bbk5n869592.png" alt="创建 RAID 阵列"></p>
+<p><em>创建 RAID 阵列</em></p>
+<p><strong>2. 检查阵列的创建状态</strong></p>
+<p>在创建了 RAID 阵列之后，你可以检查使用以下命令检查阵列的状态。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cat <span class="regexp">/proc/m</span>dstator# mdadm --detail <span class="regexp">/dev/m</span>d0    [More detailed summary]</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222348pxren45x9z57pzbu.png" alt="检查 RAID 阵列的状态"></p>
+<p><em>检查 RAID 阵列的状态</em></p>
+<p><strong>3. 格式化 RAID 设备</strong></p>
+<p>如本系列<a href="https://linux.cn/article-7187-1.html" target="_blank" rel="external">第四讲</a>所介绍的，按照你的需求/要求采用某种文件系统格式化你的设备。</p>
+<p><strong>4. 监控 RAID 阵列服务</strong></p>
+<p>让监控服务时刻监视你的 RAID 阵列。把<code># mdadm --detail --scan</code>命令输出结果添加到 <code>/etc/mdadm/mdadm.conf</code>(Debian及其衍生版)或者<code>/etc/mdadm.conf</code>(Cent0S/openSUSE)，如下。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">mdadm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">detail</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">scan</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222354jdhnm2wyasnzhmv3.png" alt="监控 RAID 阵列"></p>
+<p><em>监控 RAID 阵列</em></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mdadm --assemble --scan     [Assemble the array]</span></span><br></pre></td></tr></table></figure>
+<p>为了确保服务能够开机启动，需要以 root 权限运行以下命令。</p>
+<p><strong>Debian 及其衍生版</strong></p>
+<p>Debian 及其衍生版能够通过下面步骤使服务默认开机启动：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">update</span>-rc.<span class="keyword">d</span> mdadm defaults</span><br></pre></td></tr></table></figure>
+<p>在 <code>/etc/default/mdadm</code> 文件中添加下面这一行</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">AUTOSTART</span>=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p><strong>CentOS 和 openSUSE(systemd-based)</strong></p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># systemctl start mdmonitor# systemctl enable mdmonitor</span></span><br></pre></td></tr></table></figure>
+<p><strong>CentOS 和 openSUSE(SysVinit-based)</strong></p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># service mdmonitor start# chkconfig mdmonitor on</span></span><br></pre></td></tr></table></figure>
+<p><strong>5. 检查RAID磁盘故障</strong></p>
+<p>在支持冗余的的 RAID 级别中，在需要时会替换故障的驱动器。当磁盘阵列中的设备出现故障时，仅当存在我们第一次创建阵列时预留的备用设备时，磁盘阵列会将自动启动重建。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222400usjj5mzsxvwvql2n.png" alt="检查 RAID 故障磁盘"></p>
+<p><em>检查 RAID 故障磁盘</em></p>
+<p>否则，我们需要手动将一个额外的物理驱动器插入到我们的系统，并且运行。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mdadm <span class="regexp">/dev/m</span>d0 --add <span class="regexp">/dev/</span>sdX1</span><br></pre></td></tr></table></figure>
+<p>/dev/md0 是出现了问题的阵列，而 /dev/sdx1 是新添加的设备。</p>
+<p><strong>6. 拆解一个工作阵列</strong></p>
+<p>如果你需要使用工作阵列的设备创建一个新的阵列，你可能不得不去拆解已有工作阵列——(可选步骤)</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mdadm --stop /dev/md0                 #  Stop the array# mdadm --remove /dev/md0             # Remove the RAID device# mdadm --zero-superblock /dev/sdX1     # Overwrite the existing md superblock with zeroes</span></span><br></pre></td></tr></table></figure>
+<p><strong>7. 设置邮件通知</strong></p>
+<p>你可以配置一个用于发送通知的有效邮件地址或者系统账号(确保在 mdadm.conf 文件中有下面这一行)。——(可选步骤)</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">MAILADDR</span> root</span><br></pre></td></tr></table></figure>
+<p>在这种情况下，来自 RAID 后台监控程序所有的通知将会发送到你的本地 root 账号的邮件箱中。其中一个类似的通知如下。</p>
+<p>说明：此次通知事件和第5步中的例子相关。此处一个设备被标志为错误，并且一个空闲的设备自动地被 mdadm 加入到阵列。我们用完了所有“健康的”空闲设备，因此我们得到了通知。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222403ao1rbkmzdh5iplm9.png" alt="RAID 监控通知"></p>
+<p><em>RAID 监控通知</em></p>
+<h4 id="了解-RAID-级别"><a href="#了解-RAID-级别" class="headerlink" title="了解 RAID 级别"></a>了解 RAID 级别</h4><p><strong>RAID 0</strong></p>
+<p>阵列总大小是最小分区大小的 n 倍，n 是阵列中独立磁盘的个数(你至少需要两个驱动器/磁盘)。运行下面命令，使用 /dev/sdb1 和 /dev/sdc1 分区组装一个 RAID 0 阵列。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">mdadm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">verbose</span> <span class="comment">/dev/md0</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level=stripe</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">raid</span><span class="literal">-</span><span class="comment">devices=2</span> <span class="comment">/dev/sdb1</span> <span class="comment">/dev/sdc1</span></span><br></pre></td></tr></table></figure>
+<p>常见用途：用于支持性能比容错更重要的实时应用程序的设置</p>
+<p><strong>RAID 1 (又名镜像)</strong></p>
+<p>阵列总大小等于最小分区大小(你至少需要两个驱动器/磁盘)。运行下面命令，使用 /dev/sdb1 和 /dev/sdc1 分区组装一个 RAID 1 阵列。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">mdadm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">verbose</span> <span class="comment">/dev/md0</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level=1</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">raid</span><span class="literal">-</span><span class="comment">devices=2</span> <span class="comment">/dev/sdb1</span> <span class="comment">/dev/sdc1</span></span><br></pre></td></tr></table></figure>
+<p>常见用途：操作系统的安装或者重要的子文件夹，例如 /home</p>
+<p><strong>RAID 5 (又名奇偶校验码盘)</strong></p>
+<p>阵列总大小将是最小分区大小的 (n-1) 倍。所减少的大小用于奇偶校验(冗余)计算(你至少需要3个驱动器/磁盘)。</p>
+<p>说明：你可以指定一个空闲设备 (/dev/sde1) 替换问题出现时的故障部分(分区)。运行下面命令，使用 /dev/sdb1, /dev/sdc1, /dev/sdd1，/dev/sde1 组装一个 RAID 5 阵列，其中 /dev/sde1 作为空闲分区。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">mdadm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">verbose</span> <span class="comment">/dev/md0</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level=5</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">raid</span><span class="literal">-</span><span class="comment">devices=3</span> <span class="comment">/dev/sdb1</span> <span class="comment">/dev/sdc1</span> <span class="comment">/dev/sdd1</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">spare</span><span class="literal">-</span><span class="comment">devices=1</span> <span class="comment">/dev/sde1</span></span><br></pre></td></tr></table></figure>
+<p>常见用途：Web 和文件服务</p>
+<p><strong>RAID 6 (又名双重奇偶校验码盘)</strong></p>
+<p>阵列总大小为(n<em>s)-2</em>s，其中n为阵列中独立磁盘的个数，s为最小磁盘大小。</p>
+<p>说明：你可以指定一个空闲分区(在这个例子为 /dev/sdf1)替换问题出现时的故障部分(分区)。</p>
+<p>运行下面命令，使用 /dev/sdb1, /dev/sdc1, /dev/sdd1, /dev/sde1 和 /dev/sdf1 组装 RAID 6 阵列，其中 /dev/sdf1 作为空闲分区。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mdadm --create --verbose <span class="regexp">/dev/m</span>d0 --level=<span class="number">6</span> --raid-devices=<span class="number">4</span> <span class="regexp">/dev/</span>sdb1 <span class="regexp">/dev/</span>sdc1 <span class="regexp">/dev/</span>sdd1 <span class="regexp">/dev/</span>sde --spare-devices=<span class="number">1</span> <span class="regexp">/dev/</span>sdf1</span><br></pre></td></tr></table></figure>
+<p>常见用途：大容量、高可用性要求的文件服务器和备份服务器。</p>
+<p><strong>RAID 1+0 (又名镜像条带)</strong></p>
+<p>因为 RAID 1+0 是 RAID 0 和 RAID 1 的组合，所以阵列总大小是基于两者的公式计算的。首先，计算每一个镜像的大小，然后再计算条带的大小。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">mdadm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">verbose</span> <span class="comment">/dev/md0</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">level=10</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">raid</span><span class="literal">-</span><span class="comment">devices=4</span> <span class="comment">/dev/sd</span><span class="title">[</span><span class="comment">b</span><span class="literal">-</span><span class="comment">e</span><span class="title">]</span><span class="comment">1</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">spare</span><span class="literal">-</span><span class="comment">devices=1</span> <span class="comment">/dev/sdf1</span></span><br></pre></td></tr></table></figure>
+<p>常见用途：需要快速 IO 操作的数据库和应用服务器</p>
+<h4 id="创建和管理系统备份"><a href="#创建和管理系统备份" class="headerlink" title="创建和管理系统备份"></a>创建和管理系统备份</h4><p>记住， RAID 其所有的价值不是在于备份的替换者！在黑板上写上1000次，如果你需要的话，但无论何时一定要记住它。在我们开始前，我们必须注意的是，没有一个放之四海皆准的针对所有系统备份的解决方案，但这里有一些东西，是你在规划一个备份策略时需要考虑的。</p>
+<ul>
+<li>你的系统将用于什么？(桌面或者服务器？如果系统是应用于后者，那么最重要的服务是什么？哪个配置是痛点？)</li>
+<li>你每隔多久备份你的系统？</li>
+<li>你需要备份的数据是什么(比如文件/文件夹/数据库转储)？你还可以考虑是否需要备份大型文件(比如音频和视频文件)。</li>
+<li>这些备份将会存储在哪里(物理位置和媒体)？</li>
+</ul>
+<p><strong>备份你的数据</strong></p>
+<p>方法1：使用 dd 命令备份整个磁盘。你可以在任意时间点通过创建一个准确的镜像来备份一整个硬盘或者是分区。注意当设备是离线时，这种方法效果最好，也就是说它没有被挂载并且没有任何进程的 I/O 操作访问它。</p>
+<p>这种备份方法的缺点是镜像将具有和磁盘或分区一样的大小，即使实际数据占用的是一个很小的比例。比如，如果你想要为只使用了10%的20GB的分区创建镜像，那么镜像文件将仍旧是20GB。换句话来讲，它不仅包含了备份的实际数据，而且也包含了整个分区。如果你想完整备份你的设备，那么你可以考虑使用这个方法。</p>
+<p><strong>从现有的设备创建一个镜像文件</strong></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># dd <span class="keyword">if</span>=<span class="regexp">/dev/</span>sda of=<span class="regexp">/system_images/</span>sda.img或者--------------------- 可选地，你可以压缩镜像文件 -------------------# dd <span class="keyword">if</span>=<span class="regexp">/dev/</span>sda | gzip -c &gt; <span class="regexp">/system_images/</span>sda.img.gz</span><br></pre></td></tr></table></figure>
+<p><strong>从镜像文件恢复备份</strong></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># dd <span class="keyword">if</span>=<span class="regexp">/system_images/</span>sda.img of=<span class="regexp">/dev/</span>sda或者--------------------- 根据你创建镜像文件时的选择(译者注:比如压缩) ----------------# gzip -dc <span class="regexp">/system_images/</span>sda.img.gz | dd of=<span class="regexp">/dev/</span>sda</span><br></pre></td></tr></table></figure>
+<p>方法2：使用 tar 命令备份确定的文件/文件夹——已经在本系列<a href="https://linux.cn/article-7171-1.html" target="_blank" rel="external">第三讲</a>中讲了。如果你想要备份指定的文件/文件夹(配置文件，用户主目录等等)，你可以使用这种方法。</p>
+<p>方法3：使用 rsync 命令同步文件。rsync 是一种多功能远程（和本地）文件复制工具。如果你想要从网络设备备份或同步文件，rsync 是一种选择。</p>
+<p>无论是你是正在同步两个本地文件夹还是本地 &lt; — &gt; 挂载在本地文件系统的远程文件夹，其基本语法是一样的。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># rsync -av source_directory destination_directory</span></span><br></pre></td></tr></table></figure>
+<p>在这里，-a 递归遍历子目录(如果它们存在的话)，维持符号链接、时间戳、权限以及原本的属主/属组，-v 显示详细过程。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222405x8a94kkqyffay9sp.png" alt="rsync 同步文件"></p>
+<p><em>rsync 同步文件</em></p>
+<p>除此之外，如果你想增加在网络上传输数据的安全性，你可以通过 ssh 协议使用 rsync。</p>
+<p><strong>通过 ssh 同步本地到远程文件夹</strong></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rsync -avzhe ssh backups root<span class="doctag">@remote</span>_host:/remote_directory/</span></span><br></pre></td></tr></table></figure>
+<p>这个示例，本地主机上的 backups 文件夹将与远程主机上的 /root/remote_directory 的内容同步。</p>
+<p>在这里，-h 选项以易读的格式显示文件的大小，-e 标志用于表示一个 ssh 连接。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222410w0r0bcclcgtgc3cf.png" alt="rsync 同步远程文件"></p>
+<p><em>rsync 同步远程文件</em></p>
+<p><strong>通过ssh同步远程到本地文件夹</strong></p>
+<p>在这种情况下，交换前面示例中的 source 和 destination 文件夹。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rsync -avzhe ssh root<span class="doctag">@remote</span>_host:/remote_directory/ backups</span></span><br></pre></td></tr></table></figure>
+<p>请注意这些只是 rsync 用法的三个示例而已(你可能遇到的最常见的情形)。对于更多有关 rsync 命令的示例和用法 ，你可以查看下面的文章。</p>
+<ul>
+<li><a href="http://www.tecmint.com/rsync-local-remote-file-synchronization-commands/" target="_blank" rel="external">在 Linux 下同步文件的10个 rsync命令</a></li>
+</ul>
+]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-05]]></title>
+      <title><![CDATA[LFCS 05：如何在 Linux 中挂载/卸载本地文件系统和网络文件系统（Samba 和 NFS）]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-05/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h3 id="挂载文件系统"><a href="#挂载文件系统" class="headerlink" title="挂载文件系统"></a>挂载文件系统</h3><p>在个硬盘分好区之后，Linux 需要通过某些方式对硬盘分区上的数据进行访问。Linux 并不会像 DOS 或者 Windows 那样给每个硬盘分区分配一个字母来作为盘符，而是将硬盘分区挂载到统一的目录树上的挂载点。</p>
+<p>挂载点是一个目录，挂载是一种访问分区上文件系统的方法，挂载文件系统实际上是将一个确切的文件系统（比如一个分区）和目录树中指定的目录联系起来的过程。</p>
+<p>换句话说，管理存储设备的第一步就是把设备关联到文件系统树。要完成这一步，通常可以这样：用 mount 命令来进行临时挂载（用完的时候，使用 umount 命令来卸载），或者通过编辑 /etc/fstab 文件之后重启系统来永久性挂载，这样每次开机都会进行挂载。</p>
+<p>不带任何选项的 mount 命令，可以显示当前已挂载的文件系统。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># mount</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083734afzlpfl896fopcqr.png" alt="检查已挂载的文件系统"></p>
+<p><em>检查已挂载的文件系统</em></p>
+<p>另外，mount 命令通常用来挂载文件系统。其基本语法如下：</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mount -t <span class="built_in">type</span> device <span class="built_in">dir</span> -o options</span><br></pre></td></tr></table></figure>
+<p>该命令会指引内核将在设备上找到的文件系统（如已格式化为指定类型的文件系统）挂载到指定目录。像这样的形式，mount 命令不会再到 /etc/fstab 文件中进行确认。</p>
+<p>除非像下面，挂载指定的目录或者设备：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mount /dir -o <span class="keyword">options</span>或# mount device -o <span class="keyword">options</span></span><br></pre></td></tr></table></figure>
+<p>mount 命令会尝试寻找挂载点，如果找不到就会查找设备（上述两种情况下，mount 命令会在 /etc/fstab 查找相应的设备或挂载点），最后尝试完成挂载操作（这个通常可以成功执行，除非你的挂载点或者设备正在使用中，或者你调用 mount 命令的时候没有 root 权限）。</p>
+<p>你可以看到，mount 命令的每行输出都是如下格式：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">device</span> on directory <span class="keyword">type</span> (options)</span><br></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/mapper/debian-home on /home <span class="keyword">type</span> ext4 (rw,relatime,user_xattr,barrier=1,data=ordered)</span><br></pre></td></tr></table></figure>
+<p>读作：</p>
+<p>设备 dev/mapper/debian-home 挂载在 /home 下，它被格式化为 ext4，并且有以下挂载选项： rw，relatime，user_xattr，barrier=1，data=ordered。</p>
+<p><strong>mount 命令选项</strong></p>
+<p>下面列出 mount 命令的常用选项</p>
+<ul>
+<li>async：允许在将要挂载的文件系统上进行异步 I/O 操作</li>
+<li>auto：标示该文件系统通过 mount -a 命令挂载，与 noauto 相反。</li>
+<li>defaults：该选项相当于 <code>async,auto,dev,exec,nouser,rw,suid</code> 的组合。注意，多个选项必须由逗号隔开并且中间没有空格。倘若你不小心在两个选项中间输入了一个空格，mount 命令会把后边的字符解释为另一个参数。</li>
+<li>loop：将镜像文件（如 .iso 文件）挂载为 loop 设备。该选项可以用来模拟显示光盘中的文件内容。</li>
+<li>noexec：阻止该文件系统中可执行文件的执行。与 exec 选项相反。</li>
+<li>nouser：阻止任何用户（除 root 用户外） 挂载或卸载文件系统。与 user 选项相反。</li>
+<li>remount：重新挂载文件系统。</li>
+<li>ro：只读模式挂载。</li>
+<li>rw：读写模式挂载。</li>
+<li>relatime：只要访问时间早于修改时间，就更新文件的的访问时间。</li>
+<li>user_xattr：允许用户设置和移除可扩展文件系统属性。</li>
+</ul>
+<p><strong>以 ro 和 noexec 模式挂载设备</strong></p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># mount -t ext4 /dev/sdg1 /mnt -o ro,noexec</span></span><br></pre></td></tr></table></figure>
+<p>在本例中，我们可以看到，在挂载点 /mnt 中尝试写入文件或者运行可执行文件都会显示相应的错误信息。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># touch <span class="regexp">/mnt/my</span><span class="keyword">file</span># <span class="regexp">/mnt/</span>bin<span class="regexp">/echo “Hi there”</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083734uzm5q55ewemrsm5q.png" alt="可读写模式挂载设备"></p>
+<p><em>可读写模式挂载设备</em></p>
+<p><strong>以默认模式挂载设备</strong></p>
+<p>以下场景，我们在重新挂载设备的挂载点中，像上例一样尝试你写入文件和运行可执行文件。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># mount -t ext4 /dev/sdg1 /mnt -o defaults</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083735vrwasmt1pwrkvr1t.png" alt="挂载设备"></p>
+<p><em>挂载设备</em></p>
+<p>在这个例子中，我们发现写入文件和命令都完美执行了。</p>
+<h3 id="卸载设备"><a href="#卸载设备" class="headerlink" title="卸载设备"></a>卸载设备</h3><p>使用 umount 命令卸载设备，意味着将所有的“在使用”数据全部写入到文件系统，然后可以安全移除文件系统。请注意，倘若你移除一个没有事先正确卸载的设备，就会有造成设备损坏和数据丢失的风险。</p>
+<p>也就是说，你必须“离开”设备的块设备描述符或者挂载点，才能卸载设备。换言之，你的当前工作目录不能是需要卸载设备的挂载点。否则，系统将返回设备繁忙的提示信息。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083735la66phyyjhopkojp.png" alt="卸载设备"></p>
+<p><em>卸载设备</em></p>
+<p>离开需卸载设备的挂载点最简单的方法就是，运行不带任何选项的 cd 命令，这样会回到当前用户的家目录。</p>
+<h3 id="挂载常见的网络文件系统"><a href="#挂载常见的网络文件系统" class="headerlink" title="挂载常见的网络文件系统"></a>挂载常见的网络文件系统</h3><p>最常用的两种网络文件系统是 SMB（服务器消息块Server Message Block）和 NFS（网络文件系统Network File System）。如果你只向类 Unix 客户端提供共享，用 NFS 就可以了，如果是向 Windows 和其他类 Unix 客户端提供共享服务，就需要用到 Samba 了。</p>
+<p>扩展阅读</p>
+<ul>
+<li><a href="http://www.tecmint.com/setup-samba-server-using-tdbsam-backend-on-rhel-centos-6-3-5-8-and-fedora-17-12/" target="_blank" rel="external">Setup Samba Server in RHEL/CentOS and Fedora</a></li>
+<li><a href="http://www.tecmint.com/how-to-setup-nfs-server-in-linux/" target="_blank" rel="external">Setting up NFS (Network File System) on RHEL/CentOS/Fedora and Debian/Ubuntu</a></li>
+</ul>
+<p>下面的例子中，假设 Samba 和 NFS 已经在地址为 192.168.0.10 的服务器上架设好了（请注意，架设 NFS 服务器也是 LFCS 考试中需要考核的能力，我们会在后边中提到）。</p>
+<h4 id="在-Linux-中挂载-Samba-共享"><a href="#在-Linux-中挂载-Samba-共享" class="headerlink" title="在 Linux 中挂载 Samba 共享"></a>在 Linux 中挂载 Samba 共享</h4><p>第一步：在 Red Hat 以 Debian 系发行版中安装 samba-client、samba-common 和 cifs-utils 软件包，如下：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum update &amp;&amp; yum install samba-client samba-<span class="meta">common</span> cifs-utils# aptitude update &amp;&amp; aptitude install samba-client samba-<span class="meta">common</span> cifs-utils</span><br></pre></td></tr></table></figure>
+<p>然后运行下列命令，查看服务器上可用的 Samba 共享。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">smbclient</span> <span class="selector-tag">-L</span> 192<span class="selector-class">.168</span><span class="selector-class">.0</span><span class="selector-class">.10</span></span><br></pre></td></tr></table></figure>
+<p>并输入远程机器上 root 账户的密码。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083735n0tuv0bpr8snpt8b.png" alt="挂载 Samba 共享"></p>
+<p><em>挂载 Samba 共享</em></p>
+<p>上图中，已经对可以挂载到我们本地系统上的共享进行高亮显示。你只需要与一个远程服务器上的合法用户名及密码就可以访问共享了。</p>
+<p>第二步：当挂载有密码保护的网络文件系统时候，将你的访问凭证写入到 /etc/fstab 文件中并非明智的选择。你需要将这些信息写入到具有 600 权限的隐藏文件中，像这样：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mkdir <span class="regexp">/media/</span>samba# echo “username=samba_username” &gt; <span class="regexp">/media/</span>samba<span class="regexp">/.smbcredentials# echo “password=samba_password” &gt;&gt; /m</span>edia<span class="regexp">/samba/</span>.smbcredentials# chmod <span class="number">600</span> <span class="regexp">/media/</span>samba<span class="regexp">/.smbcredentials</span></span><br></pre></td></tr></table></figure>
+<p>第三步：然后将下面的内容添加到 /etc/fstab 文件中。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="comment">//192.168.0.10/gacanepa /media/samba cifs credentials=/media/samba/.smbcredentials,defaults 0 0</span></span></span><br></pre></td></tr></table></figure>
+<p>第四步：现在可以挂载你的 Samba 共享了。手动挂载（mount //192.168.0.10/gacanepa）或者重启系统并应用 /etc/fstab 中相应行来用就挂载都可以。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083736v77ptst9rhocsc7t.png" alt="挂载有密码保护的 Samba 共享"></p>
+<p><em>挂载有密码保护的 Samba 共享</em></p>
+<h4 id="在-Linux-系统中挂载-NFS-共享"><a href="#在-Linux-系统中挂载-NFS-共享" class="headerlink" title="在 Linux 系统中挂载 NFS 共享"></a>在 Linux 系统中挂载 NFS 共享</h4><p>第一步：在 Red Hat 以 Debian 系发行版中安装 nfs-common 和 portmap 软件包。如下：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum update &amp;&amp; yum install <span class="built_in">nfs</span>-utils <span class="built_in">nfs</span>-utils-lib# aptitude update &amp;&amp; aptitude install <span class="built_in">nfs</span>-common</span><br></pre></td></tr></table></figure>
+<p>第二步：为 NFS 共享创建挂载点。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># mkdir /media/nfs</span></span><br></pre></td></tr></table></figure>
+<p>第三步：将下面的内容添加到 /etc/fstab 文件中。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">192.168</span>.<span class="number">0</span>.<span class="number">10</span><span class="symbol">:/NFS-SHARE</span> /media/nfs nfs defaults <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>第四步：现在可以挂载你的 Samba 共享了。手动挂载（mount 192.168.0.10:/NFS-SHARE）或者重启系统并应用 /etc/fstab 中相应行来用就挂载都可以。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083737p4rbohatc5b6cfib.png" alt="挂载 NFS 共享"></p>
+<p><em>挂载 NFS 共享</em></p>
+<h3 id="永久性挂载文件系统"><a href="#永久性挂载文件系统" class="headerlink" title="永久性挂载文件系统"></a>永久性挂载文件系统</h3><p>像前面两个例子那样，/etc/fstab 控制着Linux如何访问硬盘分区及可移动设备。/etc/fstab 由六个字段的内容组成，各个字段之间通过一个空格符或者制表符来分开。井号（#）开始的行只是会被忽略的注释。</p>
+<p>每一行都按照这个格式来写入：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;file system&gt;</span> <span class="section">&lt;mount point&gt;</span> <span class="section">&lt;type&gt;</span> <span class="section">&lt;options&gt;</span> <span class="section">&lt;dump&gt;</span> <span class="section">&lt;pass&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li><file system="">: 第一个字段指定挂载的设备。大多数发行版本都通过分区的标卷（label）或者 UUID 来指定。这样做可以避免分区号改变时带来的错误。</file></li>
+<li><mount point="">: 第二个字段指定挂载点。</mount></li>
+<li><type> ：文件系统的类型代码与 mount 命令挂载文件系统时使用的类型代码是一样的。通过 auto 类型代码可以让内核自动检测文件系统，这对于可移动设备来说非常方便。注意，该选项可能不是对所有文件系统可用。</type></li>
+<li><options>: 一个（或多个）挂载选项。</options></li>
+<li><dump>: 你可能把这个字段设置为 0（否则设置为 1），使得系统启动时禁用 dump 工具（dump 程序曾经是一个常用的备份工具，但现在越来越少用了）对文件系统进行备份。</dump></li>
+<li><pass>: 这个字段指定启动系统是是否通过 fsck 来检查文件系统的完整性。0 表示 fsck 不对文件系统进行检查。数字越大，优先级越低。因此，根分区（/）最可能使用数字 1，其他所有需要检查的分区则是以数字 2.</pass></li>
+</ul>
+<p><strong>Mount 命令例示</strong></p>
+<p>1、在系统启动时，通过 TECMINT 标卷来挂载文件系统，并具备 rw 和 noexec 属性，你应该将以下语句添加到 /etc/fstab 文件中。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">LABEL</span>=TECMINT /mnt ext4 rw,noexec <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>2、若你想在系统启动时挂载 DVD 光驱中的内容，添加以下语句。</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta-keyword">/dev/</span>sr0 <span class="meta-keyword">/media/</span>cdrom0 iso9660 ro,user,noauto <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>其中 /dev/sr0 为你的 DVD 光驱。</p>
+]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-04]]></title>
+      <title><![CDATA[LFCS 04：对存储设备分区、格式化文件系统和配置交换分区]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-04/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h3 id="对存储设备分区"><a href="#对存储设备分区" class="headerlink" title="对存储设备分区"></a>对存储设备分区</h3><p>分区是一种将单独的硬盘分成一个或多个区的手段。一个分区只是硬盘的一部分，我们可以认为这部分是独立的磁盘，里边包含一个单一类型的文件系统。分区表则是将硬盘上这些分区与分区标识符联系起来的索引。</p>
+<p>在 Linux 上，IBM PC 兼容系统里边用于管理传统 MBR（用到2009年）分区的工具是 fdisk。对于 GPT（2010年至今）分区，我们使用 gdisk。这两个工具都可以通过程序名后面加上设备名称（如 /dev/sdb）进行调用。</p>
+<h4 id="使用-fdisk-管理-MBR-分区"><a href="#使用-fdisk-管理-MBR-分区" class="headerlink" title="使用 fdisk 管理 MBR 分区"></a>使用 fdisk 管理 MBR 分区</h4><p>我们先来介绍 fdisk：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># fdisk /dev/sdb</span></span><br></pre></td></tr></table></figure>
+<p>然后出现提示说进行下一步操作。若不确定如何操作，按下 “m” 键显示帮助。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052349vh0iosthplod5jiq.png" alt="fdisk 帮助菜单"></p>
+<p><em>fdisk 帮助菜单</em></p>
+<p>上图中，使用频率最高的选项已高亮显示。你可以随时按下 “p” 显示分区表。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052351wdx8ogb2kdhg5zkx.png" alt="显示分区表"></p>
+<p><em>显示分区表</em></p>
+<p>Id 列显示由 fdisk 分配给每个分区的分区类型（分区 id）。一个分区类型代表一种文件系统的标识符，简单来说，包括该分区上数据的访问方法。</p>
+<p>请注意，每个分区类型的全面讲解将超出了本教程的范围——本系列教材主要专注于 LFCS 测试，以考试为主。</p>
+<p><strong>下面列出一些 fdisk 常用选项：</strong></p>
+<p>按下 “l”（小写 L）选项来显示所有可以由 fdisk 管理的分区类型。</p>
+<p>按下 “d” 可以删除现有的分区。若硬盘上有多个分区，fdisk 将询问你要删除那个分区。</p>
+<p>键入对应的数字，并按下 “w” 保存更改（将更改写入分区表）。</p>
+<p>在下图的命令中，我们将删除 /dev/sdb2，然后显示（p）分区表来验证更改。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052353nphfjfjf6j1hvnzl.png" alt="fdisk 命令选项"></p>
+<p><em>fdisk 命令选项</em></p>
+<p>按下 “n” 后接着按下 “p” 会创建新一个主分区。最后，你可以使用所有的默认值（这将占用所有的可用空间），或者像下面一样自定义分区大小。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052355f0a3jjppj9uxbaua.png" alt="创建新分区"></p>
+<p><em>创建新分区</em></p>
+<p>若 fdisk 分配的分区 Id 并不是我们想用的，可以按下 “t” 来更改。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052357pdqrotrrtrj10ov2.png" alt="更改分区类型"></p>
+<p><em>更改分区类型</em></p>
+<p>全部设置好分区后，按下 “w” 将更改保存到硬盘分区表上。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052358fjghg3it1oig4ih0.png" alt="保存分区更改"></p>
+<p><em>保存分区更改</em></p>
+<h4 id="使用-gdisk-管理-GPT-分区"><a href="#使用-gdisk-管理-GPT-分区" class="headerlink" title="使用 gdisk 管理 GPT 分区"></a>使用 gdisk 管理 GPT 分区</h4><p>下面的例子中，我们使用 /dev/sdb。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># gdisk /dev/sdb</span></span><br></pre></td></tr></table></figure>
+<p>必须注意的是，gdisk 可以用于创建 MBR 和 GPT 两种分区表。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052359wttf81v84mzjj1u8.png" alt="创建 GPT 分区"></p>
+<p><em>创建 GPT 分区</em></p>
+<p>使用 GPT 分区方案，我们可以在同一个硬盘上创建最多 128 个分区，单个分区最大以 PB 为单位，而 MBR 分区方案最大的只能 2TB。</p>
+<p>注意，fdisk 与 gdisk 中大多数命令都是一样的。因此，我们不会详细介绍这些命令选项，而是给出一张使用过程中的截图。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052401jndri4wwzkfi9w1w.png" alt="gdisk 命令选项"></p>
+<p><em>gdisk 命令选项</em></p>
+<h3 id="格式化文件系统"><a href="#格式化文件系统" class="headerlink" title="格式化文件系统"></a>格式化文件系统</h3><p>一旦创建完需要的分区，我们就必须为分区创建文件系统。查询你所用系统支持的文件系统，请运行：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># ls /sbin/mk*</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052403mudh1vuw1cx0qdsw.png" alt="检查文件系统类型"></p>
+<p><em>检查文件系统类型</em></p>
+<p>选择文件系统取决于你的需求。你应该考虑到每个文件系统的优缺点以及其特点。选择文件系统需要看的两个重要属性：</p>
+<ul>
+<li>日志支持，允许从系统崩溃事件中快速恢复数据。</li>
+<li>安全增强式 Linux（SELinux）支持，按照项目 wiki 所说，“安全增强式 Linux 允许用户和管理员更好的控制访问控制权限”。</li>
+</ul>
+<p>在接下来的例子中，我们通过 mkfs 在 /dev/sdb1 上创建 ext4 文件系统（支持日志和 SELinux），标卷为 Tecmint。mkfs 基本语法如下：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mkfs -t <span class="string">[filesystem]</span> -L <span class="string">[label]</span> device或者# mkfs.<span class="string">[filesystem]</span> -L <span class="string">[label]</span> device</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052406lvtvyrztb7kymx9v.png" alt="创建 ext4 文件系统"></p>
+<p><em>创建 ext4 文件系统</em></p>
+<h3 id="创建并启用交换分区"><a href="#创建并启用交换分区" class="headerlink" title="创建并启用交换分区"></a>创建并启用交换分区</h3><p>要让 Linux 系统访问虚拟内存，则必须有一个交换分区，当内存（RAM）用完的时候，将硬盘中指定分区（即 Swap 分区）当做内存来使用。因此，当有足够的系统内存（RAM）来满足系统的所有的需求时，我们并不需要划分交换分区。尽管如此，是否使用交换分区取决于管理员。</p>
+<p>下面列出选择交换分区大小的经验法则：</p>
+<blockquote>
+<p>物理内存不高于 2GB 时，取两倍物理内存大小即可；物理内存在 2GB 以上时，取一倍物理内存大小即可；并且所取大小应该大于 32MB。</p>
+</blockquote>
+<p>所以，如果：</p>
+<p>M为物理内存大小，S 为交换分区大小，单位 GB，那么：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">若 <span class="keyword">M</span> &lt; 2    S = <span class="keyword">M</span> *2否则    S = <span class="keyword">M</span> + 2</span><br></pre></td></tr></table></figure>
+<p>记住，这只是基本的经验。对于作为系统管理员的你，才是决定是否使用交换分区及其大小的关键。</p>
+<p>要配置交换分区，首先要划分一个常规分区，大小像我们之前演示的那样来选取。然后添加以下条目到 /etc/fstab 文件中（其中的 X 要更改为对应的 b 或 c）。</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/sdX1 <span class="keyword">swap</span> <span class="keyword">swap</span> sw <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>最后，格式化并启用交换分区：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"># mkswap /dev/sdX1</span><span class="attr"># swapon -v /dev/sdX1</span></span><br></pre></td></tr></table></figure>
+<p>显示交换分区的快照：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># cat /proc/swaps</span></span><br></pre></td></tr></table></figure>
+<p>关闭交换分区：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># swapoff /dev/sdX1</span></span><br></pre></td></tr></table></figure>
+<p>下面的例子，我们会使用 fdisk 将 /dev/sdc1（512MB，系统和内存为 256MB）来设置交换分区，下面是我们之前详细提过的步骤。注意，这种情况下我们使用的是指定大小分区。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052408cc688zfk1zz6opp6.png" alt="创建交换分区"></p>
+<p><em>创建交换分区</em></p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052410nqiabadsn3376kwz.png" alt="启用交换分区"></p>
+<p><em>启用交换分区</em></p>
+]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[lfcs-03]]></title>
+      <title><![CDATA[LFCS 03：归档/压缩文件及目录、设置文件属性和搜索文件]]></title>
       <url>http://qiankun.space/2016/07/29/lfcs-03/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h3 id="归档和压缩的相关工具"><a href="#归档和压缩的相关工具" class="headerlink" title="归档和压缩的相关工具"></a>归档和压缩的相关工具</h3><p>文件归档工具将一堆文件整合到一个单独的归档文件之后，我们可以将归档文件备份到不同类型的介质或者通过网络传输和发送 Email 来备份。在 Linux 中使用频率最高的归档实用工具是 tar。当归档工具和压缩工具一起使用的时候，可以减少同一文件和信息在硬盘中的存储空间。</p>
+<h4 id="tar-使用工具"><a href="#tar-使用工具" class="headerlink" title="tar 使用工具"></a>tar 使用工具</h4><p>tar 将一组文件打包到一个单独的归档文件（通常叫做 tar 文件或者 tarball）。tar 这个名称最初代表磁带存档程序tape archiver，但现在我们可以用它来归档任意类型的可读写介质上边的数据，而不是只能归档磁带数据。tar 通常与 gzip、bzip2 或者 xz 等压缩工具一起使用，生成一个压缩的 tarball。</p>
+<p><strong>基本语法：</strong></p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># tar <span class="string">[选项]</span> <span class="string">[路径名 ...]</span></span><br></pre></td></tr></table></figure>
+<p>其中 … 代表指定哪些文件进行归档操作的表达式</p>
+<h4 id="tar-的常用命令"><a href="#tar-的常用命令" class="headerlink" title="tar 的常用命令"></a>tar 的常用命令</h4><table>
+<thead>
+<tr>
+<th>长选项</th>
+<th>简写</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-create</td>
+<td>c</td>
+<td>创建 tar 归档文件</td>
+</tr>
+<tr>
+<td>-concatenate</td>
+<td>A</td>
+<td>将一存档与已有的存档合并</td>
+</tr>
+<tr>
+<td>-append</td>
+<td>r</td>
+<td>把要存档的文件追加到归档文件的末尾</td>
+</tr>
+<tr>
+<td>-update</td>
+<td>u</td>
+<td>更新新文件到归档文件中去</td>
+</tr>
+<tr>
+<td>-diff 或 -compare</td>
+<td>d</td>
+<td>比较存档与当前文件的不同之处</td>
+</tr>
+<tr>
+<td>-file archive</td>
+<td>f</td>
+<td>使用档案文件或归档设备</td>
+</tr>
+<tr>
+<td>-list</td>
+<td>t</td>
+<td>列出 tarball 中的内容</td>
+</tr>
+<tr>
+<td>-extract 或 -get</td>
+<td>x</td>
+<td>从归档文件中释放文件</td>
+</tr>
+</tbody>
+</table>
+<h4 id="常用的操作修饰符"><a href="#常用的操作修饰符" class="headerlink" title="常用的操作修饰符"></a>常用的操作修饰符</h4><table>
+<thead>
+<tr>
+<th>长选项</th>
+<th>缩写</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-directory dir</td>
+<td>C</td>
+<td>执行归档操作前，先转到指定目录</td>
+</tr>
+<tr>
+<td>-same-permissions</td>
+<td>p</td>
+<td>保持原始的文件权限</td>
+</tr>
+<tr>
+<td>-verbose</td>
+<td>v</td>
+<td>列出所有的读取或提取的文件。但这个标识符与 -list 一起使用的时候，还会显示出文件大小、属主和时间戳的信息</td>
+</tr>
+<tr>
+<td>-verify</td>
+<td>W</td>
+<td>写入存档后进行校验</td>
+</tr>
+<tr>
+<td>-exclude file</td>
+<td></td>
+<td>不把指定文件包含在内</td>
+</tr>
+<tr>
+<td>-exclude=pattern</td>
+<td>X</td>
+<td>以PATTERN模式排除文件</td>
+</tr>
+<tr>
+<td>-gzip 或 -gunzip</td>
+<td>z</td>
+<td>通过gzip压缩归档</td>
+</tr>
+<tr>
+<td>-bzip2</td>
+<td>j</td>
+<td>通过bzip2压缩归档</td>
+</tr>
+<tr>
+<td>-xz</td>
+<td>J</td>
+<td>通过xz压缩归档</td>
+</tr>
+</tbody>
+</table>
+<p>Gzip 是最古老的压缩工具，压缩率最小，bzip2 的压缩率稍微高一点。另外，xz 是最新的压缩工具，压缩率最好。xz 具有最佳压缩率的代价是：完成压缩操作花费最多时间，压缩过程中占有较多系统资源。</p>
+<p>通常，通过这些工具压缩的 tar 文件相应的具有 .gz、.bz2 或 .xz的扩展名。在下列的例子中，我们使用 file1、file2、file3、file4 和 file5 进行演示。</p>
+<p><strong>通过 gzip、bzip2 和 xz 压缩归档</strong></p>
+<p>归档当前工作目录的所有文件，并以 gzip、bzip2 和 xz 压缩刚刚的归档文件（请注意，用正则表达式来指定哪些文件应该归档——这是为了防止将归档工具包前一步生成的文件打包进来）。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">tar</span> <span class="selector-tag">czf</span> <span class="selector-tag">myfiles</span><span class="selector-class">.tar</span><span class="selector-class">.gz</span> <span class="selector-tag">file</span><span class="selector-attr">[0-9]</span># <span class="selector-tag">tar</span> <span class="selector-tag">cjf</span> <span class="selector-tag">myfiles</span><span class="selector-class">.tar</span><span class="selector-class">.bz2</span> <span class="selector-tag">file</span><span class="selector-attr">[0-9]</span># <span class="selector-tag">tar</span> <span class="selector-tag">cJf</span> <span class="selector-tag">myfile</span><span class="selector-class">.tar</span><span class="selector-class">.xz</span> <span class="selector-tag">file</span><span class="selector-attr">[0-9]</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060134vs1uuyu23ag1yavk.png" alt="压缩多个文件"></p>
+<p><em>压缩多个文件</em></p>
+<p><strong>列举 tarball 中的内容和更新/追加文件到归档文件中</strong></p>
+<p>列举 tarball 中的内容，并显示相同信息为一个详细目录清单。注意，不能直接向压缩的归档文件更新/追加文件（若你需要向压缩的 tarball 中更新/追加文件，需要先解压 tar 文件后再进行操作，然后重新压缩）。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># tar tvf [tarball]</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060135zzi6hlbo6ylmo0eh.png" alt="列举归档文件中的内容"></p>
+<p><em>列举归档文件中的内容</em></p>
+<p>运行一下任意一条命令：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">gzip</span> <span class="selector-tag">-d</span> <span class="selector-tag">myfiles</span><span class="selector-class">.tar</span><span class="selector-class">.gz</span>    <span class="selector-attr">[#1]</span># <span class="selector-tag">bzip2</span> <span class="selector-tag">-d</span> <span class="selector-tag">myfiles</span><span class="selector-class">.tar</span><span class="selector-class">.bz2</span>  <span class="selector-attr">[#2]</span># <span class="selector-tag">xz</span> <span class="selector-tag">-d</span> <span class="selector-tag">myfiles</span><span class="selector-class">.tar</span><span class="selector-class">.xz</span>      <span class="selector-attr">[#3]</span></span><br></pre></td></tr></table></figure>
+<p>然后：</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">tar</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">delete</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">file</span> <span class="comment">myfiles</span><span class="string">.</span><span class="comment">tar</span> <span class="comment">file4</span> <span class="comment">(删除tarball中的file4)#</span> <span class="comment">tar</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">update</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">file</span> <span class="comment">myfiles</span><span class="string">.</span><span class="comment">tar</span> <span class="comment">file4</span> <span class="comment">(更新tarball中的file4)</span></span><br></pre></td></tr></table></figure>
+<p>和</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">gzip</span> <span class="selector-tag">myfiles</span><span class="selector-class">.tar</span>      <span class="selector-attr">[ 如果你运行 #1 命令 ]</span># <span class="selector-tag">bzip2</span> <span class="selector-tag">myfiles</span><span class="selector-class">.tar</span>     <span class="selector-attr">[ 如果你运行 #2 命令 ]</span># <span class="selector-tag">xz</span> <span class="selector-tag">myfiles</span><span class="selector-class">.tar</span>        <span class="selector-attr">[ 如果你运行 #3 命令 ]</span></span><br></pre></td></tr></table></figure>
+<p>最后</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># tar tvf [tarball] #再次</span></span><br></pre></td></tr></table></figure>
+<p>将 file4 修改后的日期和时间与之前显示的对应信息进行比较</p>
+<p><strong>排除文件类型</strong></p>
+<p>假设你现在需要备份用户的家目录。一个有经验的系统管理员会选择忽略所有视频和音频文件再备份（也可能是公司规定）。</p>
+<p>可能你最先想到的方法是在备份的时候，忽略扩展名为 .mp3 和 .mp4（或者其他格式）的文件。但如果你有些自作聪明的用户将扩展名改为 .txt 或者 .bkp，那你的方法就不灵了。为了发现并排除音频或者视频文件，你需要先检查文件类型。以下 shell 脚本可以代你完成类型检查：</p>
+<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash# 把需要进行备份的目录传递给 <span class="string">$1</span> 参数.<span class="type">DIR</span>=<span class="string">$1</span># 排除文件类型中包含了 mpeg 字符串的文件，然后创建 tarball 并进行压缩。# -若文件类型中包含 mpeg 字符串， <span class="string">$?</span>（最后执行的命令的退出状态）返回 <span class="number">0</span>，然后文件名被定向到排除选项。否则返回 <span class="number">1</span>。# -若 <span class="string">$?</span> 等于 <span class="number">0</span>，该文件从需要备份文件的列表排除。tar <span class="type">X</span> &lt;(for i in <span class="string">$D</span>IR/*; do file <span class="string">$i</span> | grep -i mpeg; if [ <span class="string">$?</span> -eq <span class="number">0</span> ]; then echo <span class="string">$i</span>; fi;done) -cjf backupfile.tar.bz2 <span class="string">$D</span>IR/*</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060136fle3keeeed4e4fem.png" alt="排除文件进行备份"></p>
+<p><em>排除文件进行备份</em></p>
+<p><strong>使用 tar 保持文件的原有权限进行恢复</strong></p>
+<p>通过以下命令，你可以保留文件的权限将备份文件恢复到原始用户的家目录（本例是 user_restore）。</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">tar</span> <span class="comment">xjf</span> <span class="comment">backupfile</span><span class="string">.</span><span class="comment">tar</span><span class="string">.</span><span class="comment">bz2</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">directory</span> <span class="comment">user_restore</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">same</span><span class="literal">-</span><span class="comment">permissions</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060137gu536aywqqzua4o3.png" alt="从归档文件中恢复"></p>
+<p><em>从归档文件中恢复</em></p>
+<p><strong>扩展阅读：</strong></p>
+<ul>
+<li><a href="http://www.tecmint.com/18-tar-command-examples-in-linux/" target="_blank" rel="external">18 tar Command Examples in Linux</a></li>
+<li><a href="http://www.tecmint.com/dtrx-an-intelligent-archive-extraction-tar-zip-cpio-rpm-deb-rar-tool-for-linux/" target="_blank" rel="external">Dtrx – An Intelligent Archive Tool for Linux</a></li>
+</ul>
+<h3 id="通过-find-命令搜索文件"><a href="#通过-find-命令搜索文件" class="headerlink" title="通过 find 命令搜索文件"></a>通过 find 命令搜索文件</h3><p>find 命令用于递归搜索目录树中包含指定字符的文件和目录，然后在屏幕显示出于指定字符相匹配的文件和目录，或者在匹配项进行其他操作。</p>
+<p>通常，我们通过文件名、文件的属主、属组、类型权限、日期及大小来搜索。</p>
+<h4 id="基本语法："><a href="#基本语法：" class="headerlink" title="基本语法："></a>基本语法：</h4><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># find <span class="string">[需搜索的目录]</span> <span class="string">[表达式]</span></span><br></pre></td></tr></table></figure>
+<p><strong>通过文件大小递归搜索文件</strong></p>
+<p>以下命令会搜索当前目录（.）及其下两层子目录（-maxdepth 3，包含当前目录及往下两层的子目录）中大于 2 MB（-size +2M）的所有文件（-f）。</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="built_in">find</span> . -maxdepth <span class="number">3</span> -<span class="built_in">type</span> f -size +<span class="number">2</span>M</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060137g7kn5dyn47n2774i.png" alt="Find Files by Size in Linux"> <em> 通过文件大小搜索文件</em></p>
+<p><em>Find Files by Size in Linux</em></p>
+<p><strong>搜索符合一定规则的文件并将其删除</strong></p>
+<p>有时候，777 权限的文件通常为外部攻击者打开便利之门。不管是以何种方式，让所有人都可以对文件进行任意操作都是不安全的。对此，我们采取一个相对激进的方法——删除这些文件（’{}’ + 用来“聚集”搜索的结果）。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">find</span> <span class="regexp">/home/u</span>ser -perm <span class="number">777</span> -exec rm <span class="string">'&#123;&#125;'</span> +</span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060138y7dxlpzxm3mgqgmm.png" alt="搜索 777 权限的文件"></p>
+<p><em>搜索 777 权限的文件</em></p>
+<p><strong>按访问时间和修改时间搜索文件</strong></p>
+<p>搜索 /etc 目录下访问时间（-atime）或修改时间（-mtime）大于（+180）或小于（-180） 6 个月或者刚好（180） 6 个月的配置文件。</p>
+<p>按照下面例子对命令进行修改：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="built_in">find</span> /etc -iname <span class="string">"*.conf"</span> -mtime -<span class="number">180</span> -<span class="built_in">print</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060139c70syyslkdqyyl9y.png" alt="按修改时间搜索文件"></p>
+<p><em>按修改时间搜索文件</em></p>
+<ul>
+<li>扩展阅读： <a href="http://www.tecmint.com/35-practical-examples-of-linux-find-command/" target="_blank" rel="external">35 Practical Examples of Linux ‘find’ Command</a></li>
+</ul>
+<h3 id="文件权限及基本属性"><a href="#文件权限及基本属性" class="headerlink" title="文件权限及基本属性"></a>文件权限及基本属性</h3><p>ls -l 命令输出的前 10 位字符是文件的属性，其中第一个字符用来表明文件的类型。</p>
+<ul>
+<li>– : 普通文件</li>
+<li>-d : 目录</li>
+<li>-l : 符号链接</li>
+<li>-c : 字符设备 (它将数据作为字节流处理，如terminal)</li>
+<li>-b : 块设备 (在块设备中处理数据，如存储设备)</li>
+</ul>
+<p>接下来表示文件属性的 9 位字符叫做文件的读写模式，代表文件属主、同组用户和其他用户（通常指的是“外部世界”）对应的读（r）、写（w）和执行（x）权限。</p>
+<p>文件的写权限允许对应的用户对文件进行打开和读写，对于同时设置了执行权限的目录，对应用户可以列举出该目录的内容。另外，文件的执行权限允许将文件当做是一个可执行程序来运行，而目录的执行权限则是允许用户进入和退出该目录。</p>
+<p>文件的权限通过 chown 命令来更改，其基本语法如下：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod [new_mode] file</span></span><br></pre></td></tr></table></figure>
+<p>new_mode 可以是 3 位八进制数值或者对应权限的表达式。</p>
+<p>八进制数值可以从二进制数值进行等值转换，通过下列方法来计算文件属主、同组用户和其他用户权限对应的二进制数值：</p>
+<p>一个确定权限的二进制数值表现为 2 的幂（r=2^2，w=2^1，x=2^0），当权限省缺时，二进制数值为 0。如下：</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060139dd60ep3ndk447xdf.png" alt="文件权限"></p>
+<p><em>文件权限</em></p>
+<p>使用八进制数值设置上图的文件权限，请输入：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod 744 myfile</span></span><br></pre></td></tr></table></figure>
+<p>通过 u、g 和 o 分别代表用户、同组用户和其他用户，然后你也可以使用权限表达式来单独对用户设置文件的权限模式。也可以通过 a 代表所有用户，然后设置文件权限。通过 + 号或者 - 号相应的赋予或移除文件权限。</p>
+<p><strong>为所有用户撤销一个 shell 脚本的执行权限</strong></p>
+<p>正如之前解释的那样，我们可以通过 - 号为需要移除权限的属主、同组用户、其他用户或者所有用户去掉指定的文件权限。下面命令中的短横线（-）可以理解为：移除（-）所有用户（a）的 backup.sh 文件执行权限（x）。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chmod a-x backup.sh</span></span><br></pre></td></tr></table></figure>
+<p>下面演示为文件属主、同组用户赋予读、写和执行权限，并赋予其他用户读权限。</p>
+<p>当我们使用 3 位八进制数值为文件设置权限的时候，第一位数字代表属主权限，第二位数字代表同组用户权限，第三位数字代表其他用户的权限：</p>
+<ul>
+<li>属主：(r=2^2 + w=2^1 + x=2^0 = 7)</li>
+<li>同组用户：(r=2^2 + w=2^1 + x=2^0 = 7)</li>
+<li>其他用户：(r=2^2 + w=0 + x=0 = 4)</li>
+</ul>
+<p>命令如下：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chmod 774 myfile</span></span><br></pre></td></tr></table></figure>
+<p>随着练习时间的推移，你会知道何种情况下使用哪种方式来更改文件的权限模式的效果最好。</p>
+<p>使用 ls -l 详细列举目录详细同样会显示出文件的属主和属组（这个很基本，而且影响到系统文件的访问控制）。</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060140latew4zef3xt3ar6.png" alt="列举 Linux 文件"></p>
+<p><em>列举 Linux 文件</em></p>
+<p>通过 chown 命令可以对文件的归属权进行更改，可以同时或者分开更改属主和属组。其基本语法为：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># chown user:<span class="keyword">group</span> <span class="keyword">file</span></span><br></pre></td></tr></table></figure>
+<p>至少要指定用户或者用户组</p>
+<p><strong>举几个例子：</strong></p>
+<p>将文件的属主更改为指定用户：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chown gacanepa sent</span></span><br></pre></td></tr></table></figure>
+<p>同时将文件的属主和属组更改为指定的用户和组：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># chown gacanepa:gacanepa TestFile</span></span><br></pre></td></tr></table></figure>
+<p>只将文件的属组更改为指定组。注意组名前的冒号（:）。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">chown</span> <span class="selector-pseudo">:gacanepa</span> <span class="selector-tag">email_body</span><span class="selector-class">.txt</span></span><br></pre></td></tr></table></figure>
+]]></content>
     </entry>
     
     <entry>

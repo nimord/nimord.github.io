@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://qiankun.space/"/>
-  <updated>2016-07-29T14:05:01.075Z</updated>
+  <updated>2016-07-29T14:55:04.454Z</updated>
   <id>http://qiankun.space/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://qiankun.space/2016/07/29/lfcs-12/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-12/</id>
     <published>2016-07-29T14:05:01.000Z</published>
-    <updated>2016-07-29T14:05:01.075Z</updated>
+    <updated>2016-07-29T14:55:04.454Z</updated>
     
     <content type="html"></content>
     
@@ -28,6 +28,10 @@
     
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   
@@ -112,66 +116,592 @@
   </entry>
   
   <entry>
-    <title>lfcs-06</title>
+    <title>LFCS 06：组装分区为RAID设备——创建和管理系统备份</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-06/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-06/</id>
     <published>2016-07-29T14:04:30.000Z</published>
-    <updated>2016-07-29T14:04:30.584Z</updated>
+    <updated>2016-07-29T14:58:08.007Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;h3 id=&quot;了解RAID&quot;&gt;&lt;a href=&quot;#了解RAID&quot; class=&quot;headerlink&quot; title=&quot;了解RAID&quot;&gt;&lt;/a&gt;了解RAID&lt;/h3&gt;&lt;p&gt;这种被称为独立磁盘冗余阵列（Redundant Array of Independent Disks）(RAID)的技术是将多个硬盘组合成一个单独逻辑单元的存储解决方案，它提供了数据冗余功能并且改善硬盘的读写操作性能。&lt;/p&gt;
+&lt;p&gt;然而，实际的容错和磁盘 I/O 性能硬盘取决于如何将多个硬盘组装成磁盘阵列。根据可用的设备和容错/性能的需求，RAID 被分为不同的级别，你可以参考 RAID 系列文章以获得每个 RAID 级别更详细的解释。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://linux.cn/article-6085-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;在 Linux 下使用 RAID（一）：介绍 RAID 的级别和概念&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我们选择用于创建、组装、管理、监视软件 RAID 的工具，叫做 mdadm (multiple disk admin 的简写）。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;Debian&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;及衍生版&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;aptitude&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;update&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;aptitude&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;Red&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;Hat&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;和基于&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;CentOS&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;的系统&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;yum&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;update&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;yum&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;openSUSE&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;上&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;zypper&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;refresh&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;zypper&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;将分区组装成-RAID-设备&quot;&gt;&lt;a href=&quot;#将分区组装成-RAID-设备&quot; class=&quot;headerlink&quot; title=&quot;将分区组装成 RAID 设备&quot;&gt;&lt;/a&gt;将分区组装成 RAID 设备&lt;/h4&gt;&lt;p&gt;组装已有分区作为 RAID 设备的过程由以下步骤组成。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 使用 mdadm 创建阵列&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果先前其中一个分区已经格式化，或者作为了另一个 RAID 阵列的一部分，你会被提示以确认创建一个新的阵列。假设你已经采取了必要的预防措施以避免丢失重要数据，那么可以安全地输入 Y 并且按下回车。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;verbose&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/md0&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level=stripe&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;raid&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;devices=2&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdb1&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdc1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222344q1889bbk5n869592.png&quot; alt=&quot;创建 RAID 阵列&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;创建 RAID 阵列&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. 检查阵列的创建状态&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在创建了 RAID 阵列之后，你可以检查使用以下命令检查阵列的状态。&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# cat &lt;span class=&quot;regexp&quot;&gt;/proc/m&lt;/span&gt;dstator# mdadm --detail &lt;span class=&quot;regexp&quot;&gt;/dev/m&lt;/span&gt;d0    [More detailed summary]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222348pxren45x9z57pzbu.png&quot; alt=&quot;检查 RAID 阵列的状态&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;检查 RAID 阵列的状态&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. 格式化 RAID 设备&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如本系列&lt;a href=&quot;https://linux.cn/article-7187-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;第四讲&lt;/a&gt;所介绍的，按照你的需求/要求采用某种文件系统格式化你的设备。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4. 监控 RAID 阵列服务&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;让监控服务时刻监视你的 RAID 阵列。把&lt;code&gt;# mdadm --detail --scan&lt;/code&gt;命令输出结果添加到 &lt;code&gt;/etc/mdadm/mdadm.conf&lt;/code&gt;(Debian及其衍生版)或者&lt;code&gt;/etc/mdadm.conf&lt;/code&gt;(Cent0S/openSUSE)，如下。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;detail&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;scan&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222354jdhnm2wyasnzhmv3.png&quot; alt=&quot;监控 RAID 阵列&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;监控 RAID 阵列&lt;/em&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# mdadm --assemble --scan     [Assemble the array]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;为了确保服务能够开机启动，需要以 root 权限运行以下命令。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Debian 及其衍生版&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Debian 及其衍生版能够通过下面步骤使服务默认开机启动：&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;update&lt;/span&gt;-rc.&lt;span class=&quot;keyword&quot;&gt;d&lt;/span&gt; mdadm defaults&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;在 &lt;code&gt;/etc/default/mdadm&lt;/code&gt; 文件中添加下面这一行&lt;/p&gt;
+&lt;figure class=&quot;highlight ini&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;AUTOSTART&lt;/span&gt;=&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;CentOS 和 openSUSE(systemd-based)&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# systemctl start mdmonitor# systemctl enable mdmonitor&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;CentOS 和 openSUSE(SysVinit-based)&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# service mdmonitor start# chkconfig mdmonitor on&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;5. 检查RAID磁盘故障&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在支持冗余的的 RAID 级别中，在需要时会替换故障的驱动器。当磁盘阵列中的设备出现故障时，仅当存在我们第一次创建阵列时预留的备用设备时，磁盘阵列会将自动启动重建。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222400usjj5mzsxvwvql2n.png&quot; alt=&quot;检查 RAID 故障磁盘&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;检查 RAID 故障磁盘&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;否则，我们需要手动将一个额外的物理驱动器插入到我们的系统，并且运行。&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# mdadm &lt;span class=&quot;regexp&quot;&gt;/dev/m&lt;/span&gt;d0 --add &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdX1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;/dev/md0 是出现了问题的阵列，而 /dev/sdx1 是新添加的设备。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;6. 拆解一个工作阵列&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果你需要使用工作阵列的设备创建一个新的阵列，你可能不得不去拆解已有工作阵列——(可选步骤)&lt;/p&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# mdadm --stop /dev/md0                 #  Stop the array# mdadm --remove /dev/md0             # Remove the RAID device# mdadm --zero-superblock /dev/sdX1     # Overwrite the existing md superblock with zeroes&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;7. 设置邮件通知&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;你可以配置一个用于发送通知的有效邮件地址或者系统账号(确保在 mdadm.conf 文件中有下面这一行)。——(可选步骤)&lt;/p&gt;
+&lt;figure class=&quot;highlight nginx&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attribute&quot;&gt;MAILADDR&lt;/span&gt; root&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;在这种情况下，来自 RAID 后台监控程序所有的通知将会发送到你的本地 root 账号的邮件箱中。其中一个类似的通知如下。&lt;/p&gt;
+&lt;p&gt;说明：此次通知事件和第5步中的例子相关。此处一个设备被标志为错误，并且一个空闲的设备自动地被 mdadm 加入到阵列。我们用完了所有“健康的”空闲设备，因此我们得到了通知。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222403ao1rbkmzdh5iplm9.png&quot; alt=&quot;RAID 监控通知&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;RAID 监控通知&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;了解-RAID-级别&quot;&gt;&lt;a href=&quot;#了解-RAID-级别&quot; class=&quot;headerlink&quot; title=&quot;了解 RAID 级别&quot;&gt;&lt;/a&gt;了解 RAID 级别&lt;/h4&gt;&lt;p&gt;&lt;strong&gt;RAID 0&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;阵列总大小是最小分区大小的 n 倍，n 是阵列中独立磁盘的个数(你至少需要两个驱动器/磁盘)。运行下面命令，使用 /dev/sdb1 和 /dev/sdc1 分区组装一个 RAID 0 阵列。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;verbose&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/md0&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level=stripe&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;raid&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;devices=2&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdb1&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdc1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;常见用途：用于支持性能比容错更重要的实时应用程序的设置&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RAID 1 (又名镜像)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;阵列总大小等于最小分区大小(你至少需要两个驱动器/磁盘)。运行下面命令，使用 /dev/sdb1 和 /dev/sdc1 分区组装一个 RAID 1 阵列。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;verbose&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/md0&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level=1&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;raid&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;devices=2&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdb1&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdc1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;常见用途：操作系统的安装或者重要的子文件夹，例如 /home&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RAID 5 (又名奇偶校验码盘)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;阵列总大小将是最小分区大小的 (n-1) 倍。所减少的大小用于奇偶校验(冗余)计算(你至少需要3个驱动器/磁盘)。&lt;/p&gt;
+&lt;p&gt;说明：你可以指定一个空闲设备 (/dev/sde1) 替换问题出现时的故障部分(分区)。运行下面命令，使用 /dev/sdb1, /dev/sdc1, /dev/sdd1，/dev/sde1 组装一个 RAID 5 阵列，其中 /dev/sde1 作为空闲分区。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;verbose&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/md0&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level=5&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;raid&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;devices=3&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdb1&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdc1&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdd1&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;spare&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;devices=1&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sde1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;常见用途：Web 和文件服务&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RAID 6 (又名双重奇偶校验码盘)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;阵列总大小为(n&lt;em&gt;s)-2&lt;/em&gt;s，其中n为阵列中独立磁盘的个数，s为最小磁盘大小。&lt;/p&gt;
+&lt;p&gt;说明：你可以指定一个空闲分区(在这个例子为 /dev/sdf1)替换问题出现时的故障部分(分区)。&lt;/p&gt;
+&lt;p&gt;运行下面命令，使用 /dev/sdb1, /dev/sdc1, /dev/sdd1, /dev/sde1 和 /dev/sdf1 组装 RAID 6 阵列，其中 /dev/sdf1 作为空闲分区。&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# mdadm --create --verbose &lt;span class=&quot;regexp&quot;&gt;/dev/m&lt;/span&gt;d0 --level=&lt;span class=&quot;number&quot;&gt;6&lt;/span&gt; --raid-devices=&lt;span class=&quot;number&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdb1 &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdc1 &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdd1 &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sde --spare-devices=&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sdf1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;常见用途：大容量、高可用性要求的文件服务器和备份服务器。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RAID 1+0 (又名镜像条带)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因为 RAID 1+0 是 RAID 0 和 RAID 1 的组合，所以阵列总大小是基于两者的公式计算的。首先，计算每一个镜像的大小，然后再计算条带的大小。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;mdadm&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;verbose&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/md0&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;level=10&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;raid&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;devices=4&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sd&lt;/span&gt;&lt;span class=&quot;title&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;title&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;spare&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;devices=1&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;/dev/sdf1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;常见用途：需要快速 IO 操作的数据库和应用服务器&lt;/p&gt;
+&lt;h4 id=&quot;创建和管理系统备份&quot;&gt;&lt;a href=&quot;#创建和管理系统备份&quot; class=&quot;headerlink&quot; title=&quot;创建和管理系统备份&quot;&gt;&lt;/a&gt;创建和管理系统备份&lt;/h4&gt;&lt;p&gt;记住， RAID 其所有的价值不是在于备份的替换者！在黑板上写上1000次，如果你需要的话，但无论何时一定要记住它。在我们开始前，我们必须注意的是，没有一个放之四海皆准的针对所有系统备份的解决方案，但这里有一些东西，是你在规划一个备份策略时需要考虑的。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;你的系统将用于什么？(桌面或者服务器？如果系统是应用于后者，那么最重要的服务是什么？哪个配置是痛点？)&lt;/li&gt;
+&lt;li&gt;你每隔多久备份你的系统？&lt;/li&gt;
+&lt;li&gt;你需要备份的数据是什么(比如文件/文件夹/数据库转储)？你还可以考虑是否需要备份大型文件(比如音频和视频文件)。&lt;/li&gt;
+&lt;li&gt;这些备份将会存储在哪里(物理位置和媒体)？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;备份你的数据&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;方法1：使用 dd 命令备份整个磁盘。你可以在任意时间点通过创建一个准确的镜像来备份一整个硬盘或者是分区。注意当设备是离线时，这种方法效果最好，也就是说它没有被挂载并且没有任何进程的 I/O 操作访问它。&lt;/p&gt;
+&lt;p&gt;这种备份方法的缺点是镜像将具有和磁盘或分区一样的大小，即使实际数据占用的是一个很小的比例。比如，如果你想要为只使用了10%的20GB的分区创建镜像，那么镜像文件将仍旧是20GB。换句话来讲，它不仅包含了备份的实际数据，而且也包含了整个分区。如果你想完整备份你的设备，那么你可以考虑使用这个方法。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;从现有的设备创建一个镜像文件&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# dd &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;=&lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sda of=&lt;span class=&quot;regexp&quot;&gt;/system_images/&lt;/span&gt;sda.img或者--------------------- 可选地，你可以压缩镜像文件 -------------------# dd &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;=&lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sda | gzip -c &amp;gt; &lt;span class=&quot;regexp&quot;&gt;/system_images/&lt;/span&gt;sda.img.gz&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;从镜像文件恢复备份&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# dd &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;=&lt;span class=&quot;regexp&quot;&gt;/system_images/&lt;/span&gt;sda.img of=&lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sda或者--------------------- 根据你创建镜像文件时的选择(译者注:比如压缩) ----------------# gzip -dc &lt;span class=&quot;regexp&quot;&gt;/system_images/&lt;/span&gt;sda.img.gz | dd of=&lt;span class=&quot;regexp&quot;&gt;/dev/&lt;/span&gt;sda&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;方法2：使用 tar 命令备份确定的文件/文件夹——已经在本系列&lt;a href=&quot;https://linux.cn/article-7171-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;第三讲&lt;/a&gt;中讲了。如果你想要备份指定的文件/文件夹(配置文件，用户主目录等等)，你可以使用这种方法。&lt;/p&gt;
+&lt;p&gt;方法3：使用 rsync 命令同步文件。rsync 是一种多功能远程（和本地）文件复制工具。如果你想要从网络设备备份或同步文件，rsync 是一种选择。&lt;/p&gt;
+&lt;p&gt;无论是你是正在同步两个本地文件夹还是本地 &amp;lt; — &amp;gt; 挂载在本地文件系统的远程文件夹，其基本语法是一样的。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# rsync -av source_directory destination_directory&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;在这里，-a 递归遍历子目录(如果它们存在的话)，维持符号链接、时间戳、权限以及原本的属主/属组，-v 显示详细过程。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222405x8a94kkqyffay9sp.png&quot; alt=&quot;rsync 同步文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;rsync 同步文件&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;除此之外，如果你想增加在网络上传输数据的安全性，你可以通过 ssh 协议使用 rsync。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;通过 ssh 同步本地到远程文件夹&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight ruby&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# rsync -avzhe ssh backups root&lt;span class=&quot;doctag&quot;&gt;@remote&lt;/span&gt;_host:/remote_directory/&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这个示例，本地主机上的 backups 文件夹将与远程主机上的 /root/remote_directory 的内容同步。&lt;/p&gt;
+&lt;p&gt;在这里，-h 选项以易读的格式显示文件的大小，-e 标志用于表示一个 ssh 连接。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/15/222410w0r0bcclcgtgc3cf.png&quot; alt=&quot;rsync 同步远程文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;rsync 同步远程文件&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;通过ssh同步远程到本地文件夹&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在这种情况下，交换前面示例中的 source 和 destination 文件夹。&lt;/p&gt;
+&lt;figure class=&quot;highlight ruby&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# rsync -avzhe ssh root&lt;span class=&quot;doctag&quot;&gt;@remote&lt;/span&gt;_host:/remote_directory/ backups&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;请注意这些只是 rsync 用法的三个示例而已(你可能遇到的最常见的情形)。对于更多有关 rsync 命令的示例和用法 ，你可以查看下面的文章。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/rsync-local-remote-file-synchronization-commands/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;在 Linux 下同步文件的10个 rsync命令&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
     
     <summary type="html">
     
+      &lt;h3 id=&quot;了解RAID&quot;&gt;&lt;a href=&quot;#了解RAID&quot; class=&quot;headerlink&quot; title=&quot;了解RAID&quot;&gt;&lt;/a&gt;了解RAID&lt;/h3&gt;&lt;p&gt;这种被称为独立磁盘冗余阵列（Redundant Array of Independent Disks）(RA
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   
   <entry>
-    <title>lfcs-05</title>
+    <title>LFCS 05：如何在 Linux 中挂载/卸载本地文件系统和网络文件系统（Samba 和 NFS）</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-05/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-05/</id>
     <published>2016-07-29T14:04:25.000Z</published>
-    <updated>2016-07-29T14:04:25.970Z</updated>
+    <updated>2016-07-29T14:57:17.084Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;h3 id=&quot;挂载文件系统&quot;&gt;&lt;a href=&quot;#挂载文件系统&quot; class=&quot;headerlink&quot; title=&quot;挂载文件系统&quot;&gt;&lt;/a&gt;挂载文件系统&lt;/h3&gt;&lt;p&gt;在个硬盘分好区之后，Linux 需要通过某些方式对硬盘分区上的数据进行访问。Linux 并不会像 DOS 或者 Windows 那样给每个硬盘分区分配一个字母来作为盘符，而是将硬盘分区挂载到统一的目录树上的挂载点。&lt;/p&gt;
+&lt;p&gt;挂载点是一个目录，挂载是一种访问分区上文件系统的方法，挂载文件系统实际上是将一个确切的文件系统（比如一个分区）和目录树中指定的目录联系起来的过程。&lt;/p&gt;
+&lt;p&gt;换句话说，管理存储设备的第一步就是把设备关联到文件系统树。要完成这一步，通常可以这样：用 mount 命令来进行临时挂载（用完的时候，使用 umount 命令来卸载），或者通过编辑 /etc/fstab 文件之后重启系统来永久性挂载，这样每次开机都会进行挂载。&lt;/p&gt;
+&lt;p&gt;不带任何选项的 mount 命令，可以显示当前已挂载的文件系统。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# mount&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083734afzlpfl896fopcqr.png&quot; alt=&quot;检查已挂载的文件系统&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;检查已挂载的文件系统&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;另外，mount 命令通常用来挂载文件系统。其基本语法如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight dos&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# mount -t &lt;span class=&quot;built_in&quot;&gt;type&lt;/span&gt; device &lt;span class=&quot;built_in&quot;&gt;dir&lt;/span&gt; -o options&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;该命令会指引内核将在设备上找到的文件系统（如已格式化为指定类型的文件系统）挂载到指定目录。像这样的形式，mount 命令不会再到 /etc/fstab 文件中进行确认。&lt;/p&gt;
+&lt;p&gt;除非像下面，挂载指定的目录或者设备：&lt;/p&gt;
+&lt;figure class=&quot;highlight gams&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# mount /dir -o &lt;span class=&quot;keyword&quot;&gt;options&lt;/span&gt;或# mount device -o &lt;span class=&quot;keyword&quot;&gt;options&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;mount 命令会尝试寻找挂载点，如果找不到就会查找设备（上述两种情况下，mount 命令会在 /etc/fstab 查找相应的设备或挂载点），最后尝试完成挂载操作（这个通常可以成功执行，除非你的挂载点或者设备正在使用中，或者你调用 mount 命令的时候没有 root 权限）。&lt;/p&gt;
+&lt;p&gt;你可以看到，mount 命令的每行输出都是如下格式：&lt;/p&gt;
+&lt;figure class=&quot;highlight elm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;device&lt;/span&gt; on directory &lt;span class=&quot;keyword&quot;&gt;type&lt;/span&gt; (options)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight elm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;/dev/mapper/debian-home on /home &lt;span class=&quot;keyword&quot;&gt;type&lt;/span&gt; ext4 (rw,relatime,user_xattr,barrier=1,data=ordered)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;读作：&lt;/p&gt;
+&lt;p&gt;设备 dev/mapper/debian-home 挂载在 /home 下，它被格式化为 ext4，并且有以下挂载选项： rw，relatime，user_xattr，barrier=1，data=ordered。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;mount 命令选项&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;下面列出 mount 命令的常用选项&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;async：允许在将要挂载的文件系统上进行异步 I/O 操作&lt;/li&gt;
+&lt;li&gt;auto：标示该文件系统通过 mount -a 命令挂载，与 noauto 相反。&lt;/li&gt;
+&lt;li&gt;defaults：该选项相当于 &lt;code&gt;async,auto,dev,exec,nouser,rw,suid&lt;/code&gt; 的组合。注意，多个选项必须由逗号隔开并且中间没有空格。倘若你不小心在两个选项中间输入了一个空格，mount 命令会把后边的字符解释为另一个参数。&lt;/li&gt;
+&lt;li&gt;loop：将镜像文件（如 .iso 文件）挂载为 loop 设备。该选项可以用来模拟显示光盘中的文件内容。&lt;/li&gt;
+&lt;li&gt;noexec：阻止该文件系统中可执行文件的执行。与 exec 选项相反。&lt;/li&gt;
+&lt;li&gt;nouser：阻止任何用户（除 root 用户外） 挂载或卸载文件系统。与 user 选项相反。&lt;/li&gt;
+&lt;li&gt;remount：重新挂载文件系统。&lt;/li&gt;
+&lt;li&gt;ro：只读模式挂载。&lt;/li&gt;
+&lt;li&gt;rw：读写模式挂载。&lt;/li&gt;
+&lt;li&gt;relatime：只要访问时间早于修改时间，就更新文件的的访问时间。&lt;/li&gt;
+&lt;li&gt;user_xattr：允许用户设置和移除可扩展文件系统属性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;以 ro 和 noexec 模式挂载设备&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# mount -t ext4 /dev/sdg1 /mnt -o ro,noexec&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;在本例中，我们可以看到，在挂载点 /mnt 中尝试写入文件或者运行可执行文件都会显示相应的错误信息。&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# touch &lt;span class=&quot;regexp&quot;&gt;/mnt/my&lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;file&lt;/span&gt;# &lt;span class=&quot;regexp&quot;&gt;/mnt/&lt;/span&gt;bin&lt;span class=&quot;regexp&quot;&gt;/echo “Hi there”&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083734uzm5q55ewemrsm5q.png&quot; alt=&quot;可读写模式挂载设备&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;可读写模式挂载设备&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;以默认模式挂载设备&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;以下场景，我们在重新挂载设备的挂载点中，像上例一样尝试你写入文件和运行可执行文件。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# mount -t ext4 /dev/sdg1 /mnt -o defaults&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083735vrwasmt1pwrkvr1t.png&quot; alt=&quot;挂载设备&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;挂载设备&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;在这个例子中，我们发现写入文件和命令都完美执行了。&lt;/p&gt;
+&lt;h3 id=&quot;卸载设备&quot;&gt;&lt;a href=&quot;#卸载设备&quot; class=&quot;headerlink&quot; title=&quot;卸载设备&quot;&gt;&lt;/a&gt;卸载设备&lt;/h3&gt;&lt;p&gt;使用 umount 命令卸载设备，意味着将所有的“在使用”数据全部写入到文件系统，然后可以安全移除文件系统。请注意，倘若你移除一个没有事先正确卸载的设备，就会有造成设备损坏和数据丢失的风险。&lt;/p&gt;
+&lt;p&gt;也就是说，你必须“离开”设备的块设备描述符或者挂载点，才能卸载设备。换言之，你的当前工作目录不能是需要卸载设备的挂载点。否则，系统将返回设备繁忙的提示信息。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083735la66phyyjhopkojp.png&quot; alt=&quot;卸载设备&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;卸载设备&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;离开需卸载设备的挂载点最简单的方法就是，运行不带任何选项的 cd 命令，这样会回到当前用户的家目录。&lt;/p&gt;
+&lt;h3 id=&quot;挂载常见的网络文件系统&quot;&gt;&lt;a href=&quot;#挂载常见的网络文件系统&quot; class=&quot;headerlink&quot; title=&quot;挂载常见的网络文件系统&quot;&gt;&lt;/a&gt;挂载常见的网络文件系统&lt;/h3&gt;&lt;p&gt;最常用的两种网络文件系统是 SMB（服务器消息块Server Message Block）和 NFS（网络文件系统Network File System）。如果你只向类 Unix 客户端提供共享，用 NFS 就可以了，如果是向 Windows 和其他类 Unix 客户端提供共享服务，就需要用到 Samba 了。&lt;/p&gt;
+&lt;p&gt;扩展阅读&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/setup-samba-server-using-tdbsam-backend-on-rhel-centos-6-3-5-8-and-fedora-17-12/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Setup Samba Server in RHEL/CentOS and Fedora&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/how-to-setup-nfs-server-in-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Setting up NFS (Network File System) on RHEL/CentOS/Fedora and Debian/Ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面的例子中，假设 Samba 和 NFS 已经在地址为 192.168.0.10 的服务器上架设好了（请注意，架设 NFS 服务器也是 LFCS 考试中需要考核的能力，我们会在后边中提到）。&lt;/p&gt;
+&lt;h4 id=&quot;在-Linux-中挂载-Samba-共享&quot;&gt;&lt;a href=&quot;#在-Linux-中挂载-Samba-共享&quot; class=&quot;headerlink&quot; title=&quot;在 Linux 中挂载 Samba 共享&quot;&gt;&lt;/a&gt;在 Linux 中挂载 Samba 共享&lt;/h4&gt;&lt;p&gt;第一步：在 Red Hat 以 Debian 系发行版中安装 samba-client、samba-common 和 cifs-utils 软件包，如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight armasm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# yum update &amp;amp;&amp;amp; yum install samba-client samba-&lt;span class=&quot;meta&quot;&gt;common&lt;/span&gt; cifs-utils# aptitude update &amp;amp;&amp;amp; aptitude install samba-client samba-&lt;span class=&quot;meta&quot;&gt;common&lt;/span&gt; cifs-utils&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然后运行下列命令，查看服务器上可用的 Samba 共享。&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;smbclient&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-L&lt;/span&gt; 192&lt;span class=&quot;selector-class&quot;&gt;.168&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.0&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.10&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;并输入远程机器上 root 账户的密码。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083735n0tuv0bpr8snpt8b.png&quot; alt=&quot;挂载 Samba 共享&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;挂载 Samba 共享&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;上图中，已经对可以挂载到我们本地系统上的共享进行高亮显示。你只需要与一个远程服务器上的合法用户名及密码就可以访问共享了。&lt;/p&gt;
+&lt;p&gt;第二步：当挂载有密码保护的网络文件系统时候，将你的访问凭证写入到 /etc/fstab 文件中并非明智的选择。你需要将这些信息写入到具有 600 权限的隐藏文件中，像这样：&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# mkdir &lt;span class=&quot;regexp&quot;&gt;/media/&lt;/span&gt;samba# echo “username=samba_username” &amp;gt; &lt;span class=&quot;regexp&quot;&gt;/media/&lt;/span&gt;samba&lt;span class=&quot;regexp&quot;&gt;/.smbcredentials# echo “password=samba_password” &amp;gt;&amp;gt; /m&lt;/span&gt;edia&lt;span class=&quot;regexp&quot;&gt;/samba/&lt;/span&gt;.smbcredentials# chmod &lt;span class=&quot;number&quot;&gt;600&lt;/span&gt; &lt;span class=&quot;regexp&quot;&gt;/media/&lt;/span&gt;samba&lt;span class=&quot;regexp&quot;&gt;/.smbcredentials&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;第三步：然后将下面的内容添加到 /etc/fstab 文件中。&lt;/p&gt;
+&lt;figure class=&quot;highlight arduino&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# &lt;span class=&quot;comment&quot;&gt;//192.168.0.10/gacanepa /media/samba cifs credentials=/media/samba/.smbcredentials,defaults 0 0&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;第四步：现在可以挂载你的 Samba 共享了。手动挂载（mount //192.168.0.10/gacanepa）或者重启系统并应用 /etc/fstab 中相应行来用就挂载都可以。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083736v77ptst9rhocsc7t.png&quot; alt=&quot;挂载有密码保护的 Samba 共享&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;挂载有密码保护的 Samba 共享&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;在-Linux-系统中挂载-NFS-共享&quot;&gt;&lt;a href=&quot;#在-Linux-系统中挂载-NFS-共享&quot; class=&quot;headerlink&quot; title=&quot;在 Linux 系统中挂载 NFS 共享&quot;&gt;&lt;/a&gt;在 Linux 系统中挂载 NFS 共享&lt;/h4&gt;&lt;p&gt;第一步：在 Red Hat 以 Debian 系发行版中安装 nfs-common 和 portmap 软件包。如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight processing&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# yum update &amp;amp;&amp;amp; yum install &lt;span class=&quot;built_in&quot;&gt;nfs&lt;/span&gt;-utils &lt;span class=&quot;built_in&quot;&gt;nfs&lt;/span&gt;-utils-lib# aptitude update &amp;amp;&amp;amp; aptitude install &lt;span class=&quot;built_in&quot;&gt;nfs&lt;/span&gt;-common&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;第二步：为 NFS 共享创建挂载点。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# mkdir /media/nfs&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;第三步：将下面的内容添加到 /etc/fstab 文件中。&lt;/p&gt;
+&lt;figure class=&quot;highlight elixir&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;number&quot;&gt;192.168&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;symbol&quot;&gt;:/NFS-SHARE&lt;/span&gt; /media/nfs nfs defaults &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;第四步：现在可以挂载你的 Samba 共享了。手动挂载（mount 192.168.0.10:/NFS-SHARE）或者重启系统并应用 /etc/fstab 中相应行来用就挂载都可以。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/11/083737p4rbohatc5b6cfib.png&quot; alt=&quot;挂载 NFS 共享&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;挂载 NFS 共享&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;永久性挂载文件系统&quot;&gt;&lt;a href=&quot;#永久性挂载文件系统&quot; class=&quot;headerlink&quot; title=&quot;永久性挂载文件系统&quot;&gt;&lt;/a&gt;永久性挂载文件系统&lt;/h3&gt;&lt;p&gt;像前面两个例子那样，/etc/fstab 控制着Linux如何访问硬盘分区及可移动设备。/etc/fstab 由六个字段的内容组成，各个字段之间通过一个空格符或者制表符来分开。井号（#）开始的行只是会被忽略的注释。&lt;/p&gt;
+&lt;p&gt;每一行都按照这个格式来写入：&lt;/p&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;section&quot;&gt;&amp;lt;file system&amp;gt;&lt;/span&gt; &lt;span class=&quot;section&quot;&gt;&amp;lt;mount point&amp;gt;&lt;/span&gt; &lt;span class=&quot;section&quot;&gt;&amp;lt;type&amp;gt;&lt;/span&gt; &lt;span class=&quot;section&quot;&gt;&amp;lt;options&amp;gt;&lt;/span&gt; &lt;span class=&quot;section&quot;&gt;&amp;lt;dump&amp;gt;&lt;/span&gt; &lt;span class=&quot;section&quot;&gt;&amp;lt;pass&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;file system=&quot;&quot;&gt;: 第一个字段指定挂载的设备。大多数发行版本都通过分区的标卷（label）或者 UUID 来指定。这样做可以避免分区号改变时带来的错误。&lt;/file&gt;&lt;/li&gt;
+&lt;li&gt;&lt;mount point=&quot;&quot;&gt;: 第二个字段指定挂载点。&lt;/mount&gt;&lt;/li&gt;
+&lt;li&gt;&lt;type&gt; ：文件系统的类型代码与 mount 命令挂载文件系统时使用的类型代码是一样的。通过 auto 类型代码可以让内核自动检测文件系统，这对于可移动设备来说非常方便。注意，该选项可能不是对所有文件系统可用。&lt;/type&gt;&lt;/li&gt;
+&lt;li&gt;&lt;options&gt;: 一个（或多个）挂载选项。&lt;/options&gt;&lt;/li&gt;
+&lt;li&gt;&lt;dump&gt;: 你可能把这个字段设置为 0（否则设置为 1），使得系统启动时禁用 dump 工具（dump 程序曾经是一个常用的备份工具，但现在越来越少用了）对文件系统进行备份。&lt;/dump&gt;&lt;/li&gt;
+&lt;li&gt;&lt;pass&gt;: 这个字段指定启动系统是是否通过 fsck 来检查文件系统的完整性。0 表示 fsck 不对文件系统进行检查。数字越大，优先级越低。因此，根分区（/）最可能使用数字 1，其他所有需要检查的分区则是以数字 2.&lt;/pass&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Mount 命令例示&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1、在系统启动时，通过 TECMINT 标卷来挂载文件系统，并具备 rw 和 noexec 属性，你应该将以下语句添加到 /etc/fstab 文件中。&lt;/p&gt;
+&lt;figure class=&quot;highlight ini&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;LABEL&lt;/span&gt;=TECMINT /mnt ext4 rw,noexec &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;2、若你想在系统启动时挂载 DVD 光驱中的内容，添加以下语句。&lt;/p&gt;
+&lt;figure class=&quot;highlight dts&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta-keyword&quot;&gt;/dev/&lt;/span&gt;sr0 &lt;span class=&quot;meta-keyword&quot;&gt;/media/&lt;/span&gt;cdrom0 iso9660 ro,user,noauto &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中 /dev/sr0 为你的 DVD 光驱。&lt;/p&gt;
+</content>
     
     <summary type="html">
     
+      &lt;h3 id=&quot;挂载文件系统&quot;&gt;&lt;a href=&quot;#挂载文件系统&quot; class=&quot;headerlink&quot; title=&quot;挂载文件系统&quot;&gt;&lt;/a&gt;挂载文件系统&lt;/h3&gt;&lt;p&gt;在个硬盘分好区之后，Linux 需要通过某些方式对硬盘分区上的数据进行访问。Linux 并不会像 DOS 或
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   
   <entry>
-    <title>lfcs-04</title>
+    <title>LFCS 04：对存储设备分区、格式化文件系统和配置交换分区</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-04/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-04/</id>
     <published>2016-07-29T14:04:21.000Z</published>
-    <updated>2016-07-29T14:04:21.097Z</updated>
+    <updated>2016-07-29T14:56:12.968Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;h3 id=&quot;对存储设备分区&quot;&gt;&lt;a href=&quot;#对存储设备分区&quot; class=&quot;headerlink&quot; title=&quot;对存储设备分区&quot;&gt;&lt;/a&gt;对存储设备分区&lt;/h3&gt;&lt;p&gt;分区是一种将单独的硬盘分成一个或多个区的手段。一个分区只是硬盘的一部分，我们可以认为这部分是独立的磁盘，里边包含一个单一类型的文件系统。分区表则是将硬盘上这些分区与分区标识符联系起来的索引。&lt;/p&gt;
+&lt;p&gt;在 Linux 上，IBM PC 兼容系统里边用于管理传统 MBR（用到2009年）分区的工具是 fdisk。对于 GPT（2010年至今）分区，我们使用 gdisk。这两个工具都可以通过程序名后面加上设备名称（如 /dev/sdb）进行调用。&lt;/p&gt;
+&lt;h4 id=&quot;使用-fdisk-管理-MBR-分区&quot;&gt;&lt;a href=&quot;#使用-fdisk-管理-MBR-分区&quot; class=&quot;headerlink&quot; title=&quot;使用 fdisk 管理 MBR 分区&quot;&gt;&lt;/a&gt;使用 fdisk 管理 MBR 分区&lt;/h4&gt;&lt;p&gt;我们先来介绍 fdisk：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# fdisk /dev/sdb&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然后出现提示说进行下一步操作。若不确定如何操作，按下 “m” 键显示帮助。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052349vh0iosthplod5jiq.png&quot; alt=&quot;fdisk 帮助菜单&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;fdisk 帮助菜单&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;上图中，使用频率最高的选项已高亮显示。你可以随时按下 “p” 显示分区表。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052351wdx8ogb2kdhg5zkx.png&quot; alt=&quot;显示分区表&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;显示分区表&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Id 列显示由 fdisk 分配给每个分区的分区类型（分区 id）。一个分区类型代表一种文件系统的标识符，简单来说，包括该分区上数据的访问方法。&lt;/p&gt;
+&lt;p&gt;请注意，每个分区类型的全面讲解将超出了本教程的范围——本系列教材主要专注于 LFCS 测试，以考试为主。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;下面列出一些 fdisk 常用选项：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;按下 “l”（小写 L）选项来显示所有可以由 fdisk 管理的分区类型。&lt;/p&gt;
+&lt;p&gt;按下 “d” 可以删除现有的分区。若硬盘上有多个分区，fdisk 将询问你要删除那个分区。&lt;/p&gt;
+&lt;p&gt;键入对应的数字，并按下 “w” 保存更改（将更改写入分区表）。&lt;/p&gt;
+&lt;p&gt;在下图的命令中，我们将删除 /dev/sdb2，然后显示（p）分区表来验证更改。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052353nphfjfjf6j1hvnzl.png&quot; alt=&quot;fdisk 命令选项&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;fdisk 命令选项&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;按下 “n” 后接着按下 “p” 会创建新一个主分区。最后，你可以使用所有的默认值（这将占用所有的可用空间），或者像下面一样自定义分区大小。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052355f0a3jjppj9uxbaua.png&quot; alt=&quot;创建新分区&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;创建新分区&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;若 fdisk 分配的分区 Id 并不是我们想用的，可以按下 “t” 来更改。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052357pdqrotrrtrj10ov2.png&quot; alt=&quot;更改分区类型&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;更改分区类型&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;全部设置好分区后，按下 “w” 将更改保存到硬盘分区表上。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052358fjghg3it1oig4ih0.png&quot; alt=&quot;保存分区更改&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;保存分区更改&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&quot;使用-gdisk-管理-GPT-分区&quot;&gt;&lt;a href=&quot;#使用-gdisk-管理-GPT-分区&quot; class=&quot;headerlink&quot; title=&quot;使用 gdisk 管理 GPT 分区&quot;&gt;&lt;/a&gt;使用 gdisk 管理 GPT 分区&lt;/h4&gt;&lt;p&gt;下面的例子中，我们使用 /dev/sdb。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# gdisk /dev/sdb&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;必须注意的是，gdisk 可以用于创建 MBR 和 GPT 两种分区表。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052359wttf81v84mzjj1u8.png&quot; alt=&quot;创建 GPT 分区&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;创建 GPT 分区&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;使用 GPT 分区方案，我们可以在同一个硬盘上创建最多 128 个分区，单个分区最大以 PB 为单位，而 MBR 分区方案最大的只能 2TB。&lt;/p&gt;
+&lt;p&gt;注意，fdisk 与 gdisk 中大多数命令都是一样的。因此，我们不会详细介绍这些命令选项，而是给出一张使用过程中的截图。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052401jndri4wwzkfi9w1w.png&quot; alt=&quot;gdisk 命令选项&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;gdisk 命令选项&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;格式化文件系统&quot;&gt;&lt;a href=&quot;#格式化文件系统&quot; class=&quot;headerlink&quot; title=&quot;格式化文件系统&quot;&gt;&lt;/a&gt;格式化文件系统&lt;/h3&gt;&lt;p&gt;一旦创建完需要的分区，我们就必须为分区创建文件系统。查询你所用系统支持的文件系统，请运行：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# ls /sbin/mk*&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052403mudh1vuw1cx0qdsw.png&quot; alt=&quot;检查文件系统类型&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;检查文件系统类型&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;选择文件系统取决于你的需求。你应该考虑到每个文件系统的优缺点以及其特点。选择文件系统需要看的两个重要属性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;日志支持，允许从系统崩溃事件中快速恢复数据。&lt;/li&gt;
+&lt;li&gt;安全增强式 Linux（SELinux）支持，按照项目 wiki 所说，“安全增强式 Linux 允许用户和管理员更好的控制访问控制权限”。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在接下来的例子中，我们通过 mkfs 在 /dev/sdb1 上创建 ext4 文件系统（支持日志和 SELinux），标卷为 Tecmint。mkfs 基本语法如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# mkfs -t &lt;span class=&quot;string&quot;&gt;[filesystem]&lt;/span&gt; -L &lt;span class=&quot;string&quot;&gt;[label]&lt;/span&gt; device或者# mkfs.&lt;span class=&quot;string&quot;&gt;[filesystem]&lt;/span&gt; -L &lt;span class=&quot;string&quot;&gt;[label]&lt;/span&gt; device&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052406lvtvyrztb7kymx9v.png&quot; alt=&quot;创建 ext4 文件系统&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;创建 ext4 文件系统&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;创建并启用交换分区&quot;&gt;&lt;a href=&quot;#创建并启用交换分区&quot; class=&quot;headerlink&quot; title=&quot;创建并启用交换分区&quot;&gt;&lt;/a&gt;创建并启用交换分区&lt;/h3&gt;&lt;p&gt;要让 Linux 系统访问虚拟内存，则必须有一个交换分区，当内存（RAM）用完的时候，将硬盘中指定分区（即 Swap 分区）当做内存来使用。因此，当有足够的系统内存（RAM）来满足系统的所有的需求时，我们并不需要划分交换分区。尽管如此，是否使用交换分区取决于管理员。&lt;/p&gt;
+&lt;p&gt;下面列出选择交换分区大小的经验法则：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;物理内存不高于 2GB 时，取两倍物理内存大小即可；物理内存在 2GB 以上时，取一倍物理内存大小即可；并且所取大小应该大于 32MB。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以，如果：&lt;/p&gt;
+&lt;p&gt;M为物理内存大小，S 为交换分区大小，单位 GB，那么：&lt;/p&gt;
+&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;若 &lt;span class=&quot;keyword&quot;&gt;M&lt;/span&gt; &amp;lt; 2    S = &lt;span class=&quot;keyword&quot;&gt;M&lt;/span&gt; *2否则    S = &lt;span class=&quot;keyword&quot;&gt;M&lt;/span&gt; + 2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;记住，这只是基本的经验。对于作为系统管理员的你，才是决定是否使用交换分区及其大小的关键。&lt;/p&gt;
+&lt;p&gt;要配置交换分区，首先要划分一个常规分区，大小像我们之前演示的那样来选取。然后添加以下条目到 /etc/fstab 文件中（其中的 X 要更改为对应的 b 或 c）。&lt;/p&gt;
+&lt;figure class=&quot;highlight avrasm&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;/dev/sdX1 &lt;span class=&quot;keyword&quot;&gt;swap&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;swap&lt;/span&gt; sw &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;最后，格式化并启用交换分区：&lt;/p&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;# mkswap /dev/sdX1&lt;/span&gt;&lt;span class=&quot;attr&quot;&gt;# swapon -v /dev/sdX1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;显示交换分区的快照：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# cat /proc/swaps&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;关闭交换分区：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# swapoff /dev/sdX1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;下面的例子，我们会使用 fdisk 将 /dev/sdc1（512MB，系统和内存为 256MB）来设置交换分区，下面是我们之前详细提过的步骤。注意，这种情况下我们使用的是指定大小分区。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052408cc688zfk1zz6opp6.png&quot; alt=&quot;创建交换分区&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;创建交换分区&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201604/04/052410nqiabadsn3376kwz.png&quot; alt=&quot;启用交换分区&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;启用交换分区&lt;/em&gt;&lt;/p&gt;
+</content>
     
     <summary type="html">
     
+      &lt;h3 id=&quot;对存储设备分区&quot;&gt;&lt;a href=&quot;#对存储设备分区&quot; class=&quot;headerlink&quot; title=&quot;对存储设备分区&quot;&gt;&lt;/a&gt;对存储设备分区&lt;/h3&gt;&lt;p&gt;分区是一种将单独的硬盘分成一个或多个区的手段。一个分区只是硬盘的一部分，我们可以认为这部分是独立的磁
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   
   <entry>
-    <title>lfcs-03</title>
+    <title>LFCS 03：归档/压缩文件及目录、设置文件属性和搜索文件</title>
     <link href="http://qiankun.space/2016/07/29/lfcs-03/"/>
     <id>http://qiankun.space/2016/07/29/lfcs-03/</id>
     <published>2016-07-29T14:04:14.000Z</published>
-    <updated>2016-07-29T14:04:14.775Z</updated>
+    <updated>2016-07-29T14:54:04.858Z</updated>
     
-    <content type="html"></content>
+    <content type="html">&lt;h3 id=&quot;归档和压缩的相关工具&quot;&gt;&lt;a href=&quot;#归档和压缩的相关工具&quot; class=&quot;headerlink&quot; title=&quot;归档和压缩的相关工具&quot;&gt;&lt;/a&gt;归档和压缩的相关工具&lt;/h3&gt;&lt;p&gt;文件归档工具将一堆文件整合到一个单独的归档文件之后，我们可以将归档文件备份到不同类型的介质或者通过网络传输和发送 Email 来备份。在 Linux 中使用频率最高的归档实用工具是 tar。当归档工具和压缩工具一起使用的时候，可以减少同一文件和信息在硬盘中的存储空间。&lt;/p&gt;
+&lt;h4 id=&quot;tar-使用工具&quot;&gt;&lt;a href=&quot;#tar-使用工具&quot; class=&quot;headerlink&quot; title=&quot;tar 使用工具&quot;&gt;&lt;/a&gt;tar 使用工具&lt;/h4&gt;&lt;p&gt;tar 将一组文件打包到一个单独的归档文件（通常叫做 tar 文件或者 tarball）。tar 这个名称最初代表磁带存档程序tape archiver，但现在我们可以用它来归档任意类型的可读写介质上边的数据，而不是只能归档磁带数据。tar 通常与 gzip、bzip2 或者 xz 等压缩工具一起使用，生成一个压缩的 tarball。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;基本语法：&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# tar &lt;span class=&quot;string&quot;&gt;[选项]&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;[路径名 ...]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中 … 代表指定哪些文件进行归档操作的表达式&lt;/p&gt;
+&lt;h4 id=&quot;tar-的常用命令&quot;&gt;&lt;a href=&quot;#tar-的常用命令&quot; class=&quot;headerlink&quot; title=&quot;tar 的常用命令&quot;&gt;&lt;/a&gt;tar 的常用命令&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;长选项&lt;/th&gt;
+&lt;th&gt;简写&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;-create&lt;/td&gt;
+&lt;td&gt;c&lt;/td&gt;
+&lt;td&gt;创建 tar 归档文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-concatenate&lt;/td&gt;
+&lt;td&gt;A&lt;/td&gt;
+&lt;td&gt;将一存档与已有的存档合并&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-append&lt;/td&gt;
+&lt;td&gt;r&lt;/td&gt;
+&lt;td&gt;把要存档的文件追加到归档文件的末尾&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-update&lt;/td&gt;
+&lt;td&gt;u&lt;/td&gt;
+&lt;td&gt;更新新文件到归档文件中去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-diff 或 -compare&lt;/td&gt;
+&lt;td&gt;d&lt;/td&gt;
+&lt;td&gt;比较存档与当前文件的不同之处&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-file archive&lt;/td&gt;
+&lt;td&gt;f&lt;/td&gt;
+&lt;td&gt;使用档案文件或归档设备&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-list&lt;/td&gt;
+&lt;td&gt;t&lt;/td&gt;
+&lt;td&gt;列出 tarball 中的内容&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-extract 或 -get&lt;/td&gt;
+&lt;td&gt;x&lt;/td&gt;
+&lt;td&gt;从归档文件中释放文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&quot;常用的操作修饰符&quot;&gt;&lt;a href=&quot;#常用的操作修饰符&quot; class=&quot;headerlink&quot; title=&quot;常用的操作修饰符&quot;&gt;&lt;/a&gt;常用的操作修饰符&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;长选项&lt;/th&gt;
+&lt;th&gt;缩写&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;-directory dir&lt;/td&gt;
+&lt;td&gt;C&lt;/td&gt;
+&lt;td&gt;执行归档操作前，先转到指定目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-same-permissions&lt;/td&gt;
+&lt;td&gt;p&lt;/td&gt;
+&lt;td&gt;保持原始的文件权限&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-verbose&lt;/td&gt;
+&lt;td&gt;v&lt;/td&gt;
+&lt;td&gt;列出所有的读取或提取的文件。但这个标识符与 -list 一起使用的时候，还会显示出文件大小、属主和时间戳的信息&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-verify&lt;/td&gt;
+&lt;td&gt;W&lt;/td&gt;
+&lt;td&gt;写入存档后进行校验&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-exclude file&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;不把指定文件包含在内&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-exclude=pattern&lt;/td&gt;
+&lt;td&gt;X&lt;/td&gt;
+&lt;td&gt;以PATTERN模式排除文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-gzip 或 -gunzip&lt;/td&gt;
+&lt;td&gt;z&lt;/td&gt;
+&lt;td&gt;通过gzip压缩归档&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-bzip2&lt;/td&gt;
+&lt;td&gt;j&lt;/td&gt;
+&lt;td&gt;通过bzip2压缩归档&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-xz&lt;/td&gt;
+&lt;td&gt;J&lt;/td&gt;
+&lt;td&gt;通过xz压缩归档&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Gzip 是最古老的压缩工具，压缩率最小，bzip2 的压缩率稍微高一点。另外，xz 是最新的压缩工具，压缩率最好。xz 具有最佳压缩率的代价是：完成压缩操作花费最多时间，压缩过程中占有较多系统资源。&lt;/p&gt;
+&lt;p&gt;通常，通过这些工具压缩的 tar 文件相应的具有 .gz、.bz2 或 .xz的扩展名。在下列的例子中，我们使用 file1、file2、file3、file4 和 file5 进行演示。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;通过 gzip、bzip2 和 xz 压缩归档&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;归档当前工作目录的所有文件，并以 gzip、bzip2 和 xz 压缩刚刚的归档文件（请注意，用正则表达式来指定哪些文件应该归档——这是为了防止将归档工具包前一步生成的文件打包进来）。&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;czf&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.gz&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;selector-attr&quot;&gt;[0-9]&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;cjf&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.bz2&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;selector-attr&quot;&gt;[0-9]&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;cJf&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfile&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.xz&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;selector-attr&quot;&gt;[0-9]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060134vs1uuyu23ag1yavk.png&quot; alt=&quot;压缩多个文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;压缩多个文件&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;列举 tarball 中的内容和更新/追加文件到归档文件中&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;列举 tarball 中的内容，并显示相同信息为一个详细目录清单。注意，不能直接向压缩的归档文件更新/追加文件（若你需要向压缩的 tarball 中更新/追加文件，需要先解压 tar 文件后再进行操作，然后重新压缩）。&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# tar tvf [tarball]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060135zzi6hlbo6ylmo0eh.png&quot; alt=&quot;列举归档文件中的内容&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;列举归档文件中的内容&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;运行一下任意一条命令：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;gzip&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.gz&lt;/span&gt;    &lt;span class=&quot;selector-attr&quot;&gt;[#1]&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;bzip2&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.bz2&lt;/span&gt;  &lt;span class=&quot;selector-attr&quot;&gt;[#2]&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;xz&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.xz&lt;/span&gt;      &lt;span class=&quot;selector-attr&quot;&gt;[#3]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然后：&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;delete&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;file4&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;(删除tarball中的file4)#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;update&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;file4&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;(更新tarball中的file4)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;和&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;gzip&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;      &lt;span class=&quot;selector-attr&quot;&gt;[ 如果你运行 #1 命令 ]&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;bzip2&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;     &lt;span class=&quot;selector-attr&quot;&gt;[ 如果你运行 #2 命令 ]&lt;/span&gt;# &lt;span class=&quot;selector-tag&quot;&gt;xz&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;myfiles&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.tar&lt;/span&gt;        &lt;span class=&quot;selector-attr&quot;&gt;[ 如果你运行 #3 命令 ]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;最后&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# tar tvf [tarball] #再次&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;将 file4 修改后的日期和时间与之前显示的对应信息进行比较&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;排除文件类型&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;假设你现在需要备份用户的家目录。一个有经验的系统管理员会选择忽略所有视频和音频文件再备份（也可能是公司规定）。&lt;/p&gt;
+&lt;p&gt;可能你最先想到的方法是在备份的时候，忽略扩展名为 .mp3 和 .mp4（或者其他格式）的文件。但如果你有些自作聪明的用户将扩展名改为 .txt 或者 .bkp，那你的方法就不灵了。为了发现并排除音频或者视频文件，你需要先检查文件类型。以下 shell 脚本可以代你完成类型检查：&lt;/p&gt;
+&lt;figure class=&quot;highlight smalltalk&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;#!/bin/bash# 把需要进行备份的目录传递给 &lt;span class=&quot;string&quot;&gt;$1&lt;/span&gt; 参数.&lt;span class=&quot;type&quot;&gt;DIR&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;$1&lt;/span&gt;# 排除文件类型中包含了 mpeg 字符串的文件，然后创建 tarball 并进行压缩。# -若文件类型中包含 mpeg 字符串， &lt;span class=&quot;string&quot;&gt;$?&lt;/span&gt;（最后执行的命令的退出状态）返回 &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;，然后文件名被定向到排除选项。否则返回 &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;。# -若 &lt;span class=&quot;string&quot;&gt;$?&lt;/span&gt; 等于 &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;，该文件从需要备份文件的列表排除。tar &lt;span class=&quot;type&quot;&gt;X&lt;/span&gt; &amp;lt;(for i in &lt;span class=&quot;string&quot;&gt;$D&lt;/span&gt;IR/*; do file &lt;span class=&quot;string&quot;&gt;$i&lt;/span&gt; | grep -i mpeg; if [ &lt;span class=&quot;string&quot;&gt;$?&lt;/span&gt; -eq &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; ]; then echo &lt;span class=&quot;string&quot;&gt;$i&lt;/span&gt;; fi;done) -cjf backupfile.tar.bz2 &lt;span class=&quot;string&quot;&gt;$D&lt;/span&gt;IR/*&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060136fle3keeeed4e4fem.png&quot; alt=&quot;排除文件进行备份&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;排除文件进行备份&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;使用 tar 保持文件的原有权限进行恢复&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;通过以下命令，你可以保留文件的权限将备份文件恢复到原始用户的家目录（本例是 user_restore）。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;xjf&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;backupfile&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;bz2&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;directory&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;user_restore&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;same&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;permissions&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060137gu536aywqqzua4o3.png&quot; alt=&quot;从归档文件中恢复&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;从归档文件中恢复&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;扩展阅读：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/18-tar-command-examples-in-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;18 tar Command Examples in Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.tecmint.com/dtrx-an-intelligent-archive-extraction-tar-zip-cpio-rpm-deb-rar-tool-for-linux/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Dtrx – An Intelligent Archive Tool for Linux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;通过-find-命令搜索文件&quot;&gt;&lt;a href=&quot;#通过-find-命令搜索文件&quot; class=&quot;headerlink&quot; title=&quot;通过 find 命令搜索文件&quot;&gt;&lt;/a&gt;通过 find 命令搜索文件&lt;/h3&gt;&lt;p&gt;find 命令用于递归搜索目录树中包含指定字符的文件和目录，然后在屏幕显示出于指定字符相匹配的文件和目录，或者在匹配项进行其他操作。&lt;/p&gt;
+&lt;p&gt;通常，我们通过文件名、文件的属主、属组、类型权限、日期及大小来搜索。&lt;/p&gt;
+&lt;h4 id=&quot;基本语法：&quot;&gt;&lt;a href=&quot;#基本语法：&quot; class=&quot;headerlink&quot; title=&quot;基本语法：&quot;&gt;&lt;/a&gt;基本语法：&lt;/h4&gt;&lt;figure class=&quot;highlight accesslog&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# find &lt;span class=&quot;string&quot;&gt;[需搜索的目录]&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;[表达式]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;通过文件大小递归搜索文件&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;以下命令会搜索当前目录（.）及其下两层子目录（-maxdepth 3，包含当前目录及往下两层的子目录）中大于 2 MB（-size +2M）的所有文件（-f）。&lt;/p&gt;
+&lt;figure class=&quot;highlight dos&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;built_in&quot;&gt;find&lt;/span&gt; . -maxdepth &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt; -&lt;span class=&quot;built_in&quot;&gt;type&lt;/span&gt; f -size +&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;M&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060137g7kn5dyn47n2774i.png&quot; alt=&quot;Find Files by Size in Linux&quot;&gt; &lt;em&gt; 通过文件大小搜索文件&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Find Files by Size in Linux&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;搜索符合一定规则的文件并将其删除&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;有时候，777 权限的文件通常为外部攻击者打开便利之门。不管是以何种方式，让所有人都可以对文件进行任意操作都是不安全的。对此，我们采取一个相对激进的方法——删除这些文件（’{}’ + 用来“聚集”搜索的结果）。&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;find&lt;/span&gt; &lt;span class=&quot;regexp&quot;&gt;/home/u&lt;/span&gt;ser -perm &lt;span class=&quot;number&quot;&gt;777&lt;/span&gt; -exec rm &lt;span class=&quot;string&quot;&gt;&#39;&amp;#123;&amp;#125;&#39;&lt;/span&gt; +&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060138y7dxlpzxm3mgqgmm.png&quot; alt=&quot;搜索 777 权限的文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;搜索 777 权限的文件&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;按访问时间和修改时间搜索文件&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;搜索 /etc 目录下访问时间（-atime）或修改时间（-mtime）大于（+180）或小于（-180） 6 个月或者刚好（180） 6 个月的配置文件。&lt;/p&gt;
+&lt;p&gt;按照下面例子对命令进行修改：&lt;/p&gt;
+&lt;figure class=&quot;highlight swift&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;built_in&quot;&gt;find&lt;/span&gt; /etc -iname &lt;span class=&quot;string&quot;&gt;&quot;*.conf&quot;&lt;/span&gt; -mtime -&lt;span class=&quot;number&quot;&gt;180&lt;/span&gt; -&lt;span class=&quot;built_in&quot;&gt;print&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060139c70syyslkdqyyl9y.png&quot; alt=&quot;按修改时间搜索文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;按修改时间搜索文件&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;扩展阅读： &lt;a href=&quot;http://www.tecmint.com/35-practical-examples-of-linux-find-command/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;35 Practical Examples of Linux ‘find’ Command&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;文件权限及基本属性&quot;&gt;&lt;a href=&quot;#文件权限及基本属性&quot; class=&quot;headerlink&quot; title=&quot;文件权限及基本属性&quot;&gt;&lt;/a&gt;文件权限及基本属性&lt;/h3&gt;&lt;p&gt;ls -l 命令输出的前 10 位字符是文件的属性，其中第一个字符用来表明文件的类型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;– : 普通文件&lt;/li&gt;
+&lt;li&gt;-d : 目录&lt;/li&gt;
+&lt;li&gt;-l : 符号链接&lt;/li&gt;
+&lt;li&gt;-c : 字符设备 (它将数据作为字节流处理，如terminal)&lt;/li&gt;
+&lt;li&gt;-b : 块设备 (在块设备中处理数据，如存储设备)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来表示文件属性的 9 位字符叫做文件的读写模式，代表文件属主、同组用户和其他用户（通常指的是“外部世界”）对应的读（r）、写（w）和执行（x）权限。&lt;/p&gt;
+&lt;p&gt;文件的写权限允许对应的用户对文件进行打开和读写，对于同时设置了执行权限的目录，对应用户可以列举出该目录的内容。另外，文件的执行权限允许将文件当做是一个可执行程序来运行，而目录的执行权限则是允许用户进入和退出该目录。&lt;/p&gt;
+&lt;p&gt;文件的权限通过 chown 命令来更改，其基本语法如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod [new_mode] file&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;new_mode 可以是 3 位八进制数值或者对应权限的表达式。&lt;/p&gt;
+&lt;p&gt;八进制数值可以从二进制数值进行等值转换，通过下列方法来计算文件属主、同组用户和其他用户权限对应的二进制数值：&lt;/p&gt;
+&lt;p&gt;一个确定权限的二进制数值表现为 2 的幂（r=2^2，w=2^1，x=2^0），当权限省缺时，二进制数值为 0。如下：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060139dd60ep3ndk447xdf.png&quot; alt=&quot;文件权限&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;文件权限&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;使用八进制数值设置上图的文件权限，请输入：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod 744 myfile&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;通过 u、g 和 o 分别代表用户、同组用户和其他用户，然后你也可以使用权限表达式来单独对用户设置文件的权限模式。也可以通过 a 代表所有用户，然后设置文件权限。通过 + 号或者 - 号相应的赋予或移除文件权限。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;为所有用户撤销一个 shell 脚本的执行权限&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;正如之前解释的那样，我们可以通过 - 号为需要移除权限的属主、同组用户、其他用户或者所有用户去掉指定的文件权限。下面命令中的短横线（-）可以理解为：移除（-）所有用户（a）的 backup.sh 文件执行权限（x）。&lt;/p&gt;
+&lt;figure class=&quot;highlight apache&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# chmod a-x backup.sh&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;下面演示为文件属主、同组用户赋予读、写和执行权限，并赋予其他用户读权限。&lt;/p&gt;
+&lt;p&gt;当我们使用 3 位八进制数值为文件设置权限的时候，第一位数字代表属主权限，第二位数字代表同组用户权限，第三位数字代表其他用户的权限：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;属主：(r=2^2 + w=2^1 + x=2^0 = 7)&lt;/li&gt;
+&lt;li&gt;同组用户：(r=2^2 + w=2^1 + x=2^0 = 7)&lt;/li&gt;
+&lt;li&gt;其他用户：(r=2^2 + w=0 + x=0 = 4)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;命令如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chmod 774 myfile&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;随着练习时间的推移，你会知道何种情况下使用哪种方式来更改文件的权限模式的效果最好。&lt;/p&gt;
+&lt;p&gt;使用 ls -l 详细列举目录详细同样会显示出文件的属主和属组（这个很基本，而且影响到系统文件的访问控制）。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://dn-linuxcn.qbox.me/data/attachment/album/201603/30/060140latew4zef3xt3ar6.png&quot; alt=&quot;列举 Linux 文件&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;列举 Linux 文件&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;通过 chown 命令可以对文件的归属权进行更改，可以同时或者分开更改属主和属组。其基本语法为：&lt;/p&gt;
+&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# chown user:&lt;span class=&quot;keyword&quot;&gt;group&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;file&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;至少要指定用户或者用户组&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;举几个例子：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;将文件的属主更改为指定用户：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chown gacanepa sent&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;同时将文件的属主和属组更改为指定的用户和组：&lt;/p&gt;
+&lt;figure class=&quot;highlight vala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;# chown gacanepa:gacanepa TestFile&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;只将文件的属组更改为指定组。注意组名前的冒号（:）。&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;selector-tag&quot;&gt;chown&lt;/span&gt; &lt;span class=&quot;selector-pseudo&quot;&gt;:gacanepa&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;email_body&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.txt&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+</content>
     
     <summary type="html">
     
+      &lt;h3 id=&quot;归档和压缩的相关工具&quot;&gt;&lt;a href=&quot;#归档和压缩的相关工具&quot; class=&quot;headerlink&quot; title=&quot;归档和压缩的相关工具&quot;&gt;&lt;/a&gt;归档和压缩的相关工具&lt;/h3&gt;&lt;p&gt;文件归档工具将一堆文件整合到一个单独的归档文件之后，我们可以将归档文件备份到
+    
     </summary>
     
+      <category term="转载" scheme="http://qiankun.space/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="lfcs" scheme="http://qiankun.space/tags/lfcs/"/>
     
   </entry>
   

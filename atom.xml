@@ -4,9 +4,9 @@
   <subtitle>似于混沌</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://nimord.github.io/"/>
+  <link href="https://nimord.github.io/"/>
   <updated>2016-07-29T15:10:16.688Z</updated>
-  <id>http://nimord.github.io/</id>
+  <id>https://nimord.github.io/</id>
   
   <author>
     <name>ZhangChao</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>LFCS 12：如何使用 Linux 的帮助文档和工具</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-12/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-12/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-12/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-12/</id>
     <published>2016-07-29T14:05:01.000Z</published>
     <updated>2016-07-29T15:10:16.688Z</updated>
     
@@ -85,17 +85,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 11：如何使用命令 vgcreate、lvcreate 和 lvextend 管理和创建 LVM</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-11/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-11/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-11/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-11/</id>
     <published>2016-07-29T14:04:56.000Z</published>
     <updated>2016-07-29T15:09:36.443Z</updated>
     
@@ -177,17 +177,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 10：学习简单的 Shell 脚本编程和文件系统故障排除</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-10/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-10/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-10/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-10/</id>
     <published>2016-07-29T14:04:51.000Z</published>
     <updated>2016-07-29T15:08:41.966Z</updated>
     
@@ -312,17 +312,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 09：使用 Yum/RPM/Apt/Dpkg/Aptitude 进行 Linux 软件包管理</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-09/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-09/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-09/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-09/</id>
     <published>2016-07-29T14:04:45.000Z</published>
     <updated>2016-07-29T15:15:22.372Z</updated>
     
@@ -428,17 +428,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 08：管理用户和用户组、文件权限和属性以及启用账户 sudo 访问权限</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-08/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-08/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-08/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-08/</id>
     <published>2016-07-29T14:04:40.000Z</published>
     <updated>2016-07-29T15:06:25.812Z</updated>
     
@@ -610,17 +610,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 07：通过 SysVinit、Systemd 和 Upstart 管理系统自启动进程和服务</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-07/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-07/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-07/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-07/</id>
     <published>2016-07-29T14:04:35.000Z</published>
     <updated>2016-07-29T15:05:44.453Z</updated>
     
@@ -811,17 +811,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 06：组装分区为RAID设备——创建和管理系统备份</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-06/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-06/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-06/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-06/</id>
     <published>2016-07-29T14:04:30.000Z</published>
     <updated>2016-07-29T14:58:08.007Z</updated>
     
@@ -946,17 +946,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 05：如何在 Linux 中挂载/卸载本地文件系统和网络文件系统（Samba 和 NFS）</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-05/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-05/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-05/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-05/</id>
     <published>2016-07-29T14:04:25.000Z</published>
     <updated>2016-07-29T14:57:17.084Z</updated>
     
@@ -1068,17 +1068,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 04：对存储设备分区、格式化文件系统和配置交换分区</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-04/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-04/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-04/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-04/</id>
     <published>2016-07-29T14:04:21.000Z</published>
     <updated>2016-07-29T14:56:12.968Z</updated>
     
@@ -1162,17 +1162,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 03：归档/压缩文件及目录、设置文件属性和搜索文件</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-03/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-03/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-03/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-03/</id>
     <published>2016-07-29T14:04:14.000Z</published>
     <updated>2016-07-29T14:54:04.858Z</updated>
     
@@ -1401,17 +1401,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 02：如何安装和使用纯文本编辑器 vi/vim</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-02/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-02/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-02/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-02/</id>
     <published>2016-07-29T14:03:49.000Z</published>
     <updated>2016-07-29T14:21:31.690Z</updated>
     
@@ -1693,17 +1693,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>LFCS 01：如何在 Linux 上使用 GNU sed 等命令来创建、编辑和操作文件</title>
-    <link href="http://nimord.github.io/2016/07/29/lfcs-01/"/>
-    <id>http://nimord.github.io/2016/07/29/lfcs-01/</id>
+    <link href="https://nimord.github.io/2016/07/29/lfcs-01/"/>
+    <id>https://nimord.github.io/2016/07/29/lfcs-01/</id>
     <published>2016-07-29T13:57:17.000Z</published>
     <updated>2016-07-29T14:01:13.500Z</updated>
     
@@ -1795,17 +1795,17 @@
     
     </summary>
     
-      <category term="转载" scheme="http://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
+      <category term="转载" scheme="https://nimord.github.io/categories/%E8%BD%AC%E8%BD%BD/"/>
     
     
-      <category term="lfcs" scheme="http://nimord.github.io/tags/lfcs/"/>
+      <category term="lfcs" scheme="https://nimord.github.io/tags/lfcs/"/>
     
   </entry>
   
   <entry>
     <title>方向选择和埋头苦干</title>
-    <link href="http://nimord.github.io/2016/05/20/orientation-is-more-important-than-hardwork/"/>
-    <id>http://nimord.github.io/2016/05/20/orientation-is-more-important-than-hardwork/</id>
+    <link href="https://nimord.github.io/2016/05/20/orientation-is-more-important-than-hardwork/"/>
+    <id>https://nimord.github.io/2016/05/20/orientation-is-more-important-than-hardwork/</id>
     <published>2016-05-20T08:23:50.000Z</published>
     <updated>2016-05-20T09:22:42.297Z</updated>
     
@@ -1821,15 +1821,15 @@
     
     </summary>
     
-      <category term="随笔" scheme="http://nimord.github.io/categories/essay/"/>
+      <category term="随笔" scheme="https://nimord.github.io/categories/essay/"/>
     
     
   </entry>
   
   <entry>
     <title>马后炮</title>
-    <link href="http://nimord.github.io/2016/05/13/monday-morning-quarterback/"/>
-    <id>http://nimord.github.io/2016/05/13/monday-morning-quarterback/</id>
+    <link href="https://nimord.github.io/2016/05/13/monday-morning-quarterback/"/>
+    <id>https://nimord.github.io/2016/05/13/monday-morning-quarterback/</id>
     <published>2016-05-13T08:48:53.000Z</published>
     <updated>2016-05-13T10:22:51.394Z</updated>
     
@@ -1848,15 +1848,15 @@
     
     </summary>
     
-      <category term="随笔" scheme="http://nimord.github.io/categories/essay/"/>
+      <category term="随笔" scheme="https://nimord.github.io/categories/essay/"/>
     
     
   </entry>
   
   <entry>
     <title>浅析Linux初始化init系统</title>
-    <link href="http://nimord.github.io/2016/05/10/introduce-the-linux-system-init/"/>
-    <id>http://nimord.github.io/2016/05/10/introduce-the-linux-system-init/</id>
+    <link href="https://nimord.github.io/2016/05/10/introduce-the-linux-system-init/"/>
+    <id>https://nimord.github.io/2016/05/10/introduce-the-linux-system-init/</id>
     <published>2016-05-10T07:07:01.000Z</published>
     <updated>2016-05-10T07:36:20.207Z</updated>
     
@@ -2501,15 +2501,15 @@
     
     </summary>
     
-      <category term="技术" scheme="http://nimord.github.io/categories/technology/"/>
+      <category term="技术" scheme="https://nimord.github.io/categories/technology/"/>
     
     
   </entry>
   
   <entry>
     <title>罪己</title>
-    <link href="http://nimord.github.io/2016/05/01/thinking-in-international-labour-day/"/>
-    <id>http://nimord.github.io/2016/05/01/thinking-in-international-labour-day/</id>
+    <link href="https://nimord.github.io/2016/05/01/thinking-in-international-labour-day/"/>
+    <id>https://nimord.github.io/2016/05/01/thinking-in-international-labour-day/</id>
     <published>2016-05-01T06:46:33.000Z</published>
     <updated>2016-05-09T05:15:54.953Z</updated>
     
@@ -2530,15 +2530,15 @@
     
     </summary>
     
-      <category term="随笔" scheme="http://nimord.github.io/categories/essay/"/>
+      <category term="随笔" scheme="https://nimord.github.io/categories/essay/"/>
     
     
   </entry>
   
   <entry>
     <title>shell脚本调用的三种不同方式</title>
-    <link href="http://nimord.github.io/2016/04/28/the-method-called-shell-script/"/>
-    <id>http://nimord.github.io/2016/04/28/the-method-called-shell-script/</id>
+    <link href="https://nimord.github.io/2016/04/28/the-method-called-shell-script/"/>
+    <id>https://nimord.github.io/2016/04/28/the-method-called-shell-script/</id>
     <published>2016-04-28T13:30:55.000Z</published>
     <updated>2016-04-28T14:42:39.813Z</updated>
     
@@ -2583,17 +2583,17 @@
     
     </summary>
     
-      <category term="技术" scheme="http://nimord.github.io/categories/technology/"/>
+      <category term="技术" scheme="https://nimord.github.io/categories/technology/"/>
     
     
-      <category term="shell" scheme="http://nimord.github.io/tags/shell/"/>
+      <category term="shell" scheme="https://nimord.github.io/tags/shell/"/>
     
   </entry>
   
   <entry>
     <title>咕咚来了</title>
-    <link href="http://nimord.github.io/2016/04/28/a-short-story-before-writing/"/>
-    <id>http://nimord.github.io/2016/04/28/a-short-story-before-writing/</id>
+    <link href="https://nimord.github.io/2016/04/28/a-short-story-before-writing/"/>
+    <id>https://nimord.github.io/2016/04/28/a-short-story-before-writing/</id>
     <published>2016-04-28T01:34:40.564Z</published>
     <updated>2016-04-28T08:56:02.304Z</updated>
     
@@ -2620,7 +2620,7 @@
     
     </summary>
     
-      <category term="随笔" scheme="http://nimord.github.io/categories/essay/"/>
+      <category term="随笔" scheme="https://nimord.github.io/categories/essay/"/>
     
     
   </entry>
